@@ -14,10 +14,10 @@ public class JwtUtil {
   private final static String SECRET_KEY = "2024_CS5721"; // private key
   private final Map<String, Date> tokenBlacklist = new ConcurrentHashMap<>(); // black_list
 
-  private final int USER_EXPIRE = 600000;
-  private final int ADMINISTRATOR_EXPIRE = 3600000;
+  private final static int USER_EXPIRE = 600000;
+  private final static int ADMINISTRATOR_EXPIRE = 3600000;
   // Create JWT Token
-  public String generateToken(String userId,Integer userRole) {
+  public static String generateToken(String userId, Integer userRole) {
     int expireTime = 0;
     if (RoleEnum.ADMIN.getValue().equals(userId)){
       expireTime = USER_EXPIRE;
