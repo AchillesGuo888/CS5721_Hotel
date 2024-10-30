@@ -1,6 +1,7 @@
 package com.example.hotel.util;
 
 import com.example.hotel.enums.RoleEnum;
+import com.example.hotel.enums.UserTypeEnum;
 import io.jsonwebtoken.*;
 
 import java.util.Date;
@@ -17,9 +18,9 @@ public class JwtUtil {
   private final static int USER_EXPIRE = 600000;
   private final static int ADMINISTRATOR_EXPIRE = 3600000;
   // Create JWT Token
-  public static String generateToken(String userId, Integer userRole) {
+  public static String generateToken(String userId, byte userType) {
     int expireTime = 0;
-    if (RoleEnum.ADMIN.getValue().equals(userId)){
+    if (UserTypeEnum.USER.getCode().equals(userType)){
       expireTime = USER_EXPIRE;
     }else{
       expireTime = ADMINISTRATOR_EXPIRE;

@@ -4,6 +4,7 @@ import com.example.hotel.common.base.ResponseResult;
 import com.example.hotel.dto.response.RegisterResponse;
 import com.example.hotel.dto.request.*;
 import com.example.hotel.exception.BizException;
+import com.example.hotel.service.common.EmailService;
 import com.example.hotel.service.user.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserWithoutTokenController {
 
   private final UserService userService;
+  private final EmailService emailService;
 
   /**
    * user login
@@ -71,7 +73,13 @@ public class UserWithoutTokenController {
    */
   @PostMapping("/getVerificationCode ")
   @RequestMapping(value = "getVerificationCode", method = RequestMethod.POST)
-  public ResponseResult<String> getVerificationCode(@ApiParam(value = "email", required = true) @RequestBody String email) {
-    return ResponseResult.ofSuccess();
+  public ResponseResult getVerificationCode(@ApiParam(value = "send verification", required = true) @RequestBody EmailValidateCodeRequestDTO requestDTO) {
+    try {
+      emailService.sendEmailValidateCode(requestDTO);
+      return ResponseResult.ofSuccess();
+    } catch (BizException e) {
+      log.error("send verification error", e);
+      return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
+    }
   }
 }

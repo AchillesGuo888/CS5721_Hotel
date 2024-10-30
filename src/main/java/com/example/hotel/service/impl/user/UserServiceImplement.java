@@ -8,6 +8,7 @@ import com.example.hotel.dto.request.RegisterRequestDTO;
 import com.example.hotel.dto.response.RegisterResponse;
 import com.example.hotel.entity.User;
 import com.example.hotel.entity.UserExample;
+import com.example.hotel.enums.UserTypeEnum;
 import com.example.hotel.exception.BizException;
 import com.example.hotel.exception.NoRollbackException;
 import com.example.hotel.mapper.UserMapper;
@@ -31,8 +32,6 @@ public class UserServiceImplement implements UserService {
 
   private final UserMapper userMapper;
 
-  private final static int saltSize = 16;
-
   @Override
   public RegisterResponse userSignUp(RegisterRequestDTO requestDTO)
       throws BizException {
@@ -55,10 +54,10 @@ public class UserServiceImplement implements UserService {
 
     String newUserId = insertNewUser(requestDTO);
     /**
-     * 3.注册成功获取token
+     * 3.get token after sign-up
      */
 
-    String token = JwtUtil.generateToken(newUserId, 0);
+    String token = JwtUtil.generateToken(newUserId, UserTypeEnum.USER.getCode());
     return RegisterResponse.builder().accessToken(token).build();
 
   }
