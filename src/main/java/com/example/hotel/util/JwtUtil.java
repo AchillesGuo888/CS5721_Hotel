@@ -7,6 +7,8 @@ import io.jsonwebtoken.*;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -56,23 +58,21 @@ public class JwtUtil {
   }
 
   // Periodically clear expired blacklist tokens
+  @Scheduled(fixedRate = 3600000)
   public void cleanupBlacklist() {
     tokenBlacklist.entrySet().removeIf(entry -> entry.getValue().before(new Date()));
   }
 
-  public static String getUserIdFromToken(String token) {
+  public String getUserIdFromToken(String token) {
     try {
-      Claims claims = Jwts.parser()
-          .setSigningKey(SECRET_KEY)
-          .parseClaimsJws(token)
-          .getBody();
+      Claims claims = validateToken(token);
       return claims.getSubject(); // get subject from token(userId)
     } catch (SignatureException e) {
       // token 签名不匹配，可能被篡改
-      return null;
+      return StringUtils.EMPTY;
     } catch (Exception e) {
       // 处理其他异常
-      return null;
+      return StringUtils.EMPTY;
     }
   }
 }

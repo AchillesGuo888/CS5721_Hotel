@@ -35,7 +35,14 @@ public class UserWithoutTokenController {
   @PostMapping("/login")
   @RequestMapping(value = "login", method = RequestMethod.POST)
   public ResponseResult<RegisterResponse> login(@ApiParam(value = "User details", required = true) @RequestBody UserLoginRequestDTO requestDTO) {
-      return ResponseResult.ofSuccess();
+    try {
+      return ResponseResult.ofSuccess(userService.userLogin(requestDTO));
+    } catch (BizException e) {
+      log.error("user login error", e);
+      return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
+    }
+
+
   }
 
   /**
@@ -45,7 +52,7 @@ public class UserWithoutTokenController {
    */
   @PostMapping("/register")
   @RequestMapping(value = "register", method = RequestMethod.POST)
-  public ResponseResult register(@ApiParam(value = "Register info", required = true) @RequestBody RegisterRequestDTO requestDTO) {
+  public ResponseResult<RegisterResponse> register(@ApiParam(value = "Register info", required = true) @RequestBody RegisterRequestDTO requestDTO) {
     try {
       return ResponseResult.ofSuccess(userService.userSignUp(requestDTO));
     } catch (BizException e) {

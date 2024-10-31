@@ -16,6 +16,8 @@ public enum ResponseCode implements BaseEnum<Long> {
     param_error("Parameter Error", "", 1001L),
     password_error_rules("Password format error", "", 1005L),
     email_has_exist("The email has existed", "", 1010L),
+    email_password_not_match("The email or password is incorrect", "", 1003L),
+    email_not_exist("The email does not exist", "", 1006L),
     ;
 
     private String desc;

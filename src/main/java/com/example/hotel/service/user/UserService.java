@@ -2,6 +2,7 @@ package com.example.hotel.service.user;
 
 import com.example.hotel.common.base.ResponseResult;
 import com.example.hotel.dto.request.RegisterRequestDTO;
+import com.example.hotel.dto.request.UserLoginRequestDTO;
 import com.example.hotel.dto.response.RegisterResponse;
 import com.example.hotel.exception.BizException;
 
@@ -19,6 +20,18 @@ public interface UserService {
      */
     RegisterResponse userSignUp(RegisterRequestDTO requestDTO) throws BizException;
 
+    /**
+     * user login interface
+     * @param requestDTO
+     * @return
+     */
+    RegisterResponse userLogin(UserLoginRequestDTO requestDTO) throws BizException;
+
+    /**
+     * user logout interface
+     * @param token
+     */
+    void userLogout(String token);
 
 //    /**
 //     * 用户登录

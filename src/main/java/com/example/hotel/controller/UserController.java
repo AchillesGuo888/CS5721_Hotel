@@ -4,6 +4,7 @@ package com.example.hotel.controller;
 import com.example.hotel.common.base.ResponseCode;
 import com.example.hotel.common.base.ResponseResult;
 import com.example.hotel.dto.request.ModifyUserInfoRequestDTO;
+import com.example.hotel.service.user.UserService;
 import com.example.hotel.util.JwtUtil;
 
 import io.swagger.annotations.Api;
@@ -31,6 +32,9 @@ public class UserController {
   @Autowired
   private JwtUtil jwtUtil;
 
+  @Autowired
+  private UserService userService;
+
   /**
    * user logout
    *
@@ -39,12 +43,7 @@ public class UserController {
   @PostMapping("/logout")
   @RequestMapping(value = "userLogout", method = RequestMethod.POST)
   public ResponseResult userLogout(@RequestHeader("Authorization") String token) {
-    if (token != null && token.startsWith("Bearer ")) {
-      token = token.substring(7);
-      jwtUtil.blacklistToken(token); // put Token into blacklist
-      SecurityContextHolder.clearContext();
-
-    }
+      userService.userLogout(token);
       return ResponseResult.ofSuccess();
   }
 
