@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -19,7 +20,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers("/swagger-ui.html", "/v2/api-docs", "/swagger-resources/**", "/webjars/**")
         .permitAll() // allow Swagger url
         .anyRequest().authenticated() // other request
-        .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        .and()
+        .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class) // 注册 JwtFilter
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
   }
 

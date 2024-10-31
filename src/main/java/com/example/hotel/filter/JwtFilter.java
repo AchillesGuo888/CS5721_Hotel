@@ -22,6 +22,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
   // without Token url
   private final static String IGNORE_URL = "/user/withoutToken";
+  private final static String SWAGGER_URL = "swagger";
+  private final static String API_DOCS_URL = "api-docs";
+  private final static String WEBJARS_URL = "webjars";
 
   private static final String AUTHORIZATION_HEADER = "Authorization";
   private static final String TOKEN_PREFIX = "Bearer ";
@@ -32,7 +35,7 @@ public class JwtFilter extends OncePerRequestFilter {
       throws ServletException, IOException {
 
     String requestURI = request.getRequestURI();
-    if (requestURI.startsWith(IGNORE_URL)){
+    if (requestURI.startsWith(IGNORE_URL)||requestURI.contains(SWAGGER_URL)||requestURI.contains(API_DOCS_URL)||requestURI.contains(WEBJARS_URL)){
       filterChain.doFilter(request, response);
       return;
     }
