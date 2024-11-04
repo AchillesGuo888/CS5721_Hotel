@@ -16,6 +16,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 
 /**
@@ -23,6 +24,7 @@ import org.apache.commons.lang3.StringUtils;
  * @date 2020/2/21
  */
 @Slf4j
+@Component
 public class MD5Util {
     /**
      * MD5转码

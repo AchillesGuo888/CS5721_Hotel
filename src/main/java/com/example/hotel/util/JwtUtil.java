@@ -65,13 +65,17 @@ public class JwtUtil {
 
   public String getUserIdFromToken(String token) {
     try {
+      if (StringUtils.isBlank(token)&& token.startsWith("Bearer ")){
+        return StringUtils.EMPTY;
+      }
+      token = token.substring(7);
       Claims claims = validateToken(token);
       return claims.getSubject(); // get subject from token(userId)
     } catch (SignatureException e) {
-      // token 签名不匹配，可能被篡改
+
       return StringUtils.EMPTY;
     } catch (Exception e) {
-      // 处理其他异常
+
       return StringUtils.EMPTY;
     }
   }

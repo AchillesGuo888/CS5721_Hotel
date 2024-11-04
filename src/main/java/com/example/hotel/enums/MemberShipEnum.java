@@ -1,18 +1,20 @@
 package com.example.hotel.enums;
 
 
-public enum UserTypeEnum implements BaseEnum<Byte> {
+public enum MemberShipEnum implements BaseEnum<Byte> {
     /**
      *
      */
-    USER("normal user",(byte)0),
-    ADMIN("administrator",(byte)1),
+    COOPER("COOPER",(byte)0),
+    SILVER("SILVER",(byte)1),
+    GOLD("GOLD",(byte)2),
+    DIAMOND("DIAMOND",(byte)3),
     ;
 
     private String desc;
     private Byte code;
 
-    UserTypeEnum(String desc, Byte code){
+    MemberShipEnum(String desc, Byte code){
         this.desc = desc;
         this.code = code;
     }
@@ -25,6 +27,7 @@ public enum UserTypeEnum implements BaseEnum<Byte> {
     public String getDesc() {
         return this.desc;
     }
+
 
     public String getKey() {
         return null;

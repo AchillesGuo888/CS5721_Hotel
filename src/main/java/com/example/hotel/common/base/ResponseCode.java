@@ -1,5 +1,7 @@
 package com.example.hotel.common.base;
 
+import com.example.hotel.enums.BaseEnum;
+
 /**
  * @Author qzb
  */
@@ -11,6 +13,7 @@ public enum ResponseCode implements BaseEnum<Long> {
     server_err("server error", "", 500L),
     forbidden("Wrong Operation","",403L),
     success("Successful", "", 200L),
+    token_error("Token error", "", 300L),
     email_error_rules("Please enter the correct email address.","", 1011L),
     code_false("Please enter the correct validation code", "", 1007L),
     param_error("Parameter Error", "", 1001L),
@@ -18,6 +21,12 @@ public enum ResponseCode implements BaseEnum<Long> {
     email_has_exist("The email has existed", "", 1010L),
     email_password_not_match("The email or password is incorrect", "", 1003L),
     email_not_exist("The email does not exist", "", 1006L),
+    password_not_same("Two passwords are inconsistent.", "", 1004L),
+    password_old_new_same("The old and new password can be same", "", 1012L),
+    password_old_error_rules("Password format error", "", 1013L),
+    password_new_error_rules("Password format error", "", 1014L),
+    password_old_not_correct("The old password is wrong", "", 1015L),
+
     ;
 
     private String desc;
@@ -55,11 +64,4 @@ public enum ResponseCode implements BaseEnum<Long> {
         response.setMsg(this.getDesc());
         return response;
     }
-
-    @Override
-    public String getEnDesc() {
-        return null;
-    }
-
-
 }

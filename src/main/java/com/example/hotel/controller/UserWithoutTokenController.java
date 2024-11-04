@@ -3,12 +3,15 @@ package com.example.hotel.controller;
 import com.example.hotel.common.base.ResponseResult;
 import com.example.hotel.dto.response.RegisterResponse;
 import com.example.hotel.dto.request.*;
+import com.example.hotel.dto.response.UpdateInfoResponse;
 import com.example.hotel.exception.BizException;
 import com.example.hotel.service.common.EmailService;
 import com.example.hotel.service.user.UserService;
+import com.example.hotel.util.VerificationCodeUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import javax.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -69,8 +72,13 @@ public class UserWithoutTokenController {
    */
   @PutMapping("/forgetPassword")
   @RequestMapping(value = "forgetPassword", method = RequestMethod.PUT)
-  public ResponseResult forgetPassword(@ApiParam(value = "Register info", required = true) @RequestBody UserLoginRequestDTO requestDTO) {
-    return ResponseResult.ofSuccess();
+  public ResponseResult<UpdateInfoResponse> forgetPassword(@ApiParam(value = "forget password request", required = true) @RequestBody ForgetPasswordRequestDTO requestDTO) {
+    try {
+      return ResponseResult.ofSuccess(userService.forgetPassword(requestDTO));
+    } catch (BizException e) {
+      log.error("register error", e);
+      return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
+    }
   }
 
   /**
@@ -80,9 +88,10 @@ public class UserWithoutTokenController {
    */
   @PostMapping("/getVerificationCode ")
   @RequestMapping(value = "getVerificationCode", method = RequestMethod.POST)
-  public ResponseResult getVerificationCode(@ApiParam(value = "send verification", required = true) @RequestBody EmailValidateCodeRequestDTO requestDTO) {
+  public ResponseResult getVerificationCode(@ApiParam(value = "send verification", required = true) @RequestBody EmailValidateCodeRequestDTO requestDTO,
+      HttpSession session) {
     try {
-      emailService.sendEmailValidateCode(requestDTO);
+      emailService.sendEmailValidateCode(requestDTO,session);
       return ResponseResult.ofSuccess();
     } catch (BizException e) {
       log.error("send verification error", e);
