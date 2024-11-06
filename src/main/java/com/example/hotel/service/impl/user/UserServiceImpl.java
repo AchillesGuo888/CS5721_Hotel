@@ -43,7 +43,7 @@ import com.example.hotel.util.MD5Util;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class UserServiceImplement implements UserService {
+public class UserServiceImpl implements UserService {
 
   private final UserMapper userMapper;
 

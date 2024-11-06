@@ -64,7 +64,7 @@ public class UserController {
     try {
       return ResponseResult.ofSuccess(userService.getUserInfo(token));
     } catch (BizException e) {
-      log.error("modify password error", e);
+      log.error("query user info error", e);
       return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
     }
   }
@@ -84,7 +84,7 @@ public class UserController {
     try {
       return ResponseResult.ofSuccess(userService.updateUserInfo(requestDTO,token));
     } catch (BizException e) {
-      log.error("modify password error", e);
+      log.error("modify user info error", e);
       return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
     }
   }

@@ -76,7 +76,7 @@ public class UserWithoutTokenController {
     try {
       return ResponseResult.ofSuccess(userService.forgetPassword(requestDTO));
     } catch (BizException e) {
-      log.error("register error", e);
+      log.error("forger password error", e);
       return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
     }
   }
