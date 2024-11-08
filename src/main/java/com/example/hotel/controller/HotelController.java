@@ -9,6 +9,8 @@ import com.example.hotel.dto.request.ModifyUserInfoRequestDTO;
 import com.example.hotel.dto.request.QueryHotelRequestDTO;
 import com.example.hotel.dto.response.AvailableHotelResponse;
 import com.example.hotel.dto.response.HotelDetailResponse;
+import com.example.hotel.entity.Hotel;
+import com.example.hotel.mapper.HotelMapper;
 import com.example.hotel.util.JwtUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -16,6 +18,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import java.util.List;
 import javax.management.Query;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Insert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,6 +39,7 @@ public class HotelController {
 
   @Autowired
   private JwtUtil jwtUtil;
+  private HotelMapper HotelMapper;
 
   /**
    * add hotel
@@ -45,7 +49,24 @@ public class HotelController {
   @PostMapping("/add")
   @RequestMapping(value = "addHotel", method = RequestMethod.POST)
   public ResponseResult addHotel(@RequestHeader("Authorization") String token, @ApiParam(value = "Hotel details", required = true) @RequestBody AddHotelRequestDTO addHotelRequestDTO) {
-      return ResponseResult.ofSuccess();
+    Hotel hotel = new Hotel();
+    hotel.setName(addHotelRequestDTO.getName());
+    hotel.setAddress(addHotelRequestDTO.getAddress());
+    hotel.setCity(addHotelRequestDTO.getCity());
+    hotel.setState(addHotelRequestDTO.getState());
+    hotel.setCountry(addHotelRequestDTO.getCountry());
+    hotel.setZipCode(addHotelRequestDTO.getZipCode());
+    hotel.setFacilities(addHotelRequestDTO.getFacilities());
+    hotel.setTotalRooms(addHotelRequestDTO.getTotalRooms());
+    hotel.setPhoneNumber(addHotelRequestDTO.getPhoneNumber());
+
+    //Insert hotel information into database
+    int rowsAffected = HotelMapper.addHotel(hotel);
+    if (rowsAffected > 0) {
+      return ResponseResult.ofSuccess(hotel);
+    } else {
+      return ResponseResult.ofError(500L, "Failed to add hotel");
+    }
   }
 
   /**
