@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class MD5Util {
+public class Md5Util {
     /**
      * MD5转码
      *

@@ -24,7 +24,7 @@ import org.springframework.context.ApplicationContext;
 @SpringBootApplication
 @EnableCaching
 
-@MapperScan("com.example.hotel.mapper*")
+//@MapperScan(basePackages = "com.example.hotel.mapper")
 public class Application {
     private static final Logger log = LoggerFactory.getLogger(Application.class);
     public static void main(String[] args) {

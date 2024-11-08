@@ -3,10 +3,11 @@ package com.example.hotel.mapper.ext;
 import com.example.hotel.dto.AvailableRoomCountDTO;
 import java.time.LocalDate;
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.ResultType;
 import org.apache.ibatis.annotations.Select;
-
+@Mapper
 public interface OrderAndDetailMapperExt {
     @Select({
         "select  "

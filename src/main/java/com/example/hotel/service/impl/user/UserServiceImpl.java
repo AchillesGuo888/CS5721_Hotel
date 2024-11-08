@@ -2,7 +2,6 @@ package com.example.hotel.service.impl.user;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.example.hotel.common.base.ResponseCode;
 import com.example.hotel.common.constant.CommonConstant;
 import com.example.hotel.dto.request.ForgetPasswordRequestDTO;
@@ -38,7 +37,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.example.hotel.util.MD5Util;
+import com.example.hotel.util.Md5Util;
 
 @Service
 @AllArgsConstructor
@@ -136,7 +135,7 @@ public class UserServiceImpl implements UserService {
     String userId = user.getUserId();
     String salt = user.getSalt();
     String passwordInDb = user.getPassword();
-    String oldPasswordInDb = MD5Util.getSaltMd5AndSha(oldPassword, salt);
+    String oldPasswordInDb = Md5Util.getSaltMd5AndSha(oldPassword, salt);
     if (!passwordInDb.equals(oldPasswordInDb)) {
       throw new BizException(ResponseCode.password_old_not_correct);
     }
@@ -144,7 +143,7 @@ public class UserServiceImpl implements UserService {
     // modify password
     User update = new User();
     update.setUserId(userId);
-    String newPasswordInDb = MD5Util.getSaltMd5AndSha(newPassword, salt);
+    String newPasswordInDb = Md5Util.getSaltMd5AndSha(newPassword, salt);
     update.setPassword(newPasswordInDb);
 
     //update DB
@@ -247,7 +246,7 @@ public class UserServiceImpl implements UserService {
    * @return
    */
   private String createPassWordInDB(String salt, String password) throws BizException {
-    return MD5Util.getSaltMd5AndSha(password, salt);
+    return Md5Util.getSaltMd5AndSha(password, salt);
   }
 
   /**
@@ -262,14 +261,14 @@ public class UserServiceImpl implements UserService {
      * 2.create new user
      */
     // create Salt
-    String salt = MD5Util.createSalt();
+    String salt = Md5Util.createSalt();
 
     // create user
     User newUser = new User();
     BeanUtils.copyProperties(requestDTO, newUser);
     // store salt secret in DB
-    String passwordInDb = MD5Util.getSaltMd5AndSha(requestDTO.getEmail(), salt);
-    Long newUserId = MD5Util.createNewUserId();
+    String passwordInDb = Md5Util.getSaltMd5AndSha(requestDTO.getEmail(), salt);
+    Long newUserId = Md5Util.createNewUserId();
     newUser.setUserId(newUserId.toString());
     newUser.setPassword(passwordInDb);
     newUser.setSalt(salt);
