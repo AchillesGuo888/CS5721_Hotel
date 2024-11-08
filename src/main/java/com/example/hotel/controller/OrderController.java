@@ -14,6 +14,9 @@ import com.example.hotel.dto.response.AvailableHotelResponse;
 import com.example.hotel.dto.response.HotelDetailResponse;
 import com.example.hotel.dto.response.OrderDetailInfoResponse;
 import com.example.hotel.dto.response.OrderInfoResponse;
+import com.example.hotel.entity.Order;
+import com.example.hotel.enums.OrderStatusEnum;
+import com.example.hotel.mapper.OrderMapper;
 import com.example.hotel.util.JwtUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -38,6 +41,7 @@ public class OrderController {
 
   @Autowired
   private JwtUtil jwtUtil;
+  private OrderMapper orderMapper;
 
   /**
    * book room and create order
@@ -91,7 +95,14 @@ public class OrderController {
   public ResponseResult cancelOrder(@RequestHeader("Authorization") String token,
       @ApiParam(value = "cancel order", required = true)
       @RequestBody CancelOrderRequestDTO requestDTO) {
+    Order order = orderMapper.findOrderById(requestDTO.getOrderId());
+    if(order == null){
+      //订单未找到，返回错误响应
+      return ResponseResult.ofError(404L,"Oder not found");
+    }
 
+    //更新订单状态为已取消
+    orderMapper.cancelOrder(requestDTO.getOrderId(), OrderStatusEnum.CANCELLED.getCode());
     return ResponseResult.ofSuccess();
   }
 

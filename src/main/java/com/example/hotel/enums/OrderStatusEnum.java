@@ -23,9 +23,9 @@ public enum OrderStatusEnum {
     FINISHED(2),
 
     /**
-     * 已关闭
+     * 已取消
      */
-    CLOSED(3);
+    CANCELLED(3);
 
     private Integer code;
 

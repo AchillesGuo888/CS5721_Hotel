@@ -11,5 +11,6 @@ import lombok.ToString;
 @ToString
 @ApiModel("cancel order request parameter")
 public class CancelOrderRequestDTO extends Request {
-
+    private Long orderId;
+    private Integer status;
 }

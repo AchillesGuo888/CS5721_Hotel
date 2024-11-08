@@ -51,7 +51,7 @@ public class Order extends BaseEntity {
 
 
     /**
-     * 订单状态：0待支付，1已支付，2已完结
+     * 订单状态：0待支付，1已支付，2已完结，3已取消
      */
     private Integer status;
 
