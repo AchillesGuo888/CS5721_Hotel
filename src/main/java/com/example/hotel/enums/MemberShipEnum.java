@@ -29,9 +29,5 @@ public enum MemberShipEnum implements BaseEnum<Byte> {
     }
 
 
-    public String getKey() {
-        return null;
-    }
-
 
 }

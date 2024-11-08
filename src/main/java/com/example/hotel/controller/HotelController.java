@@ -6,8 +6,10 @@ import com.example.hotel.dto.request.AddHotelRequestDTO;
 import com.example.hotel.dto.request.DeleteHotelInfoRequestDTO;
 import com.example.hotel.dto.request.ModifyHotelInfoRequestDTO;
 import com.example.hotel.dto.request.QueryHotelRequestDTO;
+import com.example.hotel.dto.request.QueryRoomTypePriceRequestDTO;
 import com.example.hotel.dto.response.AvailableHotelResponse;
 import com.example.hotel.dto.response.HotelDetailResponse;
+import com.example.hotel.dto.response.RoomAndTypeWithPriceResponse;
 import com.example.hotel.service.hotel.HotelAndTypeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -92,6 +94,20 @@ public class HotelController {
   @RequestMapping(value = "queryHotelPriceList", method = RequestMethod.POST)
   public ResponseResult<List<AvailableHotelResponse>> queryHotelPriceList(@ApiParam(value = "query hotel details ", required = true) @RequestBody QueryHotelRequestDTO requestDTO) {
     return ResponseResult.ofSuccess(hotelAndTypeService.queryHotelListWithPrice(requestDTO));
+  }
+
+  /**
+   * query room types(with price) and available room count of a concrete hotel
+   *
+   * @return
+   */
+  @PostMapping("/queryRoomAndTypeWithPrice")
+  @RequestMapping(value = "queryRoomAndTypeWithPrice", method = RequestMethod.POST)
+  public ResponseResult<List<RoomAndTypeWithPriceResponse>> queryRoomAndTypeWithPrice(
+      @ApiParam(value = "query price and available room count of each room type", required = true)
+      @RequestBody QueryRoomTypePriceRequestDTO requestDTO) {
+
+    return ResponseResult.ofSuccess(hotelAndTypeService.getHotelAvailableRoomWithPrice(requestDTO));
   }
 
 

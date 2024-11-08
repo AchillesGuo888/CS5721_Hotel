@@ -2,14 +2,14 @@ package com.example.hotel.enums;
 
 /**
  * <pre>
- *     order enum
+ *     HotelOrRoomTypeStatusEnum
  * </pre>
  */
-public enum OrderStatusEnum implements BaseEnum<Byte>{
+public enum HotelOrRoomTypeStatusEnum implements BaseEnum<Byte>{
 
-    NOT_PAY("NOT_PAY",(byte)0),
-    HAS_PAY("HAS_PAY",(byte)1),
-    FINISHED("FINISHED",(byte)2),
+    AVAILABLE("AVAILABLE",(byte)0),
+    FULL("FULL",(byte)1),
+
     ;
 
 
@@ -17,7 +17,7 @@ public enum OrderStatusEnum implements BaseEnum<Byte>{
     private String desc;
     private Byte code;
 
-    OrderStatusEnum(String desc, Byte code){
+    HotelOrRoomTypeStatusEnum(String desc, Byte code){
         this.desc = desc;
         this.code = code;
     }

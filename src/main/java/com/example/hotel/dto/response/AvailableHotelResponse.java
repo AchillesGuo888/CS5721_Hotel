@@ -20,7 +20,7 @@ public class AvailableHotelResponse extends BaseObject {
   private String hotelName;
 
   @ApiModelProperty("hotel status(0:available,1: full)")
-  private Integer status;
+  private Byte status;
 
   @ApiModelProperty("the lowest price")
   private BigDecimal price;

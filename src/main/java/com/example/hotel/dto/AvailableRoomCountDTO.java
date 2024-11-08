@@ -17,4 +17,5 @@ public class AvailableRoomCountDTO extends BaseObject{
   public Long hotelId;
   public Integer bookedRoomsCount;
   public Integer availableCount;
+  public String roomTypeName;
 }

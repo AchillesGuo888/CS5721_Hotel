@@ -1,6 +1,6 @@
 package com.example.hotel.util;
 
-import com.example.hotel.enums.RoleEnum;
+
 import com.example.hotel.enums.UserTypeEnum;
 import io.jsonwebtoken.*;
 
