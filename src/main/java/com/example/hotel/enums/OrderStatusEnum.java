@@ -8,22 +8,22 @@ package com.example.hotel.enums;
 public enum OrderStatusEnum {
 
     /**
-     * 待支付
+     * whait to pay
      */
     NOT_PAY(0),
 
     /**
-     * 已支付
+     * paid
      */
     HAS_PAY(1),
 
     /**
-     * 已完结
+     * finished the order
      */
     FINISHED(2),
 
     /**
-     * 已取消
+     * cancelled
      */
     CANCELLED(3);
 
