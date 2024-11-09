@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+        <!-- JDBC 配置信息 -->
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+          connectionURL="jdbc:mysql://rm-bp1k160qpstc9hojzto.mysql.rds.aliyuncs.com:3306/hotel"
+          userId="root"
+          password="Cs5721__"/>
+
+        <!-- 生成模型的目标包和输出路径 -->
+        <javaModelGenerator targetPackage="com.example.hotel.entity" targetProject="src/main/java"/>
+
+        <!-- 生成 Mapper XML 文件的目标包和输出路径 -->
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources"/>
+
+        <!-- 生成 Mapper 接口的目标包和输出路径 -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.example.hotel.mapper" targetProject="src/main/java"/>
+
+        <!-- 指定需要生成的表 -->
+        <table tableName="user" >
+            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
+        </table>
+    </context>
+</generatorConfiguration>

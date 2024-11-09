@@ -14,11 +14,13 @@ import com.example.hotel.dto.request.QueryRoomTypeRequestDTO;
 import com.example.hotel.dto.response.AvailableHotelResponse;
 import com.example.hotel.dto.response.HotelDetailResponse;
 import com.example.hotel.dto.response.RoomAndTypeWithPriceResponse;
+import com.example.hotel.service.roomType.RoomTypeInfoService;
 import com.example.hotel.util.JwtUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,11 +36,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/roomType")
 @Api(tags = "Room Type API")
+@AllArgsConstructor
 public class RoomTypeController {
 
 
-  @Autowired
-  private JwtUtil jwtUtil;
+  private final RoomTypeInfoService roomTypeInfoService;
 
   /**
    * add room type
@@ -104,10 +106,9 @@ public class RoomTypeController {
   @PostMapping("/queryRoomAndTypeWithPrice")
   @RequestMapping(value = "queryRoomAndTypeWithPrice", method = RequestMethod.POST)
   public ResponseResult<List<RoomAndTypeWithPriceResponse>> queryRoomAndTypeWithPrice(
-      @RequestHeader("Authorization") String token,
       @ApiParam(value = "query price and available room count of each room type", required = true)
       @RequestBody QueryRoomTypePriceRequestDTO requestDTO) {
 
-    return ResponseResult.ofSuccess();
+    return ResponseResult.ofSuccess(roomTypeInfoService.getHotelAvailableRoomWithPrice(requestDTO));
   }
 }

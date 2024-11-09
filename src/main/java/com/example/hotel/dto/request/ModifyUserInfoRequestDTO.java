@@ -15,11 +15,11 @@ import lombok.ToString;
 @ApiModel(value = "modify user info parameter")
 public class ModifyUserInfoRequestDTO extends Request {
   @NotEmpty(message = "Username cannot be empty")
-  @ApiModelProperty(value = "username", required = true, example = "Achilles")
-  private String username;
+  @ApiModelProperty(value = "userName", required = true, example = "Achilles")
+  private String userName;
 
   @NotEmpty(message = "phone cannot be empty")
-  @ApiModelProperty(value = "phone", required = true, example = "8339012345")
+  @ApiModelProperty(value = "phone", example = "8339012345")
   private String phone;
 
   @ApiModelProperty(value = "gender(0:male, 1:female, 2:secret)", example = "0")
@@ -27,6 +27,8 @@ public class ModifyUserInfoRequestDTO extends Request {
 
   @ApiModelProperty(value = "address", example = "Dublin")
   private String address;
+  @ApiModelProperty(value = "email", required = true, example = "11@@qq.com")
+  private String email;
   @ApiModelProperty(hidden = true)
   private String userId;
 }

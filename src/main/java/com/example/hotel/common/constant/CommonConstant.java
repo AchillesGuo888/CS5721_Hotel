@@ -20,4 +20,7 @@ public interface CommonConstant {
      * none
      */
     String NONE = "none";
+
+    /** email signal */
+    public static final String EMAIL = "@";
 }

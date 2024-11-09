@@ -2,39 +2,34 @@ package com.example.hotel.enums;
 
 /**
  * <pre>
- *     订单状态enum
+ *     order enum
  * </pre>
  */
-public enum OrderStatusEnum {
+public enum OrderStatusEnum implements BaseEnum<Byte>{
 
-    /**
-     * 待支付
-     */
-    NOT_PAY(0),
+    NOT_PAY("NOT_PAY",(byte)0),
+    HAS_PAY("HAS_PAY",(byte)1),
+    FINISHED("FINISHED",(byte)2),
+    ;
 
-    /**
-     * 已支付
-     */
-    HAS_PAY(1),
 
-    /**
-     * 已完结
-     */
-    FINISHED(2),
 
-    /**
-     * 已关闭
-     */
-    CLOSED(3);
+    private String desc;
+    private Byte code;
 
-    private Integer code;
-
-    OrderStatusEnum(Integer code) {
+    OrderStatusEnum(String desc, Byte code){
+        this.desc = desc;
         this.code = code;
     }
-
-    public Integer getCode() {
-        return code;
+    @Override
+    public Byte getCode() {
+        return this.code;
     }
+
+    @Override
+    public String getDesc() {
+        return this.desc;
+    }
+
 
 }
