@@ -10,14 +10,15 @@ import com.example.hotel.service.user.UserService;
 import com.example.hotel.util.VerificationCodeUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import javax.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -70,8 +71,8 @@ public class UserWithoutTokenController {
    *
    * @return
    */
-  @PutMapping("/forgetPassword")
-  @RequestMapping(value = "forgetPassword", method = RequestMethod.PUT)
+  @PostMapping("/forgetPassword")
+  @RequestMapping(value = "forgetPassword", method = RequestMethod.POST)
   public ResponseResult<UpdateInfoResponse> forgetPassword(@ApiParam(value = "forget password request", required = true) @RequestBody ForgetPasswordRequestDTO requestDTO) {
     try {
       return ResponseResult.ofSuccess(userService.forgetPassword(requestDTO));
@@ -86,7 +87,7 @@ public class UserWithoutTokenController {
    *
    * @return
    */
-  @PostMapping("/getVerificationCode ")
+  @PostMapping("/getVerificationCode")
   @RequestMapping(value = "getVerificationCode", method = RequestMethod.POST)
   public ResponseResult getVerificationCode(@ApiParam(value = "send verification", required = true) @RequestBody EmailValidateCodeRequestDTO requestDTO,
       HttpSession session) {

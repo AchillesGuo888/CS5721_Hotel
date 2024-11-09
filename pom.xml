@@ -80,13 +80,19 @@
 <!--        </dependency>-->
         <!--mybatis-plus end-->
 
-        <!--mybatis begin -->
+        <!-- MyBatis Spring Boot Starter 2.1.x 版本 -->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>2.3.0</version> <!-- 根据项目实际需要调整版本 -->
+            <version>2.1.0</version>  <!-- 与 Spring Boot 2.1.7.RELEASE 兼容 -->
         </dependency>
-        <!--mybatis end -->
+
+        <!-- MyBatis 3.5.x 版本 -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.5.3</version>  <!-- 与 Spring Boot 2.1.x 兼容 -->
+        </dependency>
 
         <!-- mysql-->
         <dependency>
