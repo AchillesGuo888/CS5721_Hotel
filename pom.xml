@@ -229,6 +229,24 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.15</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.11.0</version>
+        </dependency>
+
+
     </dependencies>
 
     <repositories>
@@ -254,8 +272,32 @@
                     <fork>true</fork>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.mybatis.generator</groupId>
+                <artifactId>mybatis-generator-maven-plugin</artifactId>
+                <version>1.4.1</version> <!-- 确保使用的是最新稳定版本 -->
+                <configuration>
+                    <!-- 指定 generatorConfig.xml 配置文件的位置 -->
+                    <configurationFile>src/main/resources/generatorConfig.xml</configurationFile>
+                    <!-- 启用覆盖模式 -->
+                    <overwrite>true</overwrite>
+                    <!-- 是否跳过在没有 JDBC Driver 时的警告 -->
+                    <verbose>true</verbose>
+                </configuration>
+                <dependencies>
+                    <!-- 添加数据库驱动，例如 MySQL 驱动 -->
+                    <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>8.0.33</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
         </plugins>
     </build>
+
+
 </project>
 
 
