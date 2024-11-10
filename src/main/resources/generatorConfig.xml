@@ -10,6 +10,10 @@
           userId="root"
           password="Cs5721__"/>
 
+        <javaTypeResolver type="org.mybatis.generator.internal.types.JavaTypeResolverDefaultImpl">
+            <property name="useJSR310Types" value="true"/>
+        </javaTypeResolver>
+
         <!-- 生成模型的目标包和输出路径 -->
         <javaModelGenerator targetPackage="com.example.hotel.entity" targetProject="src/main/java"/>
 
@@ -20,7 +24,7 @@
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.example.hotel.mapper" targetProject="src/main/java"/>
 
         <!-- 指定需要生成的表 -->
-        <table tableName="user" >
+        <table tableName="room_info" >
             <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
         </table>
     </context>

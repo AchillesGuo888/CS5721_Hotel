@@ -4,7 +4,6 @@ package com.example.hotel.controller;
 import com.example.hotel.common.base.ResponseResult;
 import com.example.hotel.dto.request.AddHotelRequestDTO;
 import com.example.hotel.dto.request.AddRoomRequestDTO;
-import com.example.hotel.dto.request.ChangeRoomRequestDTO;
 import com.example.hotel.dto.request.CheckInRequestDTO;
 import com.example.hotel.dto.request.DeleteHotelInfoRequestDTO;
 import com.example.hotel.dto.request.ModifyHotelInfoRequestDTO;
@@ -121,19 +120,6 @@ public class RoomController {
   public ResponseResult<CheckInResponse> checkInRoom(@RequestHeader("Authorization") String token,
       @ApiParam(value = "check in room", required = true)
       @RequestBody CheckInRequestDTO requestDTO) {
-    return ResponseResult.ofSuccess();
-  }
-
-  /**
-   * change room
-   *
-   * @return
-   */
-  @PostMapping("/changeRoom")
-  @RequestMapping(value = "changeRoom", method = RequestMethod.POST)
-  public ResponseResult changeRoom(@RequestHeader("Authorization") String token,
-      @ApiParam(value = "change room", required = true)
-      @RequestBody ChangeRoomRequestDTO requestDTO) {
     return ResponseResult.ofSuccess();
   }
 
