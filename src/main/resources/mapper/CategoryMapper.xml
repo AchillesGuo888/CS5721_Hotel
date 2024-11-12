@@ -20,4 +20,15 @@
             AND del_flag = 0
     </select>
 
+    <select id="findHotelsByConditions" resultType="Hotel">
+        SELECT * FROM hotel
+        WHERE
+            (#{name} IS NULL OR name LIKE CONCAT('%', #{name}, '%'))
+          AND (#{address} IS NULL OR address LIKE CONCAT('%', #{address}, '%'))
+          AND (#{city} IS NULL OR city LIKE CONCAT('%', #{city}, '%'))
+          AND (#{state} IS NULL OR state LIKE CONCAT('%', #{state}, '%'))
+          AND (#{country} IS NULL OR country LIKE CONCAT('%', #{country}, '%'))
+          AND (#{zipCode} IS NULL OR zip_code LIKE CONCAT('%', #{zipCode}, '%'))
+    </select>
+
 </mapper>

@@ -43,9 +43,31 @@ public interface HotelMapper extends BaseMapper<Hotel> {
      * @param city hotel city
      * @param state hotel state
      * @param country hotel country
+     * @param offset the offset for pagination
+     * @param limit the limit for pagination
      * @return list of eligible hotels
      */
     List<Hotel> findHotelsByLocation(@Param("city") String city,
                                      @Param("state") String state,
-                                     @Param("country") String country);
+                                     @Param("country") String country,
+                                     @Param("offset") int offset,
+                                     @Param("limit") int limit);
+
+    /**
+     * search hotels based on multiple conditions (name, address, city, state, country, zipCode)
+     * @param name hotel name (optional)
+     * @param address hotel address (optional)
+     * @param city hotel city (optional)
+     * @param state hotel state (optional)
+     * @param country hotel country (optional)
+     * @param zipCode hotel zip code (optional)
+     * @return list of matching hotels
+     */
+    List<Hotel> findHotelsByConditions(@Param("name") String name,
+                                       @Param("address") String address,
+                                       @Param("city") String city,
+                                       @Param("state") String state,
+                                       @Param("country") String country,
+                                       @Param("zipCode") String zipCode);
+
 }

@@ -16,6 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.management.Query;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Insert;
@@ -70,7 +71,7 @@ public class HotelController {
   }
 
   /**
-   * query Hotel info
+   * query Hotel info by id
    *
    * @return
    */
@@ -80,8 +81,27 @@ public class HotelController {
       @RequestHeader("Authorization") String token,
       @ApiParam(value = "query hotel details ", required = true)
       @RequestBody QueryHotelRequestDTO queryHotelRequestDTO) {
+    //get hotelId
+    Long hotelId = queryHotelRequestDTO.getHotelId();
+    Hotel hotel = HotelMapper.findHotelById(hotelId);
+    //check
+    if(hotel == null) {
+      return ResponseResult.ofError(404L,"Hotel not found");
+    }
 
-    return ResponseResult.ofSuccess();
+    HotelDetailResponse response = HotelDetailResponse.builder()
+            .name(hotel.getName())
+            .address(hotel.getAddress())
+            .city(hotel.getCity())
+            .state(hotel.getState())
+            .country(hotel.getCountry())
+            .zipCode(hotel.getZipCode())
+            .facilities(hotel.getFacilities())
+            .totalRooms(hotel.getTotalRooms())
+            .phoneNumber(hotel.getPhoneNumber())
+            .build();
+
+    return ResponseResult.ofSuccess(response);
   }
 
   /**
@@ -92,6 +112,27 @@ public class HotelController {
   @PutMapping("/modifyHotelInfo")
   @RequestMapping(value = "modifyHotelInfo", method = RequestMethod.PUT)
   public ResponseResult modifyHotelInfo(@RequestHeader("Authorization") String token,@ApiParam(value = "Hotel details", required = true) @RequestBody ModifyHotelInfoRequestDTO modifyHotelInfoRequestDTOInfo) {
+    //get Id
+    Long hotelId = modifyHotelInfoRequestDTOInfo.getHotelId();
+    //search hotel information
+    Hotel hotel = HotelMapper.findHotelById(hotelId);
+    //check
+    if(hotel == null){
+      return ResponseResult.ofError(404L,"Hotel not found");
+    }
+
+    //update hotel information
+    hotel.setName(modifyHotelInfoRequestDTOInfo.getName());
+    hotel.setAddress(modifyHotelInfoRequestDTOInfo.getAddress());
+    hotel.setCity(modifyHotelInfoRequestDTOInfo.getCity());
+    hotel.setState(modifyHotelInfoRequestDTOInfo.getState());
+    hotel.setCountry(modifyHotelInfoRequestDTOInfo.getCountry());
+    hotel.setZipCode(modifyHotelInfoRequestDTOInfo.getZipCode());
+    hotel.setFacilities(modifyHotelInfoRequestDTOInfo.getFacilities());
+    hotel.setTotalRooms(modifyHotelInfoRequestDTOInfo.getTotalRooms());
+    hotel.setPhoneNumber(modifyHotelInfoRequestDTOInfo.getPhoneNumber());
+
+    HotelMapper.modifyHotel(hotel);
 
     return ResponseResult.ofSuccess();
   }
@@ -116,6 +157,37 @@ public class HotelController {
   @PostMapping("/queryHotelList")
   @RequestMapping(value = "queryHotelList", method = RequestMethod.POST)
   public ResponseResult<List<AvailableHotelResponse>> queryUserInfo(@RequestHeader("Authorization") String token,@ApiParam(value = "query hotel details ", required = true) @RequestBody QueryHotelRequestDTO queryHotelRequestDTO) {
+
+    //Get query conditions
+    String name = queryHotelRequestDTO.getName();
+    String address = queryHotelRequestDTO.getAddress();
+    String city = queryHotelRequestDTO.getCity();
+    String state = queryHotelRequestDTO.getState();
+    String country = queryHotelRequestDTO.getCountry();
+    String zipCode = queryHotelRequestDTO.getZipCode();
+
+    //Search for hotels that meet your criteria
+    List<Hotel> hotels = HotelMapper.findHotelsByConditions(name,address, city, state, country, zipCode);
+
+    //check
+    if(hotels == null || hotels.isEmpty()){
+      return ResponseResult.ofError(404L, "No hotels found matching the given criteria");
+    }
+
+    List<HotelDetailResponse> response = hotels.stream()
+            .map(hotel -> HotelDetailResponse.builder()
+                    .name(hotel.getName())
+                    .address(hotel.getAddress())
+                    .city(hotel.getCity())
+                    .state(hotel.getState())
+                    .country(hotel.getCountry())
+                    .zipCode(hotel.getZipCode())
+                    .facilities(hotel.getFacilities())
+                    .totalRooms(hotel.getTotalRooms())
+                    .phoneNumber(hotel.getPhoneNumber())
+                    .build())
+            .collect(Collectors.toList());
+
     return ResponseResult.ofSuccess();
   }
 

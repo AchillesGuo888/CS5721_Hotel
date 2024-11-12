@@ -1,5 +1,6 @@
 package com.example.hotel.common.base;
 
+import com.example.hotel.dto.response.HotelDetailResponse;
 import com.example.hotel.util.JSONUtil;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
