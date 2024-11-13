@@ -20,7 +20,7 @@ import java.util.List;
 public interface OrderMapper extends BaseMapper<Order> {
 
     /**
-     * 根据时间范围查询订单
+     * Query orders by time range
      *
      * @param startDate
      * @param endDate
@@ -31,13 +31,13 @@ public interface OrderMapper extends BaseMapper<Order> {
                         Page page);
 
     /**
-     * 根据订单 ID 查找订单
+     * Find an order by order ID
      */
     @Select("SELECT * FROM orders WHERE id = #{orderId}")
     Order findOrderById(@Param("orderId")Long orderId);
 
     /**
-     * 根据时间范围查询总金额
+     * Query the total amount by time range
      *
      * @param startDate
      * @param endDate
@@ -47,7 +47,7 @@ public interface OrderMapper extends BaseMapper<Order> {
                              @Param("endDate") String endDate);
 
     /**
-     * 取消订单
+     * Cancel order
      *
      * @param orderId
      * @param status
@@ -56,5 +56,12 @@ public interface OrderMapper extends BaseMapper<Order> {
     int cancelOrder(@Param("orderId") Long orderId,
                     @Param("status") Integer status);
 
+    /**
+     * Find the number of bookings associated with a given hotel
+     *
+     * @param hotelId
+     * @return number of orders
+     */
+    int findOrdersByHotelId(@Param("hotelId") Long hotelId);
 }
 

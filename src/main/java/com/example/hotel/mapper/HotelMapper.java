@@ -68,6 +68,8 @@ public interface HotelMapper extends BaseMapper<Hotel> {
                                        @Param("city") String city,
                                        @Param("state") String state,
                                        @Param("country") String country,
-                                       @Param("zipCode") String zipCode);
+                                       @Param("zipCode") String zipCode,
+                                       @Param("offset") int offset,
+                                       @Param("size") int size);
 
 }

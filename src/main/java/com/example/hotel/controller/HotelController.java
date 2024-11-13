@@ -11,6 +11,7 @@ import com.example.hotel.dto.response.AvailableHotelResponse;
 import com.example.hotel.dto.response.HotelDetailResponse;
 import com.example.hotel.entity.Hotel;
 import com.example.hotel.mapper.HotelMapper;
+import com.example.hotel.mapper.OrderMapper;
 import com.example.hotel.util.JwtUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -41,6 +42,7 @@ public class HotelController {
   @Autowired
   private JwtUtil jwtUtil;
   private HotelMapper HotelMapper;
+  private OrderMapper orderMapper;
 
   /**
    * add hotel
@@ -145,8 +147,29 @@ public class HotelController {
   @DeleteMapping("/deleteHotel")
   @RequestMapping(value = "deleteHotel", method = RequestMethod.DELETE)
   public ResponseResult deleteHotel(@RequestHeader("Authorization") String token,@ApiParam(value = "delete hotel", required = true) @RequestBody DeleteHotelInfoRequestDTO deleteHotelInfoRequestDTO) {
+    //get Id
+    Long hotelId = deleteHotelInfoRequestDTO.getHotelId();
 
-    return ResponseResult.ofSuccess();
+    //check if null
+    if(hotelId == null){
+      return ResponseResult.ofError(400L,"Hotel Id is required");
+    }
+
+    //check if there are any reservations associated with this hotel
+    int orderCount = orderMapper.findOrdersByHotelId(hotelId);
+    if(orderCount > 0){
+      return ResponseResult.ofError(403L,"Cannot delete hotel with existing orders");
+    }
+
+    //delete hotel
+    int deletedRows = HotelMapper.deleteHotelById(hotelId);
+
+    //check result
+    if(deletedRows > 0){
+      return ResponseResult.ofSuccess();
+    }else{
+      return ResponseResult.ofError(404L,"Hotel not found or could not be deleted");
+    }
   }
 
   /**
@@ -166,8 +189,13 @@ public class HotelController {
     String country = queryHotelRequestDTO.getCountry();
     String zipCode = queryHotelRequestDTO.getZipCode();
 
-    //Search for hotels that meet your criteria
-    List<Hotel> hotels = HotelMapper.findHotelsByConditions(name,address, city, state, country, zipCode);
+    //page
+    int page = queryHotelRequestDTO.getPage();
+    int size = queryHotelRequestDTO.getSize();
+    int offset = (page - 1) * size;
+
+    //Search for hotels that meet criteria
+    List<Hotel> hotels = HotelMapper.findHotelsByConditions(name,address, city, state, country, zipCode, offset, size);
 
     //check
     if(hotels == null || hotels.isEmpty()){
@@ -190,6 +218,4 @@ public class HotelController {
 
     return ResponseResult.ofSuccess();
   }
-
-
 }
