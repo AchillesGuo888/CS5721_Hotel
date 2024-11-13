@@ -173,7 +173,7 @@ public class HotelController {
   }
 
   /**
-   * query hotel list(with price)
+   * query hotel list by conditions
    *
    * @return
    */
