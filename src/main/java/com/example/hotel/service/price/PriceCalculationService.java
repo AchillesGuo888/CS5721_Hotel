@@ -1,15 +1,17 @@
 package com.example.hotel.service.price;
 
 
-import com.example.hotel.dto.request.BookRoomRequestDTO;
+
 import com.example.hotel.dto.request.PrebookRoomRequestDTO;
 import com.example.hotel.dto.response.PreBookRoomResponse;
+import com.example.hotel.dto.response.PriceResponse;
+
 import com.example.hotel.exception.BizException;
+import java.math.BigDecimal;
 
 
-public interface OrderInfoService {
+public interface PriceCalculationService {
 
-    Boolean bookRoom(BookRoomRequestDTO requestDTO, String token) throws BizException;
-
-    PreBookRoomResponse pregenerateOrder(PrebookRoomRequestDTO requestDTO, String token) throws BizException;
+  PriceResponse calculateOrderPrice(PrebookRoomRequestDTO requestDTO, BigDecimal originalPrice,
+      String userId) throws BizException;
 }

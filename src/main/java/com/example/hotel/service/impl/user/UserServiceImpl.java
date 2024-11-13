@@ -346,7 +346,8 @@ public class UserServiceImpl implements UserService {
    * @param userId
    * @return
    */
-  private User findUserByUserId(String userId) throws BizException {
+  @Override
+  public User findUserByUserId(String userId) throws BizException {
     UserExample example = new UserExample();
     UserExample.Criteria criteria = example.createCriteria();
     criteria.andUserIdEqualTo(userId);

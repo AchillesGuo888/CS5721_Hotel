@@ -8,6 +8,7 @@ import com.example.hotel.dto.request.UserLoginRequestDTO;
 import com.example.hotel.dto.response.RegisterResponse;
 import com.example.hotel.dto.response.UpdateInfoResponse;
 import com.example.hotel.dto.response.UserInfoResponse;
+import com.example.hotel.entity.User;
 import com.example.hotel.exception.BizException;
 
 
@@ -61,4 +62,11 @@ public interface UserService {
      */
     UpdateInfoResponse updateUserInfo(ModifyUserInfoRequestDTO requestDTO, String token) throws BizException;
 
+    /**
+     * query user info by userId
+     * @param userId
+     * @return
+     * @throws BizException
+     */
+    User findUserByUserId(String userId) throws BizException;
 }

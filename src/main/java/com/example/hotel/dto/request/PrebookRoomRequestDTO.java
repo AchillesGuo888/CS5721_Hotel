@@ -14,7 +14,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @ToString
-@ApiModel("book room request parameter")
+@ApiModel("pre-book room request parameter")
 public class PrebookRoomRequestDTO extends Request {
 
   @NotEmpty(message = "hotel id cannot be empty")
@@ -33,24 +33,8 @@ public class PrebookRoomRequestDTO extends Request {
   @ApiModelProperty(value = "endDate", required = true, example = "2024-12-25")
   private LocalDate endDate;
 
-  @NotEmpty(message = "contact name cannot be empty")
-  @ApiModelProperty(value = "contactName", required = true, example = "2024-12-25")
-  private String contactName;
-
-  @NotEmpty(message = "contact phone cannot be empty")
-  @ApiModelProperty(value = "contactPhone", required = true, example = "2024-12-25")
-  private String contactPhone;
-
-  @NotEmpty(message = "guest names cannot be empty")
-  @ApiModelProperty(value = "guestNames", required = true, example = "[a,b]")
-  private List<String> guestNames;
-
-  @NotEmpty(message = "Estimated time of arrival cannot be empty")
-  @ApiModelProperty(value = "estimatedArrivalTime", required = true, example = "17:00")
-  private LocalTime estimatedArrivalTime;
-
-  @ApiModelProperty(value = "room count", example = "1")
-  private Integer roomCount;
+  @ApiModelProperty(value = "room count(default count is 1 room)", example = "1")
+  private Integer roomCount=1;
 
 
 

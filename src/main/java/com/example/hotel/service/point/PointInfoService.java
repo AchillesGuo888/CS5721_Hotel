@@ -14,59 +14,6 @@ import com.example.hotel.exception.BizException;
 
 public interface PointInfoService {
 
-    /**
-     * user sign up
-     *
-     * @param requestDTO
-     * @return
-     */
-    RegisterResponse userSignUp(RegisterRequestDTO requestDTO) throws BizException;
 
-    /**
-     * user login interface
-     * @param requestDTO
-     * @return
-     */
-    RegisterResponse userLogin(UserLoginRequestDTO requestDTO) throws BizException;
-
-    /**
-     * user logout interface
-     * @param token
-     */
-    void userLogout(String token);
-
-    /**
-     * change password
-     *
-     * @param requestDTO
-     * @return
-     */
-    UpdateInfoResponse modifyPassword(PasswordModifyRequestDTO requestDTO) throws BizException;
-
-    /**
-     * forget password
-     *
-     * @param requestDTO
-     * @return
-     * @throws BizException
-     */
-    UpdateInfoResponse forgetPassword(ForgetPasswordRequestDTO requestDTO) throws BizException;
-
-    /**
-     * get user info
-     */
-    UserInfoResponse getUserInfo(String token) throws BizException;
-
-    /**
-     * update user info
-     */
-    UpdateInfoResponse updateUserInfo(ModifyUserInfoRequestDTO requestDTO, String token) throws BizException;
-
-    /**
-     * query user info by userId
-     * @param userId
-     * @return
-     * @throws BizException
-     */
-    User findUserByUserId(String userId) throws BizException;
+    Integer getUserPointCount(String userId);
 }
