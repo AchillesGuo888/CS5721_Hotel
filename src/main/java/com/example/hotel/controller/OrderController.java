@@ -24,13 +24,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -86,7 +80,7 @@ public class OrderController {
   }
 
   /**
-   * cancel order
+   * admin cancel order
    *
    * @return
    */
@@ -95,16 +89,36 @@ public class OrderController {
   public ResponseResult cancelOrder(@RequestHeader("Authorization") String token,
       @ApiParam(value = "cancel order", required = true)
       @RequestBody CancelOrderRequestDTO requestDTO) {
-    Order order = orderMapper.findOrderById(requestDTO.getOrderId());
+    Order order = OrderMapper.findOrderById(requestDTO.getOrderId());
     if(order == null){
-      //订单未找到，返回错误响应
+      //can't find order
       return ResponseResult.ofError(404L,"Oder not found");
     }
 
-    //更新订单状态为已取消
+    //update status be canceled
     orderMapper.cancelOrder(requestDTO.getOrderId(), OrderStatusEnum.CANCELLED.getCode());
     return ResponseResult.ofSuccess();
   }
+
+  @PostMapping("/requestCancelOrder")
+  public ResponseResult requestCancelOrder(
+          @RequestHeader("Authorization") String token,
+          @ApiParam(value = "Order ID", required = true) @RequestParam Long orderId) {
+
+    // Check if the order exists
+    Order order = OrderMapper.findOrderById(orderId);
+    if (order == null) {
+      return ResponseResult.ofError(404L, "Order not found");
+    }
+
+    // Record the cancellation request and mark it as awaiting review
+    order.setStatus(4);
+    orderMapper.updateOrder(order);
+
+    return ResponseResult.ofSuccess("Cancel request submitted, awaiting admin approval.");
+  }
+
+
 
   /**
    * query order list

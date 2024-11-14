@@ -49,9 +49,13 @@ public class Order extends BaseEntity {
      */
     private String startDate;
 
+    /**
+     * order id
+     */
+    private Long orderId;
 
     /**
-     * 订单状态：0待支付，1已支付，2已完结，3已取消
+     * 订单状态：0待支付，1已支付，2已完结，3已取消，4申请取消待审核
      */
     private Integer status;
 
@@ -60,4 +64,12 @@ public class Order extends BaseEntity {
     private String postTitle;
     private String postNumber;
 
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    // Setter方法
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
 }

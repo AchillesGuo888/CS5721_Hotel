@@ -74,5 +74,27 @@ public class JwtUtil {
       return null;
     }
   }
+
+  // Get role from Token
+  public static Integer getRoleFromToken(String token) {
+    try {
+      Claims claims = Jwts.parser()
+              .setSigningKey(SECRET_KEY)
+              .parseClaimsJws(token)
+              .getBody();
+      return claims.get("role", Integer.class); // get role
+    } catch (SignatureException e) {
+      return null;
+    } catch (Exception e) {
+      return null;
+    }
+  }
+
+  public boolean isAdmin(String token) {
+    String userId = JwtUtil.getUserIdFromToken(token);
+    Integer role = getRoleFromToken(token);
+    return RoleEnum.ADMIN.getValue().equals(role);  // Determine whether the user is an administrator
+  }
+
 }
 

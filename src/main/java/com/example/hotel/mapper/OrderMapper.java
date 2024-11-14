@@ -34,7 +34,9 @@ public interface OrderMapper extends BaseMapper<Order> {
      * Find an order by order ID
      */
     @Select("SELECT * FROM orders WHERE id = #{orderId}")
-    Order findOrderById(@Param("orderId")Long orderId);
+    static Order findOrderById(@Param("orderId") Long orderId) {
+        return null;
+    }
 
     /**
      * Query the total amount by time range
@@ -63,5 +65,13 @@ public interface OrderMapper extends BaseMapper<Order> {
      * @return number of orders
      */
     int findOrdersByHotelId(@Param("hotelId") Long hotelId);
+
+    /**
+     * Update order information based on order ID
+     * @param order order, containing the updated fields
+     * @return Number of records updated
+     */
+    @Update("UPDATE orders SET status = #{status}, amount = #{amount}, payment_id = #{paymentId}, earned_points = #{earnedPoints} WHERE order_id = #{orderId}")
+    int updateOrder(Order order);
 }
 
