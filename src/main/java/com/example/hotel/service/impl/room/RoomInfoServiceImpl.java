@@ -46,11 +46,10 @@ public class RoomInfoServiceImpl implements RoomInfoService {
         // Set the room attributes based on the DTO
         roomInfo.setHotelId(requestDTO.getHotelId());
         roomInfo.setRoomTypeId(requestDTO.getRoomTypeId());
-        roomInfo.setRoomNumber(requestDTO.getRoomNumber());
         roomInfo.setRoomKey(requestDTO.getRoomKey());
         roomInfo.setUpdateTime(requestDTO.getUpdateTime()); // or use the provided update time from DTO if needed
         roomInfo.setCreateTime(requestDTO.getCreateTime()); // or use the provided create time from DTO if needed
-        roomInfo.setIsDeleted(requestDTO.getIsDeleted());
+        roomInfo.setIsDeleted((byte) 0);
 
         // Insert the room info into the database
         roomInfoMapper.insert(roomInfo);

@@ -13,5 +13,5 @@ import lombok.ToString;
 @ApiModel(value = "query room info parameter")
 public class QueryRoomRequestDTO extends Request {
     @ApiModelProperty(value = "room id",required = true, example = "01")
-    private int roomId;
+    private Long roomId;
 }

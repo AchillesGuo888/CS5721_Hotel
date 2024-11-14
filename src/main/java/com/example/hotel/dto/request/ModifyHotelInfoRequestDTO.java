@@ -11,5 +11,5 @@ import lombok.ToString;
 @ToString
 @ApiModel(value = "modify hotel info parameter")
 public class ModifyHotelInfoRequestDTO extends Request {
-
+    
 }

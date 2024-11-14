@@ -11,5 +11,5 @@ import lombok.ToString;
 @ToString
 @ApiModel("add room type request parameter")
 public class AddRoomTypeRequestDTO extends Request {
-
+    
 }
