@@ -26,9 +26,6 @@ public class DiamondPriceServiceImpl implements PriceCalculationService {
     //pointsDiscount = TotalPoints*expensePointLimit
     //expressPoints = TotalPoints
     //memberPrice = TotalPrice* MembershipDiscount
-    //if pointsDiscount>memberPrice*expensePointLimit -> pointsDiscount = RealPrice*expensePointLimit
-    //                                              -> expressPoints = pointsDiscount/expensePointLimit
-
     //RealPrice = memberPrice - pointsDiscount
     //EarnPointsCount = RealPrice * pointsRule
 

@@ -17,9 +17,6 @@ import org.springframework.context.ApplicationContext;
  * <pre>
  *     SENS run!
  * </pre>
- *
- * @author : saysky
- * @date : 2017/11/14
  */
 
 @SpringBootApplication(exclude = MybatisAutoConfiguration.class)
