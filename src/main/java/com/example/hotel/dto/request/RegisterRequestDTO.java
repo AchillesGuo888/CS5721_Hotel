@@ -45,4 +45,7 @@ public class RegisterRequestDTO extends Request {
   @ApiModelProperty(value = "address", example = "Dublin")
   @JsonProperty(value = "address")
   private String address;
+
+  @ApiModelProperty(value = "user type", hidden = true,example = "1")
+  private Byte userType;
 }
