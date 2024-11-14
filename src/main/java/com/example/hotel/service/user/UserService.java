@@ -10,6 +10,7 @@ import com.example.hotel.dto.response.UpdateInfoResponse;
 import com.example.hotel.dto.response.UserInfoResponse;
 import com.example.hotel.entity.User;
 import com.example.hotel.exception.BizException;
+import javax.servlet.http.HttpServletRequest;
 
 
 public interface UserService {
@@ -25,15 +26,18 @@ public interface UserService {
     /**
      * user login interface
      * @param requestDTO
+     * @param httpServletRequest
      * @return
      */
-    RegisterResponse userLogin(UserLoginRequestDTO requestDTO) throws BizException;
+    RegisterResponse userLogin(UserLoginRequestDTO requestDTO,
+        HttpServletRequest httpServletRequest) throws BizException;
 
     /**
      * user logout interface
      * @param token
+     * @param httpServletRequest
      */
-    void userLogout(String token);
+    void userLogout(String token, HttpServletRequest httpServletRequest);
 
     /**
      * change password

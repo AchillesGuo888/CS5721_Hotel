@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
     //auth user info
     auth.auth();
     //create token and return result
-    String token = JwtUtil.generateToken(auth.getCurrentUser().getUserId(), UserTypeEnum.USER.getCode());
+    String token = JwtUtil.generateToken(auth.getCurrentUser().getUserId(), auth.getCurrentUser().getUserType());
     //create session
 
     if (auth.getCurrentUser() != null) {

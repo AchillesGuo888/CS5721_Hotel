@@ -16,6 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/user/withToken")
 @Api(tags = "User API")
 public class UserController {
 
@@ -48,8 +49,8 @@ public class UserController {
    */
   @PostMapping("/logout")
   @RequestMapping(value = "userLogout", method = RequestMethod.POST)
-  public ResponseResult userLogout(@RequestHeader("Authorization") String token) {
-      userService.userLogout(token);
+  public ResponseResult userLogout(@RequestHeader("Authorization") String token, HttpServletRequest httpServletRequest) {
+      userService.userLogout(token,httpServletRequest);
       return ResponseResult.ofSuccess();
   }
 
