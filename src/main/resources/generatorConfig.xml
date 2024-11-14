@@ -9,11 +9,17 @@
           connectionURL="jdbc:mysql://rm-bp1k160qpstc9hojzto.mysql.rds.aliyuncs.com:3306/hotel"
           userId="root"
           password="Cs5721__"/>
+<<<<<<< HEAD
 
         <javaTypeResolver type="org.mybatis.generator.internal.types.JavaTypeResolverDefaultImpl">
             <property name="useJSR310Types" value="true"/>
         </javaTypeResolver>
 
+=======
+        <javaTypeResolver type="org.mybatis.generator.internal.types.JavaTypeResolverDefaultImpl">
+            <property name="useJSR310Types" value="true"/>
+        </javaTypeResolver>
+>>>>>>> origin/dev_rui
         <!-- 生成模型的目标包和输出路径 -->
         <javaModelGenerator targetPackage="com.example.hotel.entity" targetProject="src/main/java"/>
 
@@ -24,8 +30,13 @@
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.example.hotel.mapper" targetProject="src/main/java"/>
 
         <!-- 指定需要生成的表 -->
+<<<<<<< HEAD
         <table tableName="room_info" >
             <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
+=======
+        <table tableName="payment_info" >
+            <generatedKey column="id" sqlStatement="MYSQL" identity="true"/>
+>>>>>>> origin/dev_rui
         </table>
     </context>
 </generatorConfiguration>

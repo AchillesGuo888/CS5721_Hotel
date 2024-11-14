@@ -40,10 +40,22 @@ public class JwtUtil {
     if (isTokenBlacklisted(token)) {
       throw new JwtException("Token is blacklisted");
     }
-    return Jwts.parser()
-        .setSigningKey(SECRET_KEY)
-        .parseClaimsJws(token)
-        .getBody();
+    try{
+      return Jwts.parser()
+          .setSigningKey(SECRET_KEY)
+          .parseClaimsJws(token)
+          .getBody();
+    }catch (ExpiredJwtException e) {
+      throw new JwtException("Token has expired");
+
+    } catch (SignatureException e) {
+      throw new JwtException("Invalid JWT signature.");
+
+    } catch (Exception e) {
+      throw new JwtException("JWT parsing error.");
+
+    }
+
   }
 
   // put Token into blacklist

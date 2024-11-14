@@ -50,7 +50,7 @@ public class HotelAndTypeServiceImpl implements HotelAndTypeService {
     List<AvailableRoomCountDTO> hotelRoomTypeList =
         orderAndDetailService.queryAvailableRoomType(hotelIds,
             requestDTO.getStartDate(),
-        requestDTO.getEndDate(),requestDTO.getQuantity());
+        requestDTO.getEndDate(),requestDTO.getQuantity(),null);
     if (CollectionUtils.isEmpty(hotelRoomTypeList)){
       return response;
     }
@@ -83,7 +83,7 @@ public class HotelAndTypeServiceImpl implements HotelAndTypeService {
     List<AvailableRoomCountDTO> roomTypeInfoList =
         orderAndDetailService.queryAvailableRoomType(hotelIds,
             requestDTO.getStartDate(),
-            requestDTO.getEndDate(),requestDTO.getQuantity());
+            requestDTO.getEndDate(),requestDTO.getQuantity(),null);
 
     //get room type and price map
     List<Long> roomTypeIds = roomTypeInfoList.stream()

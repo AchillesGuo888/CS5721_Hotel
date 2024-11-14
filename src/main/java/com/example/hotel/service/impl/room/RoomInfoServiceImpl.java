@@ -14,6 +14,7 @@ import com.example.hotel.entity.RoomInfo;
 import com.example.hotel.entity.RoomInfoExample;
 import com.example.hotel.entity.RoomTypeInfo;
 import com.example.hotel.entity.RoomTypeInfoExample;
+import com.example.hotel.exception.BizException;
 import com.example.hotel.mapper.RoomInfoMapper;
 import com.example.hotel.mapper.RoomTypeInfoMapper;
 
@@ -39,20 +40,17 @@ public class RoomInfoServiceImpl implements RoomInfoService {
     private final RoomInfoMapper roomInfoMapper;
 
     @Override
-    public void addRoom(AddRoomRequestDTO requestDTO) {
+    public void addRoom(AddRoomRequestDTO requestDTO) throws BizException {
         // Create a RoomInfo entity from the AddRoomRequestDTO
         RoomInfo roomInfo = new RoomInfo();
         
         // Set the room attributes based on the DTO
         roomInfo.setHotelId(requestDTO.getHotelId());
         roomInfo.setRoomTypeId(requestDTO.getRoomTypeId());
-        roomInfo.setRoomKey(requestDTO.getRoomKey());
-        roomInfo.setUpdateTime(requestDTO.getUpdateTime()); // or use the provided update time from DTO if needed
-        roomInfo.setCreateTime(requestDTO.getCreateTime()); // or use the provided create time from DTO if needed
-        roomInfo.setIsDeleted((byte) 0);
+        roomInfo.setRoomNumber(requestDTO.getRoomNumber());
 
         // Insert the room info into the database
-        roomInfoMapper.insert(roomInfo);
+        roomInfoMapper.insertSelective(roomInfo);
         
         log.info("Room info added successfully: {} in hotel {}", roomInfo.getRoomNumber(), roomInfo.getHotelId());
     }

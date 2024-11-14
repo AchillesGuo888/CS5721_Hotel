@@ -14,11 +14,15 @@ import com.example.hotel.dto.response.AvailableHotelResponse;
 import com.example.hotel.dto.response.CheckInResponse;
 import com.example.hotel.dto.response.HotelDetailResponse;
 import com.example.hotel.dto.response.RoomDetailResponse;
+import com.example.hotel.service.room.RoomInfoService;
+import com.example.hotel.exception.BizException;
 import com.example.hotel.util.JwtUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import java.util.List;
+
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,9 +38,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/room")
 @Api(tags = "Room API")
+@AllArgsConstructor
 public class RoomController {
 
-
+  private final RoomInfoService roomInfoService;
   @Autowired
   private JwtUtil jwtUtil;
 
@@ -45,12 +50,18 @@ public class RoomController {
    *
    * @return
    */
-  @PostMapping("/add")
+  @PostMapping("/addRoom")
   @RequestMapping(value = "addRoom", method = RequestMethod.POST)
   public ResponseResult addRoom(@RequestHeader("Authorization") String token,
       @ApiParam(value = "room details", required = true)
       @RequestBody AddRoomRequestDTO requestDTO) {
-      return ResponseResult.ofSuccess();
+      try {
+        roomInfoService.addRoom(requestDTO);
+        return ResponseResult.ofSuccess();
+      } catch (BizException e) {
+        log.error("user login error", e);
+        return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
+      }
   }
 
   /**

@@ -3,12 +3,11 @@ package com.example.hotel.util;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
-/**
- * @author 言曌
- * @date 2020/4/5 4:36 下午
- */
+
 
 public class DateUtil {
 
@@ -58,6 +57,11 @@ public class DateUtil {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public static Long getBetweenDays(LocalDate startDate,LocalDate endDate){
+        long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
+        return daysBetween;
     }
 
     public static void main(String[] args) {
