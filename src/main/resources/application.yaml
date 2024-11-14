@@ -99,9 +99,19 @@ mail:
   socketFactoryClass: javax.net.ssl.SSLSocketFactory
   socketFactoryFallback: true
   socketFactoryPort: 465
-#swagger3文档配置
-springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
-  api-docs:
-    path: /v3/api-docs
+#swagger3 config
+#springdoc:
+#  swagger-ui:
+#    path: /swagger-ui.html
+#  api-docs:
+#    path: /v3/api-docs
+
+#bank
+aib:
+  api-url: "https://api.aibms.com/payment"  # mock AIB API URL
+  merchant-id: "12345678"  # mock AIB API merchant id
+  api-key: "CS5721_AIB"  # mock AIB API Id
+  secret-key: "Limerick"  # mock AIB API secret key
+  currency: "EUR"
+  payment-method: "CREDIT_CARD"
+

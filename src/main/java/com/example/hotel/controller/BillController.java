@@ -10,11 +10,13 @@ import com.example.hotel.dto.request.PayDifferenceRequestDTO;
 import com.example.hotel.dto.request.QueryHotelRequestDTO;
 import com.example.hotel.dto.response.AvailableHotelResponse;
 import com.example.hotel.dto.response.HotelDetailResponse;
+import com.example.hotel.service.bill.BillService;
 import com.example.hotel.util.JwtUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,11 +31,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/bill")
 @Api(tags = "Bill API")
+@AllArgsConstructor
 public class BillController {
 
-
-  @Autowired
-  private JwtUtil jwtUtil;
+  private final BillService billService;
 
   /**
    * pay room bill

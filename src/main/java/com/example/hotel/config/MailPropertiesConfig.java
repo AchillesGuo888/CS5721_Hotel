@@ -24,7 +24,7 @@ public class MailPropertiesConfig {
 
     private String user;
     /**
-     * 密码或者授权码
+     * password or grant code
      */
     private String pass;
 

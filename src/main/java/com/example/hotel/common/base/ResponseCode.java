@@ -30,7 +30,10 @@ public enum ResponseCode implements BaseEnum<Long> {
     room_count_error("There is no more rooms for all guests", "", 2001L),
     room_type_not_exists("Can't find this room type", "", 2002L),
     room_price_change("Room price has change,please refresh！", "", 2003L),
+
     hotel_not_exists("Can't find this hotel","",3001L),
+
+    pay_error("Insufficient account balance or incorrect information","",4001L),
     ;
 
     private String desc;
