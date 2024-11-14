@@ -4,6 +4,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.example.hotel.common.base.ResponseCode;
 import com.example.hotel.common.constant.CommonConstant;
+import com.example.hotel.dto.SessionUser;
 import com.example.hotel.dto.request.ForgetPasswordRequestDTO;
 import com.example.hotel.dto.request.ModifyUserInfoRequestDTO;
 import com.example.hotel.dto.request.PasswordModifyRequestDTO;
@@ -29,6 +30,8 @@ import com.example.hotel.util.ValidateUtils;
 import com.example.hotel.util.VerificationCodeUtil;
 import com.google.common.base.Strings;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -81,7 +84,8 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public RegisterResponse userLogin(UserLoginRequestDTO requestDTO) throws BizException {
+  public RegisterResponse userLogin(UserLoginRequestDTO requestDTO,
+      HttpServletRequest httpServletRequest) throws BizException {
 
     //get auth tool
     AbstractAuth auth = getAuth(requestDTO);
@@ -89,14 +93,25 @@ public class UserServiceImpl implements UserService {
     auth.auth();
     //create token and return result
     String token = JwtUtil.generateToken(auth.getCurrentUser().getUserId(), UserTypeEnum.USER.getCode());
+    //create session
+
+    if (auth.getCurrentUser() != null) {
+      HttpSession session = httpServletRequest.getSession();
+      SessionUser sessionUser = new SessionUser();
+      BeanUtils.copyProperties(auth.getCurrentUser(),sessionUser);
+      session.setAttribute("user", sessionUser); // 将用户信息保存到 session
+      session.setMaxInactiveInterval(1800);
+    }
     return RegisterResponse.builder().accessToken(token).build();
   }
 
   @Override
-  public void userLogout(String token) {
+  public void userLogout(String token, HttpServletRequest httpServletRequest) {
     if (StringUtils.isNotEmpty(token)&&token.startsWith("Bearer ")){
       jwtUtil.blacklistToken(token.substring(7)); // put Token into blacklist
       SecurityContextHolder.clearContext();
+      //destroy session
+      httpServletRequest.getSession().invalidate();
     }
 
   }
@@ -267,7 +282,7 @@ public class UserServiceImpl implements UserService {
     User newUser = new User();
     BeanUtils.copyProperties(requestDTO, newUser);
     // store salt secret in DB
-    String passwordInDb = Md5Util.getSaltMd5AndSha(requestDTO.getEmail(), salt);
+    String passwordInDb = Md5Util.getSaltMd5AndSha(requestDTO.getPassword(), salt);
     Long newUserId = Md5Util.createNewUserId();
     newUser.setUserId(newUserId.toString());
     newUser.setPassword(passwordInDb);
@@ -316,7 +331,7 @@ public class UserServiceImpl implements UserService {
   private AbstractAuth getAuth(UserLoginRequestDTO request) throws BizException {
     User user = null;
     AbstractAuth auth = null;
-    //邮箱密码登录
+    //email and password
       user = findUserByEmail(request.getEmail());
       String salt = user.getSalt();
     return new Auth4EmailPasswordMatch(user, request.getPassword(), salt);

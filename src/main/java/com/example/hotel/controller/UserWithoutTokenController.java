@@ -10,6 +10,7 @@ import com.example.hotel.service.user.UserService;
 import com.example.hotel.util.VerificationCodeUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,9 +39,10 @@ public class UserWithoutTokenController {
    */
   @PostMapping("/login")
   @RequestMapping(value = "login", method = RequestMethod.POST)
-  public ResponseResult<RegisterResponse> login(@ApiParam(value = "User details", required = true) @RequestBody UserLoginRequestDTO requestDTO) {
+  public ResponseResult<RegisterResponse> login(@ApiParam(value = "User details", required = true) @RequestBody UserLoginRequestDTO requestDTO,
+      HttpServletRequest httpServletRequest) {
     try {
-      return ResponseResult.ofSuccess(userService.userLogin(requestDTO));
+      return ResponseResult.ofSuccess(userService.userLogin(requestDTO,httpServletRequest));
     } catch (BizException e) {
       log.error("user login error", e);
       return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
@@ -58,6 +60,25 @@ public class UserWithoutTokenController {
   @RequestMapping(value = "register", method = RequestMethod.POST)
   public ResponseResult<RegisterResponse> register(@ApiParam(value = "Register info", required = true) @RequestBody RegisterRequestDTO requestDTO) {
     try {
+      return ResponseResult.ofSuccess(userService.userSignUp(requestDTO));
+    } catch (BizException e) {
+      log.error("register error", e);
+      return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
+    }
+
+  }
+
+  /**
+   * administrator register
+   *
+   * @return
+   */
+  @PostMapping("/adminRegister")
+  @RequestMapping(value = "adminRegister", method = RequestMethod.POST)
+  public ResponseResult<RegisterResponse> adminRegister(@ApiParam(value = "Register info", required = true) @RequestBody RegisterRequestDTO requestDTO) {
+    try {
+      //userType=1, administrator
+      requestDTO.setUserType((byte)1);
       return ResponseResult.ofSuccess(userService.userSignUp(requestDTO));
     } catch (BizException e) {
       log.error("register error", e);

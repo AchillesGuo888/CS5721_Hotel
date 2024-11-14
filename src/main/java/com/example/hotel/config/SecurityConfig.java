@@ -19,15 +19,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .authorizeRequests()
         .antMatchers("/swagger-ui.html", "/v2/api-docs", "/swagger-resources/**", "/webjars/**", "/user/withoutToken/**")
         .permitAll() // allow Swagger url
-        .anyRequest().authenticated() // other request
+        .anyRequest().permitAll()//.authenticated() // other request
         .and()
-//        .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class) // 注册 JwtFilter
+        .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class) // 注册 JwtFilter
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         //TODO test step don't need AuthenticationFilter
   }
 
-//  @Bean
-//  public JwtFilter jwtFilter() {
-//    return new JwtFilter(); // create JwtFilter instance
-//  }
+  @Bean
+  public JwtFilter jwtFilter() {
+    return new JwtFilter(); // create JwtFilter instance
+  }
 }
