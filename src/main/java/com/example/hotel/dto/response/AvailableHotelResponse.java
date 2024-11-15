@@ -11,5 +11,7 @@ import org.apache.commons.pool2.BaseObject;
 @Builder
 @ApiModel("query hotel list result(with price)")
 public class AvailableHotelResponse extends BaseObject {
-
+    public AvailableHotelResponse() {
+        // 初始化逻辑，如果有需要的话
+    }
 }

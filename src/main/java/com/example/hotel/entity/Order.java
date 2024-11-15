@@ -63,6 +63,7 @@ public class Order extends BaseEntity {
     private Integer totalPrice;
     private String postTitle;
     private String postNumber;
+    private int earnedPoints;
 
     public Long getOrderId() {
         return orderId;
@@ -72,4 +73,48 @@ public class Order extends BaseEntity {
     public void setOrderId(Long orderId) {
         this.orderId = orderId;
     }
+
+    /**
+     * No-argument constructor
+     */
+    public Order() {
+    }
+
+    /**
+     * Full parameter construction method (for easy initialization)
+     */
+    public Order(Long userId, Long postId, Integer quantity, String name, String phone, String idCard,
+                 String startDate, Long orderId, Integer status, Integer price, Integer totalPrice,
+                 String postTitle, String postNumber, int earnedPoints) {
+        this.userId = userId;
+        this.postId = postId;
+        this.quantity = quantity;
+        this.name = name;
+        this.phone = phone;
+        this.idCard = idCard;
+        this.startDate = startDate;
+        this.orderId = orderId;
+        this.status = status;
+        this.price = price;
+        this.totalPrice = totalPrice;
+        this.postTitle = postTitle;
+        this.postNumber = postNumber;
+        this.earnedPoints = earnedPoints;
+    }
+
+    /**
+     * Getter for earnedPoints
+     */
+    public int getEarnedPoints() {
+        return earnedPoints;
+    }
+
+    /**
+     * Setter for earnedPoints
+     */
+    public void setEarnedPoints(int earnedPoints) {
+        this.earnedPoints = earnedPoints;
+    }
+
+
 }
