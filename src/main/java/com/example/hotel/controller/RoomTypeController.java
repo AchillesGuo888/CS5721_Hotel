@@ -85,20 +85,6 @@ public class RoomTypeController {
   }
 
   /**
-   * delete room type info
-   *
-   * @return
-   */
-  @DeleteMapping("/deleteRoomType")
-  @RequestMapping(value = "deleteRoomType", method = RequestMethod.DELETE)
-  public ResponseResult deleteRoomType(@RequestHeader("Authorization")
-      String token,@ApiParam(value = "delete room type", required = true)
-      @RequestBody DeleteRoomTypeRequestDTO requestDTO) {
-
-    return ResponseResult.ofSuccess();
-  }
-
-  /**
    * query room types(with price) and available room count of a concrete hotel
    *
    * @return
