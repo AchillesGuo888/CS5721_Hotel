@@ -10,6 +10,7 @@ import com.example.hotel.dto.request.PayDifferenceRequestDTO;
 import com.example.hotel.dto.request.QueryHotelRequestDTO;
 import com.example.hotel.dto.response.AvailableHotelResponse;
 import com.example.hotel.dto.response.HotelDetailResponse;
+import com.example.hotel.exception.BizException;
 import com.example.hotel.service.bill.BillService;
 import com.example.hotel.util.JwtUtil;
 import io.swagger.annotations.Api;
@@ -45,6 +46,12 @@ public class BillController {
   @RequestMapping(value = "payRoomBill", method = RequestMethod.POST)
   public ResponseResult payRoomBill(@RequestHeader("Authorization") String token,
       @ApiParam(value = "bill detail", required = true) @RequestBody PayBillRequestDTO requestDTO) {
+    try {
+      billService.payBill(token,requestDTO);
+    } catch (BizException e) {
+      log.error("user login error", e);
+      return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
+    }
       return ResponseResult.ofSuccess();
   }
 
