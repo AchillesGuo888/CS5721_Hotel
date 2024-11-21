@@ -3,7 +3,8 @@ package com.example.hotel.controller.refund;
 import com.example.hotel.entity.Order;
 
 public class RefundObserver {
-    void update(Order order) {
+    //This method is triggered when a refund operation occurs on the observed object.
+    public void update(Order order) {
 
     }
 }

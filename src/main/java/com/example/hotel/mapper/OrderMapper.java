@@ -73,5 +73,14 @@ public interface OrderMapper extends BaseMapper<Order> {
      */
     @Update("UPDATE orders SET status = #{status}, amount = #{amount}, payment_id = #{paymentId}, earned_points = #{earnedPoints} WHERE order_id = #{orderId}")
     int updateOrder(Order order);
+
+    /**
+     * Update order status
+     * @param orderId
+     * @param status New order status
+     * @return Number of rows affected
+     */
+    @Update("UPDATE t_order SET status = #{status} WHERE order_id = #{orderId}")
+    int updateOrderStatus(@Param("orderId") Long orderId, @Param("status") String status);
 }
 

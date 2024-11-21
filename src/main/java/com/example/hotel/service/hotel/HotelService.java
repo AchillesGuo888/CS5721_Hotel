@@ -29,7 +29,7 @@ public class HotelService {
 
     public ResponseResult addHotel(AddHotelRequestDTO addHotelRequestDTO) {
         Hotel hotel = new Hotel();
-        BeanUtils.copyProperties(addHotelRequestDTO, hotel); // 自动拷贝属性
+        BeanUtils.copyProperties(addHotelRequestDTO, hotel);
         int rowsAffected = hotelMapper.addHotel(hotel);
         return rowsAffected > 0 ? ResponseResult.ofSuccess(hotel)
                 : ResponseResult.ofError(500L, "Failed to add hotel");
@@ -40,6 +40,7 @@ public class HotelService {
         if (hotel == null) {
             return ResponseResult.ofError(404L, "Hotel not found");
         }
+        //Construct HotelDetailResponse response object
         HotelDetailResponse response = HotelDetailResponse.builder()
                 .name(hotel.getName())
                 .address(hotel.getAddress())
@@ -51,6 +52,7 @@ public class HotelService {
                 .totalRooms(hotel.getTotalRooms())
                 .phoneNumber(hotel.getPhoneNumber())
                 .build();
+        //Returns the encapsulated response result
         return ResponseResult.ofSuccess(response);
     }
 
@@ -76,7 +78,9 @@ public class HotelService {
     }
 
     public ResponseResult<List<AvailableHotelResponse>> queryHotelList(QueryHotelRequestDTO queryHotelRequestDTO) {
+        //Calculating paging offsets
         int offset = (queryHotelRequestDTO.getPage() - 1) * queryHotelRequestDTO.getSize();
+        //Call the database query operation to get the Hotel list
         List<Hotel> hotels = hotelMapper.findHotelsByConditions(
                 queryHotelRequestDTO.getName(),
                 queryHotelRequestDTO.getAddress(),
@@ -87,15 +91,20 @@ public class HotelService {
                 offset,
                 queryHotelRequestDTO.getSize()
         );
+        //If there is no data, an error response is returned
         if (hotels.isEmpty()) {
             return ResponseResult.ofError(404L, "No hotels found matching the given criteria");
         }
+        //Convert the Hotel entity to an AvailableHotelResponse response object
         List<AvailableHotelResponse> responses = hotels.stream()
                 .map(hotel -> {
+                    //Creating a Response Object
                     AvailableHotelResponse response = new AvailableHotelResponse();
+                    //Use BeanUtils to copy the Hotel properties into the response object
                     BeanUtils.copyProperties(hotel, response);
-                    return response;
-                }).collect(Collectors.toList());
+                    return response;//Returns the constructed response object
+                }).collect(Collectors.toList());//Collect stream objects into a List
+        //Returns the encapsulated response result
         return ResponseResult.ofSuccess(responses);
     }
 }
