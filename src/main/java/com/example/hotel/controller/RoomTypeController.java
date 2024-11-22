@@ -18,19 +18,12 @@ import com.example.hotel.service.roomType.RoomTypeInfoService;
 import com.example.hotel.util.JwtUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -47,12 +40,12 @@ public class RoomTypeController {
    *
    * @return
    */
-  @PostMapping("/add")
-  @RequestMapping(value = "addRoomType", method = RequestMethod.POST)
-  public ResponseResult userLogout(@RequestHeader("Authorization") String token,
-      @ApiParam(value = "Room type details", required = true)
+  @PostMapping("/addRoomType")
+  public ResponseResult addRoomType(@RequestHeader("Authorization") String token,
       @RequestBody AddRoomTypeRequestDTO requestDTO) {
-      return ResponseResult.ofSuccess();
+       log.info("Token is:" + token);
+      String msg = roomTypeInfoService.addRoomType(requestDTO);
+      return ResponseResult.ofSuccess(msg);
   }
 
   /**
@@ -60,14 +53,14 @@ public class RoomTypeController {
    *
    * @return
    */
-  @PostMapping("/queryRoomTypeInfo")
-  @RequestMapping(value = "queryRoomTypeInfo", method = RequestMethod.POST)
+  @GetMapping("/queryRoomTypeInfo")
+  @RequestMapping(value = "queryRoomTypeInfo", method = RequestMethod.GET)
   public ResponseResult<HotelDetailResponse> queryHotelInfo(
       @RequestHeader("Authorization") String token,
       @ApiParam(value = "query room type details ", required = true)
       @RequestBody QueryRoomTypeRequestDTO requestDTO) {
-
-    return ResponseResult.ofSuccess();
+     log.info("I am in query room type info");
+    return ResponseResult.ofSuccess(roomTypeInfoService.getRoomOnId(requestDTO.getId()));
   }
 
   /**
@@ -80,8 +73,9 @@ public class RoomTypeController {
   public ResponseResult modifyHotelInfo(@RequestHeader("Authorization")
       String token,@ApiParam(value = "room type details", required = true)
       @RequestBody ModifyRoomTypeInfoRequestDTO requestDTO) {
-
-    return ResponseResult.ofSuccess();
+      log.info("I am in update room type info");
+      String msg = roomTypeInfoService.updateRoomType(requestDTO);
+      return ResponseResult.ofSuccess(msg);
   }
 
   /**
