@@ -24,15 +24,15 @@ public interface RoomInfoService {
     void addRoom(AddRoomRequestDTO requestDTO) throws BizException;
 
     // Method to modify room details
-    void modifyRoomInfo(ModifyRoomInfoRequestDTO requestDTO);
+    void modifyRoomInfo(ModifyRoomInfoRequestDTO requestDTO) throws BizException;
 
     // Method to delete a room
-    void deleteRoom(DeleteRoomRequestDTO requestDTO);
+    void deleteRoom(DeleteRoomRequestDTO requestDTO) throws BizException;
 
     // Method to check in a guest to a room
-    CheckInResponse checkInRoom(CheckInRequestDTO requestDTO);
+    CheckInResponse checkInRoom(CheckInRequestDTO requestDTO) throws BizException;
 
-    RoomDetailResponse queryRoom(QueryRoomRequestDTO requestDTO);
+    RoomDetailResponse queryRoomInfo(QueryRoomRequestDTO requestDTO) throws BizException;
 
-    List<RoomDetailResponse> queryRoomList(QueryRoomListRequestDTO requestDTO);
+    List<RoomDetailResponse> queryRoomList(QueryRoomListRequestDTO requestDTO) throws BizException;
 }

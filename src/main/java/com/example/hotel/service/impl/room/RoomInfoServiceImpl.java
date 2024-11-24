@@ -56,7 +56,7 @@ public class RoomInfoServiceImpl implements RoomInfoService {
     }
 
     @Override
-    public void modifyRoomInfo(ModifyRoomInfoRequestDTO requestDTO) {
+    public void modifyRoomInfo(ModifyRoomInfoRequestDTO requestDTO) throws BizException {
     // Retrieve the existing room info based on room ID
         RoomInfo roomInfo = roomInfoMapper.selectByPrimaryKey(requestDTO.getRoomId());
         
@@ -67,10 +67,7 @@ public class RoomInfoServiceImpl implements RoomInfoService {
         // Update the fields of the room info
         roomInfo.setRoomNumber(requestDTO.getRoomNumber());
         roomInfo.setRoomKey(requestDTO.getRoomKey());
-        roomInfo.setHotelId(requestDTO.getHotelId());
         roomInfo.setRoomTypeId(requestDTO.getRoomTypeId());
-        roomInfo.setUpdateTime(requestDTO.getUpdateTime()); // Set the update time
-        roomInfo.setIsDeleted(requestDTO.getIsDeleted());
 
         // Update the room info in the database
         roomInfoMapper.updateByPrimaryKeySelective(roomInfo);
@@ -79,7 +76,7 @@ public class RoomInfoServiceImpl implements RoomInfoService {
     }
 
     @Override
-    public void deleteRoom(DeleteRoomRequestDTO requestDTO) {
+    public void deleteRoom(DeleteRoomRequestDTO requestDTO) throws BizException {
         // Retrieve the existing room info based on room ID
         RoomInfo roomInfo = roomInfoMapper.selectByPrimaryKey(requestDTO.getRoomId());
         
@@ -97,7 +94,7 @@ public class RoomInfoServiceImpl implements RoomInfoService {
     }
 
     @Override
-    public CheckInResponse checkInRoom(CheckInRequestDTO requestDTO) {
+    public CheckInResponse checkInRoom(CheckInRequestDTO requestDTO) throws BizException {
         // Retrieve the room info based on room ID
         RoomInfo roomInfo = roomInfoMapper.selectByPrimaryKey(requestDTO.getRoomId());
 
@@ -107,10 +104,6 @@ public class RoomInfoServiceImpl implements RoomInfoService {
 
         // Here, we would also update the room status (e.g., marked as occupied)
         // For simplicity, let's assume we have a room status field (roomStatus) in RoomInfo or elsewhere.
-
-        // Perform check-in operation (e.g., update room status to occupied)
-        roomInfo.setUpdateTime(requestDTO.getUpdateTime()); // Update time to current timestamp
-        // roomInfo.setRoomStatus("occupied");  // Example of updating the room status (if applicable)
 
         roomInfoMapper.updateByPrimaryKeySelective(roomInfo);
 
@@ -122,7 +115,7 @@ public class RoomInfoServiceImpl implements RoomInfoService {
     }
 
     @Override
-    public RoomDetailResponse queryRoom(QueryRoomRequestDTO requestDTO) {
+    public RoomDetailResponse queryRoomInfo(QueryRoomRequestDTO requestDTO) throws BizException {
         // Retrieve the room info based on room ID
         RoomInfo roomInfo = roomInfoMapper.selectByPrimaryKey(requestDTO.getRoomId());
 
@@ -143,7 +136,7 @@ public class RoomInfoServiceImpl implements RoomInfoService {
     }
 
     @Override
-    public List<RoomDetailResponse> queryRoomList(QueryRoomListRequestDTO requestDTO) {
+    public List<RoomDetailResponse> queryRoomList(QueryRoomListRequestDTO requestDTO) throws BizException {
         // Query room list based on provided parameters (e.g., hotelId, roomTypeId)
         RoomInfoExample example = new RoomInfoExample();
         RoomInfoExample.Criteria criteria = example.createCriteria();

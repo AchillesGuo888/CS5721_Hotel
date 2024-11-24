@@ -1,37 +1,34 @@
 package com.example.hotel.util;
 
-
 import com.example.hotel.enums.UserTypeEnum;
 import io.jsonwebtoken.*;
-
-import java.util.Date;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.Base64;
+import java.util.Date;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 @Component
 public class JwtUtil {
 
-  private final static String SECRET_KEY = "2024_CS5721"; // private key
+  private static final String SECRET_KEY = "2024_CS5721"; // private key
+  private static final byte[] SECRET_KEY_BYTES = Base64.getEncoder().encode(SECRET_KEY.getBytes());
   private final Map<String, Date> tokenBlacklist = new ConcurrentHashMap<>(); // black_list
 
-  private final static int USER_EXPIRE = 600000;
-  private final static int ADMINISTRATOR_EXPIRE = 3600000;
+  private static final int USER_EXPIRE = 600000;
+  private static final int ADMINISTRATOR_EXPIRE = 3600000;
+
   // Create JWT Token
   public static String generateToken(String userId, byte userType) {
-    int expireTime = 0;
-    if (UserTypeEnum.USER.getCode().equals(userType)){
-      expireTime = USER_EXPIRE;
-    }else{
-      expireTime = ADMINISTRATOR_EXPIRE;
-    }
+    int expireTime = userType == UserTypeEnum.USER.getCode() ? USER_EXPIRE : ADMINISTRATOR_EXPIRE;
     return Jwts.builder()
         .setSubject(userId)
         .setIssuedAt(new Date())
         .setExpiration(new Date(System.currentTimeMillis() + expireTime))
-        .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+        .signWith(SignatureAlgorithm.HS256, SECRET_KEY_BYTES)
         .compact();
   }
 
@@ -40,31 +37,27 @@ public class JwtUtil {
     if (isTokenBlacklisted(token)) {
       throw new JwtException("Token is blacklisted");
     }
-    try{
+    try {
       return Jwts.parser()
-          .setSigningKey(SECRET_KEY)
+          .setSigningKey(SECRET_KEY_BYTES)
           .parseClaimsJws(token)
           .getBody();
-    }catch (ExpiredJwtException e) {
-      throw new JwtException("Token has expired");
-
+    } catch (ExpiredJwtException e) {
+      throw new JwtException("Token has expired", e);
     } catch (SignatureException e) {
-      throw new JwtException("Invalid JWT signature.");
-
+      throw new JwtException("Invalid JWT signature", e);
     } catch (Exception e) {
-      throw new JwtException("JWT parsing error.");
-
+      throw new JwtException("JWT parsing error", e);
     }
-
   }
 
-  // put Token into blacklist
+  // Put token into blacklist
   public void blacklistToken(String token) {
     Date expiration = validateToken(token).getExpiration();
     tokenBlacklist.put(token, expiration);
   }
 
-  // check Token in blacklist
+  // Check token in blacklist
   public boolean isTokenBlacklisted(String token) {
     return tokenBlacklist.containsKey(token) && tokenBlacklist.get(token).after(new Date());
   }
@@ -77,17 +70,15 @@ public class JwtUtil {
 
   public String getUserIdFromToken(String token) {
     try {
-      if (StringUtils.isBlank(token)&& token.startsWith("Bearer ")){
+      if (StringUtils.isBlank(token) || !token.startsWith("Bearer ")) {
         return StringUtils.EMPTY;
       }
-      token = token.substring(7);
+      token = token.substring(7); // Remove "Bearer " prefix
       Claims claims = validateToken(token);
-      return claims.getSubject(); // get subject from token(userId)
+      return claims.getSubject(); // Get subject from token (userId)
     } catch (SignatureException e) {
-
       return StringUtils.EMPTY;
     } catch (Exception e) {
-
       return StringUtils.EMPTY;
     }
   }

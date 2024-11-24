@@ -5,8 +5,8 @@ import com.example.hotel.common.base.ResponseResult;
 import com.example.hotel.dto.request.AddHotelRequestDTO;
 import com.example.hotel.dto.request.AddRoomRequestDTO;
 import com.example.hotel.dto.request.CheckInRequestDTO;
-import com.example.hotel.dto.request.DeleteHotelInfoRequestDTO;
-import com.example.hotel.dto.request.ModifyHotelInfoRequestDTO;
+import com.example.hotel.dto.request.DeleteRoomRequestDTO;
+import com.example.hotel.dto.request.ModifyRoomInfoRequestDTO;
 import com.example.hotel.dto.request.QueryHotelRequestDTO;
 import com.example.hotel.dto.request.QueryRoomListRequestDTO;
 import com.example.hotel.dto.request.QueryRoomRequestDTO;
@@ -59,7 +59,7 @@ public class RoomController {
         roomInfoService.addRoom(requestDTO);
         return ResponseResult.ofSuccess();
       } catch (BizException e) {
-        log.error("user login error", e);
+        log.error("adding room error", e);
         return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
       }
   }
@@ -69,14 +69,18 @@ public class RoomController {
    *
    * @return
    */
-  @PostMapping("/queryRoomInfo")
-  @RequestMapping(value = "queryRoomInfo", method = RequestMethod.POST)
-  public ResponseResult<RoomDetailResponse> queryHotelInfo(
-      @RequestHeader("Authorization") String token,
+  @GetMapping("/queryRoomInfo")
+  @RequestMapping(value = "queryRoomInfo", method = RequestMethod.GET)
+  public ResponseResult<RoomDetailResponse> queryRoomInfo(@RequestHeader("Authorization") String token,
       @ApiParam(value = "query room details ", required = true)
       @RequestBody QueryRoomRequestDTO requestDTO) {
-
-    return ResponseResult.ofSuccess();
+      try {
+        roomInfoService.queryRoomInfo(requestDTO);
+        return ResponseResult.ofSuccess();
+      } catch (BizException e) {
+        log.error("adding room error", e);
+        return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
+      }
   }
 
   /**
@@ -86,12 +90,16 @@ public class RoomController {
    */
   @PutMapping("/modifyRoomInfo")
   @RequestMapping(value = "modifyRoomInfo", method = RequestMethod.PUT)
-  public ResponseResult modifyHotelInfo(
-      @RequestHeader("Authorization") String token,
+  public ResponseResult modifyRoomInfo(@RequestHeader("Authorization") String token,
       @ApiParam(value = "room details", required = true)
-      @RequestBody ModifyHotelInfoRequestDTO requestDTO) {
-
-    return ResponseResult.ofSuccess();
+      @RequestBody ModifyRoomInfoRequestDTO requestDTO) {
+      try {
+        roomInfoService.modifyRoomInfo(requestDTO);
+        return ResponseResult.ofSuccess();
+      } catch (BizException e) {
+        log.error("modify error error", e);
+        return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
+      }
   }
 
   /**
@@ -99,13 +107,18 @@ public class RoomController {
    *
    * @return
    */
-  @DeleteMapping("/deleteRoom")
-  @RequestMapping(value = "deleteRoom", method = RequestMethod.DELETE)
-  public ResponseResult deleteHotel(@RequestHeader("Authorization")
-      String token,@ApiParam(value = "delete room", required = true)
-  @RequestBody DeleteHotelInfoRequestDTO requestDTO) {
-
-    return ResponseResult.ofSuccess();
+  @PutMapping("/deleteRoom")
+  @RequestMapping(value = "deleteRoom", method = RequestMethod.PUT)
+  public ResponseResult deleteRoom(@RequestHeader("Authorization") String token,
+    @ApiParam(value = "delete room", required = true)
+    @RequestBody DeleteRoomRequestDTO requestDTO) {
+    try {
+      roomInfoService.deleteRoom(requestDTO);
+      return ResponseResult.ofSuccess();
+    } catch (BizException e) {
+      log.error("modify error error", e);
+      return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
+    }
   }
 
   /**
@@ -116,9 +129,15 @@ public class RoomController {
   @PostMapping("/queryRoomList")
   @RequestMapping(value = "queryRoomList", method = RequestMethod.POST)
   public ResponseResult<List<RoomDetailResponse>> queryUserInfo(@RequestHeader("Authorization") String token,
-      @ApiParam(value = "query room details ", required = true)
+      @ApiParam(value = "query room list details ", required = true)
       @RequestBody QueryRoomListRequestDTO requestDTO) {
-    return ResponseResult.ofSuccess();
+      try {
+        roomInfoService.queryRoomList(requestDTO);
+        return ResponseResult.ofSuccess();
+      } catch (BizException e) {
+        log.error("modify error error", e);
+        return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
+      }
   }
 
   /**
@@ -131,7 +150,13 @@ public class RoomController {
   public ResponseResult<CheckInResponse> checkInRoom(@RequestHeader("Authorization") String token,
       @ApiParam(value = "check in room", required = true)
       @RequestBody CheckInRequestDTO requestDTO) {
-    return ResponseResult.ofSuccess();
+        try {
+          roomInfoService.checkInRoom(requestDTO);
+          return ResponseResult.ofSuccess();
+        } catch (BizException e) {
+          log.error("check in error", e);
+          return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
+        }
   }
 
 
