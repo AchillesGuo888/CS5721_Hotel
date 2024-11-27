@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.example.hotel.common.base.BaseEntity;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * 订单
  * @author 言曌
@@ -65,6 +67,23 @@ public class Order extends BaseEntity {
     private String postNumber;
     private int earnedPoints;
 
+    private List<Integer> roomNumbers; // the room number list in the order
+
+    /**
+     * List of rooms to be cancelled (record room number in case of partial cancellation)
+     */
+    private int[] pendingCancelRooms;
+
+    /**
+     * Remaining room numbers (updated after partial cancellation)
+     */
+    private List<String> remainingRooms;
+
+    /**
+     * Order review comments (recorded by the administrator during review)
+     */
+    private String reviewComment;
+
     public Long getOrderId() {
         return orderId;
     }
@@ -73,6 +92,23 @@ public class Order extends BaseEntity {
     public void setOrderId(Long orderId) {
         this.orderId = orderId;
     }
+
+    public List<Integer> getRoomNumbers() {
+        return roomNumbers;
+    }
+
+    public void setRoomNumbers(List<Integer> roomNumbers) {
+        this.roomNumbers = roomNumbers;
+    }
+
+    public class OrderStatus {
+        public static final int PENDING_PAYMENT = 0;
+        public static final int PAID = 1;
+        public static final int COMPLETED = 2;
+        public static final int CANCELLED = 3;
+        public static final int PENDING_APPROVAL = 4;
+    }
+
 
     /**
      * No-argument constructor
@@ -116,5 +152,36 @@ public class Order extends BaseEntity {
         this.earnedPoints = earnedPoints;
     }
 
+    /**
+     * Getter and Setter for pendingCancelRooms
+     */
+    public int[] getPendingCancelRooms() {
+        return pendingCancelRooms;
+    }
 
+    public void setPendingCancelRooms(int[] pendingCancelRooms) {
+        this.pendingCancelRooms = pendingCancelRooms;
+    }
+
+    /**
+     * Getter and Setter for remainingRooms
+     */
+    public List<String> getRemainingRooms() {
+        return remainingRooms;
+    }
+
+    public void setRemainingRooms(List<String> remainingRooms) {
+        this.remainingRooms = remainingRooms;
+    }
+
+    /**
+     * Getter and Setter for reviewComment
+     */
+    public String getReviewComment() {
+        return reviewComment;
+    }
+
+    public void setReviewComment(String reviewComment) {
+        this.reviewComment = reviewComment;
+    }
 }

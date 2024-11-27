@@ -17,6 +17,7 @@ import com.example.hotel.dto.response.OrderInfoResponse;
 import com.example.hotel.entity.Order;
 import com.example.hotel.enums.OrderStatusEnum;
 import com.example.hotel.mapper.OrderMapper;
+import com.example.hotel.service.oder.OrderService;
 import com.example.hotel.util.JwtUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -35,6 +36,7 @@ public class OrderController {
   @Autowired
   private JwtUtil jwtUtil;
   private OrderMapper orderMapper;
+  private OrderService orderService;
 
   /**
    * book room and create order
@@ -78,27 +80,6 @@ public class OrderController {
     return ResponseResult.ofSuccess();
   }
 
-  /**
-   * admin cancel order
-   *
-   * @return
-   */
-  @DeleteMapping("/cancelOrder")
-  @RequestMapping(value = "cancelOrder", method = RequestMethod.DELETE)
-  public ResponseResult cancelOrder(@RequestHeader("Authorization") String token,
-      @ApiParam(value = "cancel order", required = true)
-      @RequestBody CancelOrderRequestDTO requestDTO) {
-    Order order = OrderMapper.findOrderById(requestDTO.getOrderId());
-    if(order == null){
-      //can't find order
-      return ResponseResult.ofError(404L,"Oder not found");
-    }
-
-    //update status be canceled
-    orderMapper.cancelOrder(requestDTO.getOrderId(), OrderStatusEnum.CANCELLED.getCode());
-    return ResponseResult.ofSuccess();
-  }
-
   @PostMapping("/requestCancelOrder")
   public ResponseResult requestCancelOrder(
           @RequestHeader("Authorization") String token,
@@ -132,5 +113,30 @@ public class OrderController {
     return ResponseResult.ofSuccess();
   }
 
+  /**
+   * User submits order cancellation request
+   * @param orderId
+   * @param roomNumbers List of room numbers to be cancelled
+   * @return Submit Result
+   */
+  @PostMapping("/{orderId}/cancel/request")
+  public ResponseResult<String> requestCancelOrder(
+          @PathVariable Long orderId,
+          @RequestBody int[] roomNumbers) {
+    return orderService.requestCancelOrder(orderId, roomNumbers);
+  }
+
+  /**
+   * Administrator reviews and cancels order application
+   * @param orderId
+   * @param approve Approval
+   * @return Audit Results
+   */
+  @PostMapping("/{orderId}/cancel/review")
+  public ResponseResult<String> reviewCancelOrder(
+          @PathVariable Long orderId,
+          @RequestParam boolean approve) {
+    return orderService.reviewCancelOrder(orderId, approve);
+  }
 
 }

@@ -6,10 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.hotel.dto.PostQueryCondition;
 import com.example.hotel.entity.Order;
 import com.example.hotel.entity.Post;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -33,7 +30,7 @@ public interface OrderMapper extends BaseMapper<Order> {
     /**
      * Find an order by order ID
      */
-    @Select("SELECT * FROM orders WHERE id = #{orderId}")
+    @Select("SELECT * FROM t_order WHERE order_id = #{orderId}")
     static Order findOrderById(@Param("orderId") Long orderId) {
         return null;
     }
@@ -71,7 +68,7 @@ public interface OrderMapper extends BaseMapper<Order> {
      * @param order order, containing the updated fields
      * @return Number of records updated
      */
-    @Update("UPDATE orders SET status = #{status}, amount = #{amount}, payment_id = #{paymentId}, earned_points = #{earnedPoints} WHERE order_id = #{orderId}")
+    @Update("UPDATE t_order SET status = #{status}, pending_cancel_rooms = #{pendingCancelRooms} WHERE order_id = #{orderId}")
     int updateOrder(Order order);
 
     /**
@@ -82,5 +79,16 @@ public interface OrderMapper extends BaseMapper<Order> {
      */
     @Update("UPDATE t_order SET status = #{status} WHERE order_id = #{orderId}")
     int updateOrderStatus(@Param("orderId") Long orderId, @Param("status") String status);
+
+    @Insert("INSERT INTO t_order (user_id, post_id, quantity, name, phone, id_card, start_date, order_id, status, price, total_price, post_title, post_number, earned_points) " +
+            "VALUES (#{userId}, #{postId}, #{quantity}, #{name}, #{phone}, #{idCard}, #{startDate}, #{orderId}, #{status}, #{price}, #{totalPrice}, #{postTitle}, #{postNumber}, #{earnedPoints})")
+    @Options(useGeneratedKeys = true, keyProperty = "orderId")
+    int saveOrder(Order order);
+
+    @Update("UPDATE t_order SET status = #{status} WHERE order_id = #{orderId}")
+    int updateOrderStatus(@Param("orderId") Long orderId, @Param("status") Integer status);
+
+    @Select("SELECT * FROM t_order")
+    List<Order> findAllOrders();
 }
 
