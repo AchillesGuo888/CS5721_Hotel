@@ -9,7 +9,7 @@ import org.apache.commons.pool2.BaseObject;
 @Data
 @Builder
 
-public class DistributableRoomDTO extends BaseObject{
+public class DistributableRoomDTO extends BaseObject {
 
   public Long roomId;
   public String roomNumber;

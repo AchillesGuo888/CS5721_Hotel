@@ -12,6 +12,7 @@ import org.apache.commons.pool2.BaseObject;
 @Builder
 @ApiModel("query user info result")
 public class UserInfoResponse extends BaseObject {
+
   private static final long serialVersionUID = -6808963525093889898L;
 
   @ApiModelProperty("email")

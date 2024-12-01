@@ -8,8 +8,9 @@ import com.example.hotel.service.impl.price.SilverPriceServiceImpl;
 import com.example.hotel.service.price.PriceCalculationService;
 
 public class PriceFactory {
+
   public static PriceCalculationService getService(Byte membership) {
-    switch (membership){
+    switch (membership) {
       case CommonConstant.COPPER:
         return new CopperPriceServiceImpl();
       case CommonConstant.SILVER:

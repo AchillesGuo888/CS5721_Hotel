@@ -3,10 +3,8 @@ package com.example.hotel.service.impl.roomType;
 import com.example.hotel.entity.RoomTypePrice;
 import com.example.hotel.entity.RoomTypePriceExample;
 import com.example.hotel.mapper.RoomTypePriceMapper;
-
 import com.example.hotel.service.roomType.RoomTypeInfoService;
 import com.example.hotel.service.roomType.RoomTypePriceService;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Date;
@@ -34,21 +32,25 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
       LocalDate startDate, LocalDate endDate) {
 
     //get special price in a period
-    Map<Long, Map<LocalDate, BigDecimal>> specialPriceMap = getSpecialPriceMap(roomTypeIds,startDate,endDate);
+    Map<Long, Map<LocalDate, BigDecimal>> specialPriceMap = getSpecialPriceMap(roomTypeIds,
+        startDate, endDate);
     //get default price(weekday and weekend)
-    Map<Long, Map<String, BigDecimal>> defaultPriceMap = roomTypeInfoService.getDefaultPrices(roomTypeIds);
+    Map<Long, Map<String, BigDecimal>> defaultPriceMap = roomTypeInfoService
+        .getDefaultPrices(roomTypeIds);
     //get date range (weekday or weekend)
     List<LocalDate> dateRange = generateDateRange(startDate, endDate);
     //calculate each type price
-    Map<Long, BigDecimal> averagePrices = getAveragePrices(roomTypeIds,specialPriceMap,defaultPriceMap,dateRange);
-
+    Map<Long, BigDecimal> averagePrices = getAveragePrices(roomTypeIds, specialPriceMap,
+        defaultPriceMap, dateRange);
 
     return averagePrices;
   }
 
-  private Map<Long, BigDecimal> getAveragePrices(List<Long> roomTypeIds, Map<Long, Map<LocalDate, BigDecimal>> specialPriceMap, Map<Long, Map<String, BigDecimal>> defaultPriceMap, List<LocalDate> dateRange) {
+  private Map<Long, BigDecimal> getAveragePrices(List<Long> roomTypeIds,
+      Map<Long, Map<LocalDate, BigDecimal>> specialPriceMap,
+      Map<Long, Map<String, BigDecimal>> defaultPriceMap, List<LocalDate> dateRange) {
     Map<Long, BigDecimal> averagePrices = new HashMap<>();
-    for (Long id: roomTypeIds){
+    for (Long id : roomTypeIds) {
       BigDecimal total = new BigDecimal(0);
       int count = 0;
 
@@ -79,14 +81,15 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
   }
 
 
-  private Map<Long, Map<LocalDate, BigDecimal>> getSpecialPriceMap(List<Long> roomTypeIds, LocalDate startDate, LocalDate endDate) {
+  private Map<Long, Map<LocalDate, BigDecimal>> getSpecialPriceMap(List<Long> roomTypeIds,
+      LocalDate startDate, LocalDate endDate) {
     Map<Long, Map<LocalDate, BigDecimal>> specialMap = new HashMap<>();
-    List<RoomTypePrice> specialList = getPriceByCondition(roomTypeIds,startDate,endDate);
-    if (CollectionUtils.isEmpty(specialList)){
+    List<RoomTypePrice> specialList = getPriceByCondition(roomTypeIds, startDate, endDate);
+    if (CollectionUtils.isEmpty(specialList)) {
       return specialMap;
     }
 
-    for (RoomTypePrice item: specialList){
+    for (RoomTypePrice item : specialList) {
       specialMap.putIfAbsent(item.getRoomTypeId(), new HashMap<>());
       LocalDate start = item.getStartDate().toInstant()
           .atZone(ZoneId.systemDefault())
@@ -107,7 +110,8 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
       LocalDate endDate) {
     RoomTypePriceExample example = new RoomTypePriceExample();
     RoomTypePriceExample.Criteria criteria = example.createCriteria();
-    criteria.andRoomTypeIdIn(roomTypeIds).andStartDateLessThanOrEqualTo(Date.valueOf(endDate)).andEndDateGreaterThanOrEqualTo(Date.valueOf(startDate));
+    criteria.andRoomTypeIdIn(roomTypeIds).andStartDateLessThanOrEqualTo(Date.valueOf(endDate))
+        .andEndDateGreaterThanOrEqualTo(Date.valueOf(startDate));
 
     return roomTypePriceMapper.selectByExample(example);
   }

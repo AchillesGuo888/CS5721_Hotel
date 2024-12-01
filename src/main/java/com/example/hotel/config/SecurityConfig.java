@@ -17,13 +17,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     http.csrf().disable()
         .authorizeRequests()
-        .antMatchers("/swagger-ui.html", "/v2/api-docs", "/swagger-resources/**", "/webjars/**", "/user/withoutToken/**")
+        .antMatchers("/swagger-ui.html", "/v2/api-docs", "/swagger-resources/**", "/webjars/**",
+            "/user/withoutToken/**")
         .permitAll() // allow Swagger url
         .anyRequest().permitAll()//.authenticated() // other request
         .and()
         .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class) // 注册 JwtFilter
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        //TODO test step don't need AuthenticationFilter
+    //TODO test step don't need AuthenticationFilter
   }
 
   @Bean

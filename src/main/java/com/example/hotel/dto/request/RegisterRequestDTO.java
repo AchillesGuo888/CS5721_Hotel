@@ -14,6 +14,7 @@ import lombok.ToString;
 @ToString
 @ApiModel("Register request parameter")
 public class RegisterRequestDTO extends Request {
+
   @NotEmpty(message = "Username cannot be empty")
   @ApiModelProperty(value = "username", required = true, example = "Achilles")
   @JsonProperty(value = "userName")
@@ -46,6 +47,6 @@ public class RegisterRequestDTO extends Request {
   @JsonProperty(value = "address")
   private String address;
 
-  @ApiModelProperty(value = "user type", hidden = true,example = "1")
+  @ApiModelProperty(value = "user type", hidden = true, example = "1")
   private Byte userType;
 }

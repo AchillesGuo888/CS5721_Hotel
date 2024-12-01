@@ -1,8 +1,7 @@
 package com.example.hotel.vo;
 
-import lombok.Data;
-
 import java.io.Serializable;
+import lombok.Data;
 
 
 /**
@@ -11,117 +10,117 @@ import java.io.Serializable;
 @Data
 public class PageVo implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
-
-    /**
-     * 页号
-     */
-    private long page = 1;
-
-    /**
-     * 页大小
-     */
-    private long size = 10;
-
-    /**
-     * 排序字段
-     */
-    private String sort = "create_time";
-
-    /**
-     * 排序方式 asc/desc
-     */
-    private String order = "desc";
-
-    /**
-     * 当前页码
-     */
-    private long current;
-
-    /**
-     * 总数
-     */
-    private long total;
-
-    /**
-     * 页数
-     */
-    private long pages;
+  public static long getSerialVersionUID() {
+    return serialVersionUID;
+  }
 
 
-    public PageVo() {
-    }
+  /**
+   * 页号
+   */
+  private long page = 1;
 
-    public PageVo(int page, int size) {
-        this.page = page;
-        this.size = size;
-    }
+  /**
+   * 页大小
+   */
+  private long size = 10;
 
-    public PageVo(int page, int size, String sort, String order) {
-        this.page = page;
-        this.size = size;
-        this.sort = sort;
-        this.order = order;
-    }
+  /**
+   * 排序字段
+   */
+  private String sort = "create_time";
 
-    public long getPage() {
-        return page;
-    }
+  /**
+   * 排序方式 asc/desc
+   */
+  private String order = "desc";
 
-    public void setPage(long page) {
-        this.page = page;
-    }
+  /**
+   * 当前页码
+   */
+  private long current;
 
-    public long getSize() {
-        return size;
-    }
+  /**
+   * 总数
+   */
+  private long total;
 
-    public void setSize(long size) {
-        this.size = size;
-    }
+  /**
+   * 页数
+   */
+  private long pages;
 
-    public String getSort() {
-        return sort;
-    }
 
-    public void setSort(String sort) {
-        this.sort = sort;
-    }
+  public PageVo() {
+  }
 
-    public String getOrder() {
-        return order;
-    }
+  public PageVo(int page, int size) {
+    this.page = page;
+    this.size = size;
+  }
 
-    public void setOrder(String order) {
-        this.order = order;
-    }
+  public PageVo(int page, int size, String sort, String order) {
+    this.page = page;
+    this.size = size;
+    this.sort = sort;
+    this.order = order;
+  }
 
-    public long getCurrent() {
-        return current;
-    }
+  public long getPage() {
+    return page;
+  }
 
-    public void setCurrent(long current) {
-        this.current = current;
-    }
+  public void setPage(long page) {
+    this.page = page;
+  }
 
-    public long getTotal() {
-        return total;
-    }
+  public long getSize() {
+    return size;
+  }
 
-    public void setTotal(long total) {
-        this.total = total;
-    }
+  public void setSize(long size) {
+    this.size = size;
+  }
 
-    public long getPages() {
-        return pages;
-    }
+  public String getSort() {
+    return sort;
+  }
 
-    public void setPages(long pages) {
-        this.pages = pages;
-    }
+  public void setSort(String sort) {
+    this.sort = sort;
+  }
+
+  public String getOrder() {
+    return order;
+  }
+
+  public void setOrder(String order) {
+    this.order = order;
+  }
+
+  public long getCurrent() {
+    return current;
+  }
+
+  public void setCurrent(long current) {
+    this.current = current;
+  }
+
+  public long getTotal() {
+    return total;
+  }
+
+  public void setTotal(long total) {
+    this.total = total;
+  }
+
+  public long getPages() {
+    return pages;
+  }
+
+  public void setPages(long pages) {
+    this.pages = pages;
+  }
 }

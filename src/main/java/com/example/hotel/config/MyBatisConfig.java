@@ -18,29 +18,29 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 @Configuration
 public class MyBatisConfig {
 
-    @Autowired
-    private DataSourceProperties dataSourceProperties;
+  @Autowired
+  private DataSourceProperties dataSourceProperties;
 
 
-    @Bean(name = "dataSource")
-    public DruidDataSource dataSource() {
-        DruidDataSource dataSource = new DruidDataSource();
-        dataSource.setUrl(dataSourceProperties.getUrl());
+  @Bean(name = "dataSource")
+  public DruidDataSource dataSource() {
+    DruidDataSource dataSource = new DruidDataSource();
+    dataSource.setUrl(dataSourceProperties.getUrl());
 
-        dataSource.setDriverClassName(dataSourceProperties.getDriverClassName());
-        dataSource.setUsername(dataSourceProperties.getUsername());
-        dataSource.setPassword(dataSourceProperties.getPassword());
+    dataSource.setDriverClassName(dataSourceProperties.getDriverClassName());
+    dataSource.setUsername(dataSourceProperties.getUsername());
+    dataSource.setPassword(dataSourceProperties.getPassword());
 
-        return dataSource;
+    return dataSource;
 
-    }
+  }
 
-    @Bean
-    public SqlSessionFactory sqlSessionFactory() throws Exception {
-        SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-        sqlSessionFactoryBean.setDataSource(dataSource());
-        sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver()
-                .getResources(("classpath*:mapper/*.xml")));
-        return sqlSessionFactoryBean.getObject();
-    }
+  @Bean
+  public SqlSessionFactory sqlSessionFactory() throws Exception {
+    SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
+    sqlSessionFactoryBean.setDataSource(dataSource());
+    sqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver()
+        .getResources(("classpath*:mapper/*.xml")));
+    return sqlSessionFactoryBean.getObject();
+  }
 }

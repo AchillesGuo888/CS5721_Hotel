@@ -2,33 +2,28 @@ package com.example.hotel.controller;
 
 
 import com.example.hotel.common.base.ResponseResult;
-import com.example.hotel.dto.request.AddHotelRequestDTO;
 import com.example.hotel.dto.request.BookRoomRequestDTO;
 import com.example.hotel.dto.request.CancelOrderRequestDTO;
-import com.example.hotel.dto.request.DeleteHotelInfoRequestDTO;
-import com.example.hotel.dto.request.ModifyHotelInfoRequestDTO;
 import com.example.hotel.dto.request.ModifyOrderInfoRequestDTO;
 import com.example.hotel.dto.request.PrebookRoomRequestDTO;
-import com.example.hotel.dto.request.QueryHotelRequestDTO;
 import com.example.hotel.dto.request.QueryOrderDetailRequestDTO;
-import com.example.hotel.dto.response.AvailableHotelResponse;
-import com.example.hotel.dto.response.HotelDetailResponse;
-import com.example.hotel.dto.response.OrderDetailInfoResponse;
+import com.example.hotel.dto.response.ChangeOrderRoomCountResponse;
+import com.example.hotel.dto.response.OrderInfoListResponse;
 import com.example.hotel.dto.response.OrderInfoResponse;
 import com.example.hotel.dto.response.PreBookRoomResponse;
 import com.example.hotel.exception.BizException;
 import com.example.hotel.service.order.OrderInfoService;
-import com.example.hotel.util.JwtUtil;
+import com.example.hotel.service.order.OrderQueryService;
+import com.github.pagehelper.PageSerializable;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -43,6 +38,8 @@ public class OrderController {
 
   private final OrderInfoService orderInfoService;
 
+  private final OrderQueryService orderQueryService;
+
   /**
    * book room and create order
    *
@@ -54,7 +51,7 @@ public class OrderController {
       @ApiParam(value = "book room", required = true)
       @RequestBody BookRoomRequestDTO requestDTO) {
     try {
-      return ResponseResult.ofSuccess(orderInfoService.bookRoom(requestDTO,token));
+      return ResponseResult.ofSuccess(orderInfoService.bookRoom(requestDTO, token));
     } catch (BizException e) {
       log.error("Book room error", e);
       return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
@@ -66,14 +63,18 @@ public class OrderController {
    *
    * @return
    */
-  @GetMapping("/queryOrderDetailInfo")
+  @GetMapping("/queryOrderDetailInfo/{id}")
   @RequestMapping(value = "queryOrderDetailInfo", method = RequestMethod.GET)
   public ResponseResult<OrderInfoResponse> queryOrderDetailInfo(
-      @RequestHeader("Authorization") String token,
-      @ApiParam(value = "query order details ", required = true)
-      @RequestBody QueryOrderDetailRequestDTO requestDTO) {
+      @ApiParam(value = "order id ", required = true)
+      @PathVariable Long id) {
 
-    return ResponseResult.ofSuccess();
+    try {
+      return ResponseResult.ofSuccess(orderQueryService.queryOrderDetail(id));
+    } catch (BizException e) {
+      log.error("Query order detail error", e);
+      return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
+    }
   }
 
   /**
@@ -86,8 +87,12 @@ public class OrderController {
   public ResponseResult modifyOrderInfo(@RequestHeader("Authorization") String token,
       @ApiParam(value = "order info", required = true)
       @RequestBody ModifyOrderInfoRequestDTO requestDTO) {
-
-    return ResponseResult.ofSuccess();
+    try {
+      return ResponseResult.ofSuccess(orderInfoService.modifyOrder(requestDTO));
+    } catch (BizException e) {
+      log.error("Query order detail error", e);
+      return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
+    }
   }
 
   /**
@@ -111,10 +116,16 @@ public class OrderController {
    */
   @PostMapping("/queryOrderList")
   @RequestMapping(value = "queryOrderList", method = RequestMethod.POST)
-  public ResponseResult<List<OrderDetailInfoResponse>> queryOrderList(@RequestHeader("Authorization") String token,
+  public ResponseResult<PageSerializable<OrderInfoListResponse>> queryOrderList(
+      @RequestHeader("Authorization") String token,
       @ApiParam(value = "query hotel details ", required = true)
       @RequestBody QueryOrderDetailRequestDTO requestDTO) {
-    return ResponseResult.ofSuccess();
+    try {
+      return ResponseResult.ofSuccess(orderInfoService.queryOrderList(requestDTO, token));
+    } catch (BizException e) {
+      log.error("Query order detail error", e);
+      return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
+    }
   }
 
   /**
@@ -124,11 +135,50 @@ public class OrderController {
    */
   @PostMapping("/pregenerateOrder")
   @RequestMapping(value = "pregenerateOrder", method = RequestMethod.POST)
-  public ResponseResult<PreBookRoomResponse> pregenerateOrder(@RequestHeader("Authorization") String token,
+  public ResponseResult<PreBookRoomResponse> pregenerateOrder(
+      @RequestHeader("Authorization") String token,
       @ApiParam(value = "pre-generate order", required = true)
       @RequestBody PrebookRoomRequestDTO requestDTO) {
     try {
-      return ResponseResult.ofSuccess(orderInfoService.pregenerateOrder(requestDTO,token));
+      return ResponseResult.ofSuccess(orderInfoService.pregenerateOrder(requestDTO, token));
+    } catch (BizException e) {
+      log.error("modify user info error", e);
+      return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
+    }
+  }
+
+  /**
+   * add a room count in order view (show the price and discount)
+   *
+   * @return
+   */
+  @PostMapping("/addOrderRoom")
+  @RequestMapping(value = "addOrderRoom", method = RequestMethod.POST)
+  public ResponseResult<ChangeOrderRoomCountResponse> addOrderRoom(
+      @RequestHeader("Authorization") String token,
+      @ApiParam(value = "pre-generate order", required = true)
+      @RequestBody PrebookRoomRequestDTO requestDTO) {
+    try {
+      return ResponseResult.ofSuccess(orderInfoService.addOrderRoom(requestDTO, token));
+    } catch (BizException e) {
+      log.error("modify user info error", e);
+      return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
+    }
+  }
+
+  /**
+   * add a room count in order view (show the price and discount)
+   *
+   * @return
+   */
+  @PostMapping("/removeOrderRoom")
+  @RequestMapping(value = "removeOrderRoom", method = RequestMethod.POST)
+  public ResponseResult<ChangeOrderRoomCountResponse> removeOrderRoom(
+      @RequestHeader("Authorization") String token,
+      @ApiParam(value = "pre-generate order", required = true)
+      @RequestBody PrebookRoomRequestDTO requestDTO) {
+    try {
+      return ResponseResult.ofSuccess(orderInfoService.removeOrderRoom(requestDTO, token));
     } catch (BizException e) {
       log.error("modify user info error", e);
       return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());

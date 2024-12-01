@@ -1,0 +1,28 @@
+spring:
+  profiles: local
+  application:
+    name: Hotux
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+  actuator:
+    endpoints:
+      web:
+        exposure:
+          include: health,info,metrics,env  # 你可以根据需求暴露更多的端点
+    web:
+      enabled: true
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    status-page-url-path: /actuator/info
+    health-check-url-path: /actuator/health
+  client:
+    register-with-eureka: true #把本服务也注册到注册中心，从注册中心的服务列表中可以看到本服务
+    fetch-registry: true #从注册中心拉取服务列表
+    serviceUrl:
+      defaultZone: http://admin:admin123@127.0.0.1:8761/eureka/
+

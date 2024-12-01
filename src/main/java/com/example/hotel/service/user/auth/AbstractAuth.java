@@ -11,16 +11,19 @@ import lombok.Getter;
 @Getter
 public abstract class AbstractAuth {
 
-    /** current user*/
-    private User currentUser;
-    public AbstractAuth(User tUser) {
-        this.currentUser = tUser;
-    }
+  /**
+   * current user
+   */
+  private User currentUser;
 
-    /**
-     * auth
-     *
-     * @throws BizException
-     */
-    public abstract void auth() throws BizException;
+  public AbstractAuth(User tUser) {
+    this.currentUser = tUser;
+  }
+
+  /**
+   * auth
+   *
+   * @throws BizException
+   */
+  public abstract void auth() throws BizException;
 }

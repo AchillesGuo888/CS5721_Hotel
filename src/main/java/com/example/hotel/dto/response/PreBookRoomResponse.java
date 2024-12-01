@@ -14,6 +14,7 @@ import org.apache.commons.pool2.BaseObject;
 @Builder
 @ApiModel("pre-book room result")
 public class PreBookRoomResponse extends BaseObject {
+
   private static final long serialVersionUID = -6808963525093889898L;
 
   @ApiModelProperty("startDate")
@@ -51,5 +52,8 @@ public class PreBookRoomResponse extends BaseObject {
 
   @ApiModelProperty("roomTypePrice")
   private BigDecimal roomTypePrice;
+
+  @ApiModelProperty("totalPrice")
+  private BigDecimal totalPrice;
 
 }

@@ -4,8 +4,6 @@ import com.example.hotel.dto.request.Base.Request;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
 import javax.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -34,8 +32,7 @@ public class PrebookRoomRequestDTO extends Request {
   private LocalDate endDate;
 
   @ApiModelProperty(value = "room count(default count is 1 room)", example = "1")
-  private Integer roomCount=1;
-
+  private Integer roomCount = 1;
 
 
 }

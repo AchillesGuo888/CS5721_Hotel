@@ -12,7 +12,6 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ApplicationContext;
 
 
-
 /**
  * <pre>
  *     SENS run!
@@ -24,11 +23,13 @@ import org.springframework.context.ApplicationContext;
 
 @MapperScan(basePackages = "com.example.hotel.mapper")
 public class Application {
-    private static final Logger log = LoggerFactory.getLogger(Application.class);
-    public static void main(String[] args) {
-        ApplicationContext context = SpringApplication.run(Application.class, args);
-        String serverPort = context.getEnvironment().getProperty("server.port");
-        log.info("SENS started at http://localhost:" + serverPort);
-    }
+
+  private static final Logger log = LoggerFactory.getLogger(Application.class);
+
+  public static void main(String[] args) {
+    ApplicationContext context = SpringApplication.run(Application.class, args);
+    String serverPort = context.getEnvironment().getProperty("server.port");
+    log.info("SENS started at http://localhost:" + serverPort);
+  }
 
 }

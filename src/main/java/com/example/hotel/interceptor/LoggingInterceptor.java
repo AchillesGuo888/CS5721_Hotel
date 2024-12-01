@@ -1,13 +1,10 @@
 package com.example.hotel.interceptor;
 
 
-import com.example.hotel.dto.SessionUser;
-
 import com.example.hotel.entity.LogInfo;
 import com.example.hotel.mapper.LogInfoMapper;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -17,13 +14,15 @@ public class LoggingInterceptor implements HandlerInterceptor {
   private LogInfoMapper logInfoMapper;
 
   @Override
-  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+  public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
+      Object handler) {
 
     return true;
   }
 
   @Override
-  public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+  public void afterCompletion(HttpServletRequest request, HttpServletResponse response,
+      Object handler, Exception ex) {
     int status = response.getStatus();
     String url = request.getRequestURL().toString();
     String method = request.getMethod();

@@ -1,6 +1,5 @@
 package com.example.hotel.dto;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.pool2.BaseObject;

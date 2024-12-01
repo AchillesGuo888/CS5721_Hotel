@@ -15,6 +15,7 @@ import lombok.ToString;
 @ToString
 @ApiModel(value = "modify user info parameter")
 public class ModifyUserInfoRequestDTO extends Request {
+
   @NotEmpty(message = "Username cannot be empty")
   @ApiModelProperty(value = "userName", required = true, example = "Achilles")
   @JsonProperty(value = "userName")

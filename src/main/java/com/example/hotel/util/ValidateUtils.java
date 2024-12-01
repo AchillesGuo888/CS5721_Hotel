@@ -9,23 +9,28 @@ import java.util.regex.Pattern;
  */
 public class ValidateUtils {
 
-    /**
-     * 校验登陆密码
-     * @param password
-     * @return
-     */
-    private static Pattern passwordReg = Pattern.compile("^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,18}$");
-    public static boolean checkPassword(String password){
-        return passwordReg.matcher(password).matches();
-    }
+  /**
+   * 校验登陆密码
+   *
+   * @param password
+   * @return
+   */
+  private static Pattern passwordReg = Pattern
+      .compile("^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,18}$");
 
-    /**
-     * 校验phone
-     * @param password
-     * @return
-     */
-    private static Pattern phoneReg = Pattern.compile("^1\\d{10}$");
-    public static boolean checkPhone(String phone){
-        return phoneReg.matcher(phone).matches();
-    }
+  public static boolean checkPassword(String password) {
+    return passwordReg.matcher(password).matches();
+  }
+
+  /**
+   * 校验phone
+   *
+   * @param password
+   * @return
+   */
+  private static Pattern phoneReg = Pattern.compile("^1\\d{10}$");
+
+  public static boolean checkPhone(String phone) {
+    return phoneReg.matcher(phone).matches();
+  }
 }

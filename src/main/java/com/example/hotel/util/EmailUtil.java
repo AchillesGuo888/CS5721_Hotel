@@ -1,11 +1,17 @@
 package com.example.hotel.util;
 
-import javax.mail.*;
+import java.util.Properties;
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.util.Properties;
 
 public class EmailUtil {
+
   private static final String SMTP_HOST = "smtp.gmail.com";
   private static final String SMTP_PORT = "587";
   private static final String EMAIL_USERNAME = "your-email@gmail.com";

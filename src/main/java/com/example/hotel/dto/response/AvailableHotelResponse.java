@@ -13,6 +13,7 @@ import org.apache.commons.pool2.BaseObject;
 @Builder
 @ApiModel("query hotel list result(with price)")
 public class AvailableHotelResponse extends BaseObject {
+
   @ApiModelProperty("hotel id")
   private Long hotelId;
 

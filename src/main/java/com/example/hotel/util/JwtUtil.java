@@ -2,8 +2,12 @@ package com.example.hotel.util;
 
 
 import com.example.hotel.enums.UserTypeEnum;
-import io.jsonwebtoken.*;
-
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,16 +23,18 @@ public class JwtUtil {
 
   private final static int USER_EXPIRE = 600000;
   private final static int ADMINISTRATOR_EXPIRE = 3600000;
+
   // Create JWT Token
-  public static String generateToken(String userId, byte userType) {
+  public static String generateToken(String userId, byte userType, String jti) {
     int expireTime = 0;
-    if (UserTypeEnum.USER.getCode().equals(userType)){
+    if (UserTypeEnum.USER.getCode().equals(userType)) {
       expireTime = USER_EXPIRE;
-    }else{
+    } else {
       expireTime = ADMINISTRATOR_EXPIRE;
     }
     return Jwts.builder()
         .setSubject(userId)
+        .setId(jti)
         .setIssuedAt(new Date())
         .setExpiration(new Date(System.currentTimeMillis() + expireTime))
         .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
@@ -40,12 +46,12 @@ public class JwtUtil {
     if (isTokenBlacklisted(token)) {
       throw new JwtException("Token is blacklisted");
     }
-    try{
+    try {
       return Jwts.parser()
           .setSigningKey(SECRET_KEY)
           .parseClaimsJws(token)
           .getBody();
-    }catch (ExpiredJwtException e) {
+    } catch (ExpiredJwtException e) {
       throw new JwtException("Token has expired");
 
     } catch (SignatureException e) {
@@ -77,7 +83,7 @@ public class JwtUtil {
 
   public String getUserIdFromToken(String token) {
     try {
-      if (StringUtils.isBlank(token)&& token.startsWith("Bearer ")){
+      if (StringUtils.isBlank(token) && token.startsWith("Bearer ")) {
         return StringUtils.EMPTY;
       }
       token = token.substring(7);

@@ -5,31 +5,31 @@ package com.example.hotel.enums;
  *     HotelOrRoomTypeStatusEnum
  * </pre>
  */
-public enum HotelOrRoomTypeStatusEnum implements BaseEnum<Byte>{
+public enum HotelOrRoomTypeStatusEnum implements BaseEnum<Byte> {
 
-    AVAILABLE("AVAILABLE",(byte)0),
-    FULL("FULL",(byte)1),
+  AVAILABLE("AVAILABLE", (byte) 0),
+  FULL("FULL", (byte) 1),
 
-    ;
+  ;
 
 
+  private String desc;
+  private Byte code;
 
-    private String desc;
-    private Byte code;
+  HotelOrRoomTypeStatusEnum(String desc, Byte code) {
+    this.desc = desc;
+    this.code = code;
+  }
 
-    HotelOrRoomTypeStatusEnum(String desc, Byte code){
-        this.desc = desc;
-        this.code = code;
-    }
-    @Override
-    public Byte getCode() {
-        return this.code;
-    }
+  @Override
+  public Byte getCode() {
+    return this.code;
+  }
 
-    @Override
-    public String getDesc() {
-        return this.desc;
-    }
+  @Override
+  public String getDesc() {
+    return this.desc;
+  }
 
 
 }

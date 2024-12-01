@@ -14,6 +14,7 @@ import lombok.ToString;
 @ToString
 @ApiModel("login request parameter")
 public class UserLoginRequestDTO extends Request {
+
   @NotEmpty(message = "email cannot be empty")
   @ApiModelProperty(value = "email", required = true, example = "11@qq.com")
   @JsonProperty(value = "email")

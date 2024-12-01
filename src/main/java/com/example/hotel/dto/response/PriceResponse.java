@@ -13,6 +13,7 @@ import org.apache.commons.pool2.BaseObject;
 @Builder
 @ApiModel("pre-book room price result")
 public class PriceResponse extends BaseObject {
+
   private static final long serialVersionUID = -6808963525093889898L;
 
   @ApiModelProperty("earnPointsCount")
@@ -21,11 +22,11 @@ public class PriceResponse extends BaseObject {
   @ApiModelProperty("membershipDiscount")
   private BigDecimal membershipDiscount;
 
-  @ApiModelProperty("pointsDiscount")
-  private BigDecimal pointsDiscount;
-
-  @ApiModelProperty("pointsExpenseCount")
-  private Integer pointsExpenseCount;
+//  @ApiModelProperty("pointsDiscount")
+//  private BigDecimal pointsDiscount;
+//
+//  @ApiModelProperty("pointsExpenseCount")
+//  private Integer pointsExpenseCount;
 
   @ApiModelProperty("realPrice")
   private BigDecimal realPrice;
