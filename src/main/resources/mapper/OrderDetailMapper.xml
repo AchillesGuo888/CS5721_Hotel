@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.hotel.mapper.OrderDetail">
+
+    <resultMap id="OrderDetailResultMap" type="com.example.hotel.entity.OrderDetail">
+        <id column="id" property="id" />
+        <result column="order_id" property="orderId" />
+        <result column="user_id" property="userId" />
+        <result column="room_number" property="roomNumber" />
+        <result column="price_difference" property="priceDifference" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="remark" property="remark" />
+        <result column="room_type_id" property="roomTypeId" />
+        <result column="original_room_type_id" property="originalRoomTypeId" />
+        <result column="status" property="status" />
+        <result column="price" property="price" />
+        <result column="change_type" property="changeType" />
+        <result column="change_date" property="changeDate" />
+        <result column="guest_name" property="guestName" />
+    </resultMap>
+
+    <select id="getOrderDetailsByOrderId" resultMap="OrderDetailResultMap">
+        SELECT * FROM order_detail WHERE order_id = #{orderId} AND is_deleted = 0
+    </select>
+
+</mapper>

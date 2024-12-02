@@ -19,19 +19,30 @@
         <result column="create_time" property="createTime"></result>
     </resultMap>
 
+    <!-- Insert or update statement -->
+    <insert id="insertOrder">
+        INSERT INTO order_detail (/* Other fields */, pending_cancel_rooms)
+        VALUES (/* Other field values */, #{pendingCancelRoomsStr})
+    </insert>
+
+    <update id="updateOrder">
+        UPDATE order_detail
+        SET /* Other fields */
+            pending_cancel_rooms = #{pendingCancelRoomsStr}
+        WHERE id = #{id}
+    </update>
+
     <select id="findAll" resultMap="BaseResultMap">
-        SELECT
-            id, post_id, user_id, quantity, status, start_date, name, phone, id_card, price, total_price, post_title, post_number, create_time
-        FROM
-            t_order
-        WHERE
-        <if test="startDate != null">
-            create_time >= STR_TO_DATE( #{startDate}, "%Y-%m-%d" ) AND
-        </if>
-        <if test="endDate != null">
-            create_time &lt;= STR_TO_DATE( #{endDate}, "%Y-%m-%d" )+1 AND
-        </if>
-        del_flag = 0
+        SELECT * FROM t_order
+        <where>
+            <if test="startDate != null">
+                AND create_time >= STR_TO_DATE( #{startDate}, "%Y-%m-%d" )
+            </if>
+            <if test="endDate != null">
+                AND create_time &lt;= STR_TO_DATE( #{endDate}, "%Y-%m-%d" )+1
+            </if>
+            AND del_flag = 0
+        </where>
     </select>
 
     <select id="getTotalPriceSum" resultType="java.lang.Integer">
@@ -40,14 +51,15 @@
         FROM
             t_order
         <where>
-        <if test="startDate != null">
-            create_time >= STR_TO_DATE( #{startDate}, "%Y-%m-%d" ) AND
-        </if>
-        <if test="endDate != null">
-            create_time &lt;= STR_TO_DATE( #{endDate}, "%Y-%m-%d" )+1 AND
-        </if>
-         del_flag = 0
+            <if test="startDate != null">
+                AND create_time >= STR_TO_DATE( #{startDate}, "%Y-%m-%d" )
+            </if>
+            <if test="endDate != null">
+                AND create_time &lt;= STR_TO_DATE( #{endDate}, "%Y-%m-%d" )+1
+            </if>
+            AND del_flag = 0
         </where>
+
     </select>
 
 </mapper>

@@ -1,19 +1,12 @@
-package com.example.hotel.dto.response;
+package com.example.hotel.entity;
 
-import io.swagger.annotations.ApiModel;
-import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.apache.commons.pool2.BaseObject;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
-@ApiModel("query order detail info result")
-public class OrderDetailInfoResponse extends BaseObject {
+public class OrderDetail {
+
     private Long id; // Primary Key
     private Long orderId; // Associated Order ID
     private Long userId;
@@ -30,4 +23,5 @@ public class OrderDetailInfoResponse extends BaseObject {
     private Integer changeType;
     private LocalDateTime changeDate;
     private String guestName;
+
 }

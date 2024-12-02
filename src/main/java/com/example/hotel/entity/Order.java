@@ -1,10 +1,13 @@
 package com.example.hotel.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.example.hotel.common.base.BaseEntity;
 import lombok.Data;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 订单
@@ -69,10 +72,30 @@ public class Order extends BaseEntity {
 
     private List<Integer> roomNumbers; // the room number list in the order
 
-    /**
-     * List of rooms to be cancelled (record room number in case of partial cancellation)
-     */
-    private int[] pendingCancelRooms;
+    // 在OrderDetail类中将pendingCancelRooms改为String类型
+    private String pendingCancelRooms; // 存储为逗号分隔的字符串
+
+    // 在插入或更新时，将int[]转换为String
+    public void setPendingCancelRooms(int[] rooms) {
+        if (rooms != null && rooms.length > 0) {
+            this.pendingCancelRooms = Arrays.stream(rooms)
+                    .mapToObj(String::valueOf)
+                    .collect(Collectors.joining(","));
+        } else {
+            this.pendingCancelRooms = "";
+        }
+    }
+
+    // 在获取时将String转换回int[]
+    public int[] getPendingCancelRooms() {
+        if (pendingCancelRooms != null && !pendingCancelRooms.isEmpty()) {
+            return Arrays.stream(pendingCancelRooms.split(","))
+                    .mapToInt(Integer::parseInt)
+                    .toArray();
+        }
+        return new int[0]; // 默认返回空数组
+    }
+
 
     /**
      * Remaining room numbers (updated after partial cancellation)
@@ -88,7 +111,7 @@ public class Order extends BaseEntity {
         return orderId;
     }
 
-    // Setter方法
+    // Setter
     public void setOrderId(Long orderId) {
         this.orderId = orderId;
     }
@@ -150,17 +173,6 @@ public class Order extends BaseEntity {
      */
     public void setEarnedPoints(int earnedPoints) {
         this.earnedPoints = earnedPoints;
-    }
-
-    /**
-     * Getter and Setter for pendingCancelRooms
-     */
-    public int[] getPendingCancelRooms() {
-        return pendingCancelRooms;
-    }
-
-    public void setPendingCancelRooms(int[] pendingCancelRooms) {
-        this.pendingCancelRooms = pendingCancelRooms;
     }
 
     /**

@@ -85,10 +85,18 @@ public interface OrderMapper extends BaseMapper<Order> {
     @Options(useGeneratedKeys = true, keyProperty = "orderId")
     int saveOrder(Order order);
 
-    @Update("UPDATE t_order SET status = #{status} WHERE order_id = #{orderId}")
-    int updateOrderStatus(@Param("orderId") Long orderId, @Param("status") Integer status);
-
     @Select("SELECT * FROM t_order")
     List<Order> findAllOrders();
+
+    @Update("UPDATE order_detail " +
+            "SET pending_cancel_rooms = #{pendingCancelRoomsStr}, is_deleted = 1 " +
+            "WHERE order_id = #{orderId} AND room_number IN (${roomNumbers})")
+    void updatePendingCancelRooms(@Param("orderId") int orderId,
+                                  @Param("pendingCancelRoomsStr") String pendingCancelRoomsStr,
+                                  @Param("roomNumbers") String roomNumbers);
+
+    @Select("SELECT order_id, pending_cancel_rooms FROM orders WHERE order_id = #{orderId}")
+    @ResultMap("orderResultMap")
+    Order selectOrder(int orderId);
 }
 

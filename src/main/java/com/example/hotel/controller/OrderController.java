@@ -15,8 +15,10 @@ import com.example.hotel.dto.response.HotelDetailResponse;
 import com.example.hotel.dto.response.OrderDetailInfoResponse;
 import com.example.hotel.dto.response.OrderInfoResponse;
 import com.example.hotel.entity.Order;
+import com.example.hotel.entity.OrderDetail;
 import com.example.hotel.enums.OrderStatusEnum;
 import com.example.hotel.mapper.OrderMapper;
+import com.example.hotel.service.oder.OrderDetailService;
 import com.example.hotel.service.oder.OrderService;
 import com.example.hotel.util.JwtUtil;
 import io.swagger.annotations.Api;
@@ -139,4 +141,19 @@ public class OrderController {
     return orderService.reviewCancelOrder(orderId, approve);
   }
 
+  private final OrderDetailService orderDetailService;
+
+  public OrderController(OrderDetailService orderDetailService) {
+    this.orderDetailService = orderDetailService;
+  }
+
+  @GetMapping("/{orderId}/details")
+  public List<OrderDetail> getOrderDetails(@PathVariable Long orderId) {
+    return orderDetailService.getOrderDetailsByOrderId(orderId);
+  }
+
+  @PostMapping("/details/{id}/status")
+  public void updateOrderDetailStatus(@PathVariable Long id, @RequestParam Integer status) {
+    orderDetailService.updateOrderDetailStatus(id, status);
+  }
 }

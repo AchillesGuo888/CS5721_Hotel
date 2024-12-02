@@ -2,6 +2,8 @@ package com.example.hotel.service.oder;
 
 import com.example.hotel.common.base.ResponseResult;
 import com.example.hotel.entity.Order;
+import com.example.hotel.entity.OrderDetail;
+import com.example.hotel.mapper.OrderDetailMapper;
 import com.example.hotel.mapper.OrderMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ public class OrderService {
 
     @Autowired
     private OrderMapper orderMapper;
+    private OrderDetailMapper orderDetailMapper;
 
     /**
      * Update order status
