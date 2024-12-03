@@ -83,6 +83,11 @@ public class RoomInfo {
      *
      * @mbg.generated Sat Nov 09 15:54:04 GMT 2024
      */
+
+    private Long priceRangeMin;
+    private Long priceRangeMax;
+
+
     public Long getId() {
         return id;
     }
@@ -266,4 +271,21 @@ public class RoomInfo {
     public void setRoomKey(String roomKey) {
         this.roomKey = roomKey;
     }
+
+    public Long getPriceRangeMin() {
+        return priceRangeMin;
+    }
+
+    public void setPriceRangeMin(Long priceRangeMin) {
+        this.priceRangeMin = priceRangeMin;
+    }
+
+    public Long getPriceRangeMax() {
+        return priceRangeMax;
+    }
+
+    public void setPriceRangeMax(Long priceRangeMax) {
+        this.priceRangeMax = priceRangeMax;
+    }
+
 }

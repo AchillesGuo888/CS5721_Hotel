@@ -36,6 +36,26 @@ public class RoomTypeInfoExample {
      *
      * @mbg.generated Wed Nov 06 01:15:54 GMT 2024
      */
+
+     private Integer limit;
+    private Integer offset;
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
+    }
+
+    public Integer getOffset() {
+        return offset;
+    }
+
+    public void setOffset(Integer offset) {
+        this.offset = offset;
+    }
+    
     public RoomTypeInfoExample() {
         oredCriteria = new ArrayList<>();
     }
@@ -863,6 +883,21 @@ public class RoomTypeInfoExample {
 
         public Criteria andMaxQuantityNotBetween(Integer value1, Integer value2) {
             addCriterion("max_quantity not between", value1, value2, "maxQuantity");
+            return (Criteria) this;
+        }
+
+        public Criteria andPriceBetween(Long value1, Long value2) {
+            addCriterion("price between", value1, value2, "price");
+            return (Criteria) this;
+        }
+        
+        public Criteria andPriceGreaterThanOrEqualTo(Long value) {
+            addCriterion("price >=", value, "price");
+            return (Criteria) this;
+        }
+        
+        public Criteria andPriceLessThanOrEqualTo(Long value) {
+            addCriterion("price <=", value, "price");
             return (Criteria) this;
         }
     }

@@ -136,36 +136,70 @@ public class RoomInfoServiceImpl implements RoomInfoService {
     }
 
     @Override
-    public List<RoomDetailResponse> queryRoomList(QueryRoomListRequestDTO requestDTO) throws BizException {
-        // Query room list based on provided parameters (e.g., hotelId, roomTypeId)
-        RoomInfoExample example = new RoomInfoExample();
-        RoomInfoExample.Criteria criteria = example.createCriteria();
+public List<RoomDetailResponse> queryRoomList(QueryRoomListRequestDTO requestDTO) throws BizException {
+    // Create an example object to define query criteria
+    RoomInfoExample example = new RoomInfoExample();
+    RoomInfoExample.Criteria criteria = example.createCriteria();
 
-        // Set criteria for hotelId and roomTypeId based on requestDTO
+    // Add conditions based on the requestDTO parameters if they are not null
+    if (requestDTO.getHotelId() != null) {
         criteria.andHotelIdEqualTo(requestDTO.getHotelId());
-        criteria.andRoomTypeIdEqualTo(requestDTO.getRoomTypeId());
-
-        // Fetch the list of RoomInfo objects based on the criteria in RoomListExample
-        List<RoomInfo> roomList = roomInfoMapper.selectByExample(example);
-
-        if (roomList == null || roomList.isEmpty()) {
-            throw new RuntimeException("No rooms found for the given criteria.");
-        }
-
-        // Map each RoomInfo to RoomDetailResponse
-        List<RoomDetailResponse> responseList = roomList.stream()
-          .map(roomInfo -> RoomDetailResponse.builder()
-              .roomId(roomInfo.getId())
-              .roomNumber(roomInfo.getRoomNumber())
-              .roomKey(roomInfo.getRoomKey())
-              .hotelId(roomInfo.getHotelId())
-              .roomTypeId(roomInfo.getRoomTypeId())
-              .createTime(roomInfo.getCreateTime())
-              .updateTime(roomInfo.getUpdateTime())
-              .build())
-          .collect(Collectors.toList());
-
-        return responseList;
     }
+
+    if (requestDTO.getRoomTypeId() != null) {
+        criteria.andRoomTypeIdEqualTo(requestDTO.getRoomTypeId());
+    }
+
+    if (requestDTO.getPriceRangeMin() != null && requestDTO.getPriceRangeMax() != null) {
+        criteria.andPriceBetween(requestDTO.getPriceRangeMin(), requestDTO.getPriceRangeMax());
+    } else if (requestDTO.getPriceRangeMin() != null) {
+        criteria.andPriceGreaterThanOrEqualTo(requestDTO.getPriceRangeMin());
+    } else if (requestDTO.getPriceRangeMax() != null) {
+        criteria.andPriceLessThanOrEqualTo(requestDTO.getPriceRangeMax());
+    }
+
+    if (requestDTO.getRoomNumber() != null) {
+        criteria.andRoomNumberEqualTo(requestDTO.getRoomNumber());
+    }
+
+    if (requestDTO.getIsDeleted() != null) {
+        criteria.andIsDeletedEqualTo(requestDTO.getIsDeleted());
+    }
+
+    if (requestDTO.getUpdateTime() != null) {
+        criteria.andUpdateTimeGreaterThanOrEqualTo(requestDTO.getUpdateTime());
+    }
+
+    if (requestDTO.getCreateTime() != null) {
+        criteria.andCreateTimeGreaterThanOrEqualTo(requestDTO.getCreateTime());
+    }
+
+    // Add pagination logic if page and pageSize are provided
+    if (requestDTO.getPage() != null && requestDTO.getPageSize() != null) {
+        int offset = Math.toIntExact((requestDTO.getPage() - 1) * requestDTO.getPageSize());
+        example.setLimit(requestDTO.getPageSize().intValue());
+        example.setOffset(offset);
+    }
+
+    // Fetch the list of RoomInfo objects based on the criteria
+    List<RoomInfo> roomList = roomInfoMapper.selectByExample(example);
+
+    if (roomList == null || roomList.isEmpty()) {
+        throw new RuntimeException("No rooms found for the given criteria.");
+    }
+
+    // Map each RoomInfo to RoomDetailResponse
+    return roomList.stream()
+        .map(roomInfo -> RoomDetailResponse.builder()
+            .roomId(roomInfo.getId())
+            .roomNumber(roomInfo.getRoomNumber())
+            .roomKey(roomInfo.getRoomKey())
+            .hotelId(roomInfo.getHotelId())
+            .roomTypeId(roomInfo.getRoomTypeId())
+            .createTime(roomInfo.getCreateTime())
+            .updateTime(roomInfo.getUpdateTime())
+            .build())
+        .collect(Collectors.toList());
+}
 
 }

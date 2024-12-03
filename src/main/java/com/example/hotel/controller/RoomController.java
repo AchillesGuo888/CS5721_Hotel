@@ -135,7 +135,7 @@ public class RoomController {
         roomInfoService.queryRoomList(requestDTO);
         return ResponseResult.ofSuccess();
       } catch (BizException e) {
-        log.error("modify error error", e);
+        log.error("query room list error", e);
         return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
       }
   }
