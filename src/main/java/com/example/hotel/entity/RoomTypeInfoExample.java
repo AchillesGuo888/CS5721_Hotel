@@ -885,21 +885,6 @@ public class RoomTypeInfoExample {
             addCriterion("max_quantity not between", value1, value2, "maxQuantity");
             return (Criteria) this;
         }
-
-        public Criteria andPriceBetween(Long value1, Long value2) {
-            addCriterion("price between", value1, value2, "price");
-            return (Criteria) this;
-        }
-        
-        public Criteria andPriceGreaterThanOrEqualTo(Long value) {
-            addCriterion("price >=", value, "price");
-            return (Criteria) this;
-        }
-        
-        public Criteria andPriceLessThanOrEqualTo(Long value) {
-            addCriterion("price <=", value, "price");
-            return (Criteria) this;
-        }
     }
 
     /**
