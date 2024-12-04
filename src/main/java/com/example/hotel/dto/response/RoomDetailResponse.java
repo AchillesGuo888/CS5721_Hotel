@@ -29,4 +29,8 @@ public class RoomDetailResponse extends BaseObject {
     private LocalDateTime updateTime;
     @ApiModelProperty("create time")
     private LocalDateTime createTime;
+    @ApiModelProperty("price range min")
+    private Long priceRangeMin;
+    @ApiModelProperty("price range max")
+    private Long priceRangeMax;
 }
