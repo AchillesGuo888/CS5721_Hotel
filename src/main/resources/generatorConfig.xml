@@ -3,40 +3,28 @@
   PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
   "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
-    <context id="DB2Tables" targetRuntime="MyBatis3">
-        <!-- JDBC 配置信息 -->
-        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-          connectionURL="jdbc:mysql://rm-bp1k160qpstc9hojzto.mysql.rds.aliyuncs.com:3306/hotel"
-          userId="root"
-          password="Cs5721__"/>
-<<<<<<< HEAD
+  <context id="DB2Tables" targetRuntime="MyBatis3">
+    <!-- JDBC configuration information -->
+    <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+      connectionURL="jdbc:mysql://rm-bp1k160qpstc9hojzto.mysql.rds.aliyuncs.com:3306/hotel"
+      userId="root"
+      password="Cs5721__"/>
+    <javaTypeResolver type="org.mybatis.generator.internal.types.JavaTypeResolverDefaultImpl">
+      <property name="useJSR310Types" value="true"/>
+    </javaTypeResolver>
+    <!-- arget package and output path for generating model classes -->
+    <javaModelGenerator targetPackage="com.example.hotel.entity" targetProject="src/main/java"/>
 
-        <javaTypeResolver type="org.mybatis.generator.internal.types.JavaTypeResolverDefaultImpl">
-            <property name="useJSR310Types" value="true"/>
-        </javaTypeResolver>
+    <!-- Target package and output path for generating Mapper XML files -->
+    <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources"/>
 
-=======
-        <javaTypeResolver type="org.mybatis.generator.internal.types.JavaTypeResolverDefaultImpl">
-            <property name="useJSR310Types" value="true"/>
-        </javaTypeResolver>
->>>>>>> origin/dev_rui
-        <!-- 生成模型的目标包和输出路径 -->
-        <javaModelGenerator targetPackage="com.example.hotel.entity" targetProject="src/main/java"/>
+    <!-- Target package and output path for generating Mapper interfaces -->
+    <javaClientGenerator type="XMLMAPPER" targetPackage="com.example.hotel.mapper"
+      targetProject="src/main/java"/>
 
-        <!-- 生成 Mapper XML 文件的目标包和输出路径 -->
-        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources"/>
-
-        <!-- 生成 Mapper 接口的目标包和输出路径 -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.example.hotel.mapper" targetProject="src/main/java"/>
-
-        <!-- 指定需要生成的表 -->
-<<<<<<< HEAD
-        <table tableName="room_info" >
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-=======
-        <table tableName="payment_info" >
-            <generatedKey column="id" sqlStatement="MYSQL" identity="true"/>
->>>>>>> origin/dev_rui
-        </table>
-    </context>
+    <!-- Specify the tables to be generated -->
+    <table tableName="room_info">
+      <generatedKey column="id" sqlStatement="MYSQL" identity="true"/>
+    </table>
+  </context>
 </generatorConfiguration>
