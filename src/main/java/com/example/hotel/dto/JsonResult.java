@@ -2,37 +2,29 @@ package com.example.hotel.dto;
 
 import lombok.Data;
 
-/**
- * <pre>
- *     Json格式
- * </pre>
- *
- * @author : saysky
- * @date : 2018/5/24
- */
 @Data
 public class JsonResult {
 
   /**
-   * 返回的状态码，0：失败，1：成功
+   * status code，0：failed，1：success
    */
   private Integer code;
 
   /**
-   * 返回信息
+   * return message
    */
   private String msg;
 
   /**
-   * 返回的数据
+   * return object
    */
   private Object result;
 
   /**
-   * 不返回数据的构造方法
+   * constructor without result
    *
-   * @param code 状态码
-   * @param msg  信息
+   * @param code code
+   * @param msg  message
    */
   public JsonResult(Integer code, String msg) {
     this.code = code;
@@ -40,11 +32,11 @@ public class JsonResult {
   }
 
   /**
-   * 返回数据的构造方法
+   * constructor with result
    *
-   * @param code   状态码
-   * @param msg    信息
-   * @param result 数据
+   * @param code   code
+   * @param msg    message
+   * @param result data
    */
   public JsonResult(Integer code, String msg, Object result) {
     this.code = code;
@@ -53,10 +45,10 @@ public class JsonResult {
   }
 
   /**
-   * 返回状态码和数据
+   * return code and data
    *
-   * @param code   状态码
-   * @param result 数据
+   * @param code   code
+   * @param result data
    */
   public JsonResult(Integer code, Object result) {
     this.code = code;

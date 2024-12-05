@@ -2,9 +2,12 @@ package com.example.hotel.controller;
 
 
 import com.example.hotel.common.base.ResponseResult;
+import com.example.hotel.config.OrderQueryConfig;
 import com.example.hotel.dto.request.BookRoomRequestDTO;
 import com.example.hotel.dto.request.CancelOrderRequestDTO;
 import com.example.hotel.dto.request.ModifyOrderInfoRequestDTO;
+import com.example.hotel.dto.request.PayBillRequestDTO;
+import com.example.hotel.dto.request.PayDifferenceRequestDTO;
 import com.example.hotel.dto.request.PrebookRoomRequestDTO;
 import com.example.hotel.dto.request.QueryOrderDetailRequestDTO;
 import com.example.hotel.dto.response.ChangeOrderRoomCountResponse;
@@ -40,6 +43,8 @@ public class OrderController {
 
   private final OrderQueryService orderQueryService;
 
+//  private final OrderQueryConfig orderQueryConfig;
+
   /**
    * book room and create order
    *
@@ -70,6 +75,7 @@ public class OrderController {
       @PathVariable Long id) {
 
     try {
+
       return ResponseResult.ofSuccess(orderQueryService.queryOrderDetail(id));
     } catch (BizException e) {
       log.error("Query order detail error", e);
@@ -183,6 +189,36 @@ public class OrderController {
       log.error("modify user info error", e);
       return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
     }
+  }
+
+  /**
+   * pay room bill
+   *
+   * @return
+   */
+  @PostMapping("/payBill")
+  @RequestMapping(value = "payBill", method = RequestMethod.POST)
+  public ResponseResult<Boolean> payRoomBill(@RequestHeader("Authorization") String token,
+      @ApiParam(value = "bill detail", required = true) @RequestBody PayBillRequestDTO requestDTO) {
+    try {
+      return ResponseResult.ofSuccess(orderInfoService.payBill(token,requestDTO));
+    } catch (BizException e) {
+      log.error("user login error", e);
+      return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
+    }
+
+  }
+
+  /**
+   * pay update room difference
+   *
+   * @return
+   */
+  @PostMapping("/payDifference")
+  @RequestMapping(value = "payDifference", method = RequestMethod.POST)
+  public ResponseResult payRoomDifference(@RequestHeader("Authorization") String token,
+      @ApiParam(value = "difference bill detail", required = true) @RequestBody PayDifferenceRequestDTO requestDTO) {
+    return ResponseResult.ofSuccess();
   }
 
 

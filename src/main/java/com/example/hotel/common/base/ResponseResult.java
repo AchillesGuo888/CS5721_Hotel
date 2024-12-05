@@ -22,20 +22,20 @@ public class ResponseResult<T> extends BaseObject {
 
 
   /**
-   * 错误编码
+   * wrong code
    */
   public Long code;
   /**
-   * 错误描述
+   * wrong reason
    */
   public String msg = "";
 
   /**
-   * 数据对象
+   * date object
    */
   public T data;
   /**
-   * 结果扩展参数
+   * extend param
    */
   private Map<String, Object> extparams;
 
@@ -94,7 +94,7 @@ public class ResponseResult<T> extends BaseObject {
   }
 
   /**
-   * 添加参数
+   * add extend param
    *
    * @param name
    * @param value
@@ -116,7 +116,7 @@ public class ResponseResult<T> extends BaseObject {
   }
 
   /**
-   * 添加信息到map中
+   * add into map
    *
    * @param map
    * @return

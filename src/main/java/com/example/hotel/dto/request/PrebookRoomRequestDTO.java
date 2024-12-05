@@ -34,5 +34,4 @@ public class PrebookRoomRequestDTO extends Request {
   @ApiModelProperty(value = "room count(default count is 1 room)", example = "1")
   private Integer roomCount = 1;
 
-
 }

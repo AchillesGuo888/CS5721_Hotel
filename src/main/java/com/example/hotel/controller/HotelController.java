@@ -39,10 +39,11 @@ public class HotelController {
    *
    * @return
    */
-  @PostMapping("/admin/add")
+  @PostMapping("/addHotel")
   @RequestMapping(value = "addHotel", method = RequestMethod.POST)
   public ResponseResult addHotel(@RequestHeader("Authorization") String token,
       @ApiParam(value = "Hotel details", required = true) @RequestBody AddHotelRequestDTO addHotelRequestDTO) {
+    System.out.println("1111");
     return ResponseResult.ofSuccess();
   }
 
@@ -66,7 +67,7 @@ public class HotelController {
    *
    * @return
    */
-  @PutMapping("/admin/modifyHotelInfo")
+  @PutMapping("/modifyHotelInfo")
   @RequestMapping(value = "modifyHotelInfo", method = RequestMethod.PUT)
   public ResponseResult modifyHotelInfo(@RequestHeader("Authorization") String token,
       @ApiParam(value = "Hotel details", required = true) @RequestBody ModifyHotelInfoRequestDTO modifyHotelInfoRequestDTOInfo) {
@@ -79,7 +80,7 @@ public class HotelController {
    *
    * @return
    */
-  @PostMapping("/admin/deleteHotel")
+  @PostMapping("/deleteHotel")
   @RequestMapping(value = "deleteHotel", method = RequestMethod.DELETE)
   public ResponseResult deleteHotel(@RequestHeader("Authorization") String token,
       @ApiParam(value = "delete hotel", required = true) @RequestBody DeleteHotelInfoRequestDTO deleteHotelInfoRequestDTO) {

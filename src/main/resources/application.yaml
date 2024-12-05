@@ -41,6 +41,7 @@ mybatis:
   type-aliases-package: com.example.hotel.entity
   configLocation: classpath:mybatis-config.xml
   configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
 #  #实体扫描，多个package用逗号或者分号分隔
 #  typeAliasesPackage: com.example.sens.entity
@@ -108,10 +109,17 @@ mail:
 
 #bank
 aib:
-  api-url: "https://api.aibms.com/payment"  # mock AIB API URL
-  merchant-id: "12345678"  # mock AIB API merchant id
-  api-key: "CS5721_AIB"  # mock AIB API Id
-  secret-key: "Limerick"  # mock AIB API secret key
-  currency: "EUR"
-  payment-method: "CREDIT_CARD"
+  api-url: https://api.aibms.com/payment  # mock AIB API URL
+  merchant-id: 12345678  # mock AIB API merchant id
+  api-key: CS5721_AIB  # mock AIB API Id
+  secret-key: Limerick  # mock AIB API secret key
+  currency: EUR
+  payment-method: CREDIT_CARD
+
+ribbon:
+  MaxAutoRetries: 1 #同一台实例最大重试次数,不包括首次调用
+  MaxAutoRetriesNextServer: 1 #重试负载均衡其他的实例最大重试次数,不包括首次调用
+  OkToRetryOnAllOperations: true  #是否所有操作都重试
+  ReadTimeout: 6000
+  ConnectTimeout: 6000
 

@@ -20,12 +20,11 @@ public class HotelDetailDecorator extends OrderServiceDecorator {
 
   @Override
   protected OrderInfoResponse enhanceOrder(OrderInfoResponse order) {
-
+    OrderInfoResponse response = super.enhanceOrder(order);
     HotelInfo hotelInfo = hotelInfoMapper.selectByPrimaryKey(order.getHotelId());
-    order.setHotelName(hotelInfo.getHotelName());
-    order.setCity(hotelInfo.getCity());
-    return order;
+    response.setHotelName(hotelInfo.getHotelName());
+    response.setCity(hotelInfo.getCity());
+    return response;
   }
-
 
 }

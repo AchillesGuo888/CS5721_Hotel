@@ -25,5 +25,4 @@ public class UserLoginRequestDTO extends Request {
   @JsonProperty(value = "password")
   private String password;
 
-
 }

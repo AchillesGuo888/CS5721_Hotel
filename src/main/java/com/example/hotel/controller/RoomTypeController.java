@@ -39,9 +39,9 @@ public class RoomTypeController {
    *
    * @return
    */
-  @PostMapping("/add")
+  @PostMapping("/addRoomType")
   @RequestMapping(value = "addRoomType", method = RequestMethod.POST)
-  public ResponseResult userLogout(@RequestHeader("Authorization") String token,
+  public ResponseResult addRoomType(@RequestHeader("Authorization") String token,
       @ApiParam(value = "Room type details", required = true)
       @RequestBody AddRoomTypeRequestDTO requestDTO) {
     return ResponseResult.ofSuccess();
@@ -54,7 +54,7 @@ public class RoomTypeController {
    */
   @PostMapping("/queryRoomTypeInfo")
   @RequestMapping(value = "queryRoomTypeInfo", method = RequestMethod.POST)
-  public ResponseResult<HotelDetailResponse> queryHotelInfo(
+  public ResponseResult<HotelDetailResponse> queryRoomTypeInfo(
       @RequestHeader("Authorization") String token,
       @ApiParam(value = "query room type details ", required = true)
       @RequestBody QueryRoomTypeRequestDTO requestDTO) {
@@ -69,7 +69,7 @@ public class RoomTypeController {
    */
   @PutMapping("/modifyRoomTypeInfo")
   @RequestMapping(value = "modifyRoomTypeInfo", method = RequestMethod.PUT)
-  public ResponseResult modifyHotelInfo(@RequestHeader("Authorization")
+  public ResponseResult modifyRoomTypeInfo(@RequestHeader("Authorization")
       String token, @ApiParam(value = "room type details", required = true)
   @RequestBody ModifyRoomTypeInfoRequestDTO requestDTO) {
 

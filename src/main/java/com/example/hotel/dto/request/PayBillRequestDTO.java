@@ -55,4 +55,7 @@ public class PayBillRequestDTO extends Request {
   @JsonProperty(value = "payType")
   private Byte payType;
 
+  @ApiModelProperty(value = "userId", hidden = true,example = "878787")
+  @JsonProperty(value = "userId")
+  private String userId;
 }

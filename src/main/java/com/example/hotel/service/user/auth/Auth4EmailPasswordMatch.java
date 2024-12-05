@@ -14,7 +14,7 @@ import lombok.Getter;
 public class Auth4EmailPasswordMatch extends AbstractAuth {
 
   /**
-   * 密码信息
+   *
    */
   private String passwordMD5;
 

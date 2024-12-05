@@ -3,9 +3,11 @@ package com.example.hotel.service.impl.order;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.example.hotel.common.base.ResponseCode;
+import com.example.hotel.common.base.ResponseResult;
 import com.example.hotel.dto.AvailableRoomCountDTO;
 import com.example.hotel.dto.request.BookRoomRequestDTO;
 import com.example.hotel.dto.request.ModifyOrderInfoRequestDTO;
+import com.example.hotel.dto.request.PayBillRequestDTO;
 import com.example.hotel.dto.request.PrebookRoomRequestDTO;
 import com.example.hotel.dto.request.QueryOrderAmountRequestDTO;
 import com.example.hotel.dto.request.QueryOrderDetailRequestDTO;
@@ -22,6 +24,7 @@ import com.example.hotel.entity.User;
 import com.example.hotel.enums.OrderStatusEnum;
 import com.example.hotel.exception.BizException;
 import com.example.hotel.exception.NoRollbackException;
+import com.example.hotel.feign.BillFeignClient;
 import com.example.hotel.mapper.HotelInfoMapper;
 import com.example.hotel.mapper.OrderBaseMapper;
 import com.example.hotel.service.command.ChangeRoomCountCommand;
@@ -67,6 +70,8 @@ public class OrderInfoServiceImpl implements OrderInfoService {
   private final UserService userService;
   private final OrderBaseMapper orderBaseMapper;
   private final UserPointService userPointService;
+
+  private BillFeignClient billFeignClient;
 
   @Override
   @Transactional(rollbackFor = Exception.class, noRollbackFor = NoRollbackException.class)
@@ -246,6 +251,23 @@ public class OrderInfoServiceImpl implements OrderInfoService {
       updateFinishOrder(orderBaseList);
 
     }
+  }
+
+  @Override
+  @Transactional(rollbackFor = Exception.class, noRollbackFor = NoRollbackException.class)
+  public Boolean payBill(String token, PayBillRequestDTO requestDTO) throws BizException {
+    String userId = jwtUtil.getUserIdFromToken(token);
+    requestDTO.setUserId(userId);
+    ResponseResult<Boolean> billResult = billFeignClient.payRoomBill(requestDTO);
+    if (billResult.getData()){
+      OrderBase param = new OrderBase();
+      param.setId(requestDTO.getOrderId());
+      param.setStatus(OrderStatusEnum.HAS_PAY.getCode());
+      orderBaseMapper.updateByPrimaryKeySelective(param);
+    }else{
+      throw new BizException(ResponseCode.pay_error);
+    }
+    return true;
   }
 
   private void updateFinishOrder(List<OrderBase> orderBaseList) {

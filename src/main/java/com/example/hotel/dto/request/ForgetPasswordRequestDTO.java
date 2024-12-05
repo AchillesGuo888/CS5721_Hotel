@@ -29,5 +29,4 @@ public class ForgetPasswordRequestDTO extends Request {
   @JsonProperty(value = "confirmPassword")
   private String confirmPassword;
 
-
 }

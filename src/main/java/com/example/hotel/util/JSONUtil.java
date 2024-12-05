@@ -11,12 +11,12 @@ import org.apache.commons.lang3.StringUtils;
 
 
 /**
- * Json工具类
+ * Json tool util
  */
 public class JSONUtil {
 
   /**
-   * 启动全局Object mapper
+   * global Object mapper
    */
   public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -26,7 +26,7 @@ public class JSONUtil {
 
 
   /**
-   * 转换为Json
+   * transfer to Json
    *
    * @param object
    * @return
@@ -52,7 +52,7 @@ public class JSONUtil {
   }
 
   /**
-   * 解析json成T对象信息
+   * analyse json and transfer to T object
    *
    * @param json
    * @param clazz
@@ -71,7 +71,7 @@ public class JSONUtil {
   }
 
   /**
-   * 解析成list T
+   * transfer to list T
    *
    * @param json
    * @param clazz
@@ -91,7 +91,7 @@ public class JSONUtil {
   }
 
   /**
-   * 获取 get Collection Type
+   *  get Collection Type
    *
    * @param collectionClass
    * @param elementClasses

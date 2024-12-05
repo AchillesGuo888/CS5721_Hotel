@@ -8,7 +8,7 @@ import javax.servlet.http.HttpSession;
 public interface EmailService {
 
   /**
-   * 发送邮箱验证码
+   * send verification code
    *
    * @param requestDTO
    * @param session
@@ -16,12 +16,5 @@ public interface EmailService {
    */
   void sendEmailValidateCode(EmailValidateCodeRequestDTO requestDTO,
       HttpSession session) throws BizException;
-
-  /**
-   * 验证邮箱验证码
-   * @param requestDTO
-   * @throws Exception
-   */
-//    void verifyEmailValidateCode(EmailValidateCodeVerifyRequestDTO requestDTO) throws Exception;
 
 }

@@ -16,5 +16,7 @@ public abstract class OrderServiceDecorator implements OrderQueryService {
     return enhanceOrder(baseOrder); // enhance order info
   }
 
-  protected abstract OrderInfoResponse enhanceOrder(OrderInfoResponse order);
+  protected OrderInfoResponse enhanceOrder(OrderInfoResponse baseOrder) {
+    return baseOrder;
+  }
 }

@@ -17,11 +17,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-
-/**
- * @author qzb
- * @date 2020/2/21
- */
 @Slf4j
 @Component
 public class Md5Util {
@@ -273,17 +268,6 @@ public class Md5Util {
   }
 
 
-  /**
-   * 验证密码
-   *
-   * @param password 原密码
-   * @param password 加密之后的密码
-   * @return boolean true表示和原密码一致   false表示和原密码不一致
-   */
-  public static boolean volidatePassword(String password, String passwordMd5, String salt) {
-    String encrypPwd = getSaltMd5AndSha(password, salt);
-    return encrypPwd.equals(passwordMd5);
-  }
 
   /**
    * 生成用户ID
@@ -296,12 +280,6 @@ public class Md5Util {
     return Long.parseLong(code);
   }
 
-  /**
-   * 生成团队成员ID
-   */
-  public static Long createNewMemberId() {
-    return createNewUserId();
-  }
 
   /**
    * 生成指定位数的随机数
@@ -317,32 +295,5 @@ public class Md5Util {
     }
     return val;
   }
-
-//    public static void main(String[] args) throws UnknownHostException {
-//        // 原密码
-//        String pwd = "123";
-//        // 盐
-//        String salt = createSalt();
-//
-//        // 获取加盐后的MD5值
-//        String passwordMd5 = MD5Util.getSaltMd5AndSha(pwd, salt);
-//        System.out.println("盐：" + salt);
-//        System.out.println("盐1：" + String.valueOf(System.currentTimeMillis() / 1000).substring
-//        (2, 10));
-//        System.out.println("盐2：" + String.valueOf(InetAddress.getLocalHost().getHostAddress())
-//        .replace(".", ""));
-//        System.out.println("加盐后MD5：" + passwordMd5);
-//        System.out.println("是否是同一字符串:" + MD5Util.volidatePassword(pwd, passwordMd5, salt));
-//
-//        System.out.println("----------");
-//
-//        System.out.println("A:" + getRandom(2));
-//        String code1 = String.valueOf(System.currentTimeMillis() / 1000).substring(2, 10);
-//        System.out.println(code1);
-//        Random r2 = new Random();
-//        int i2 = r2.nextInt();
-//        System.out.println(createNewUserId());
-//    }
-
 
 }

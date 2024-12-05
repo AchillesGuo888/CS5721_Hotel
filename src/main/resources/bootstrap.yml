@@ -1,19 +1,10 @@
 spring:
-  profiles: local
   application:
     name: Hotux
-  cloud:
-    gateway:
-      discovery:
-        locator:
-          enabled: true
-  actuator:
-    endpoints:
-      web:
-        exposure:
-          include: health,info,metrics,env  # 你可以根据需求暴露更多的端点
-    web:
-      enabled: true
+  servlet:
+    multipart:
+      maxFileSize:  1024000000
+      maxRequestSize: 1024000000
 
 eureka:
   instance:

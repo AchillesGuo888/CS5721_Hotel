@@ -33,6 +33,7 @@ public class OrderDetailDecorator extends OrderServiceDecorator {
 
   @Override
   protected OrderInfoResponse enhanceOrder(OrderInfoResponse order) {
+    OrderInfoResponse response = super.enhanceOrder(order);
     List<OrderDetail> orderDetailList = orderAndDetailService.getOrderDetailByOrderId(
         Arrays.asList(order.getOrderId()));
     List<String> guestNames = new ArrayList<>();
@@ -60,7 +61,9 @@ public class OrderDetailDecorator extends OrderServiceDecorator {
         }
       }
     }
-    return order;
+    response.getDetailList().addAll(orderDetails);
+    response.getChangeRoomList().addAll(changeList);
+    return response;
   }
 
 

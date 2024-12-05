@@ -2,27 +2,22 @@ package com.example.hotel.common.constant;
 
 import java.math.BigDecimal;
 
-/**
- * 常量
- *
- * @author 言曌
- */
 public interface CommonConstant {
 
-  /**
-   * 正常状态
-   */
-  Integer STATUS_NORMAL = 0;
-
-  /**
-   * 用户密码加盐的盐
-   */
-  String PASSWORD_SALT = "sens";
-
-  /**
-   * none
-   */
-  String NONE = "none";
+//  /**
+//   * 正常状态
+//   */
+//  Integer STATUS_NORMAL = 0;
+//
+//  /**
+//   * 用户密码加盐的盐
+//   */
+//  String PASSWORD_SALT = "sens";
+//
+//  /**
+//   * none
+//   */
+//  String NONE = "none";
 
   /**
    * email signal
@@ -56,7 +51,4 @@ public interface CommonConstant {
 
   public final static Integer DIAMOND_MEMBER_POINTS = 10000;
 
-//    public final static BigDecimal EXPENSE_POINTS_RULE = new BigDecimal(0.01);
-
-//    public final static BigDecimal EXPENSE_POINTS_LIMIT = new BigDecimal(0.1);
 }

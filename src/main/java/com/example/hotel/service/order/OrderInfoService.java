@@ -3,6 +3,7 @@ package com.example.hotel.service.order;
 
 import com.example.hotel.dto.request.BookRoomRequestDTO;
 import com.example.hotel.dto.request.ModifyOrderInfoRequestDTO;
+import com.example.hotel.dto.request.PayBillRequestDTO;
 import com.example.hotel.dto.request.PrebookRoomRequestDTO;
 import com.example.hotel.dto.request.QueryOrderDetailRequestDTO;
 import com.example.hotel.dto.response.ChangeOrderRoomCountResponse;
@@ -34,4 +35,6 @@ public interface OrderInfoService {
       String token) throws BizException;
 
   void scheduleFinishOrder();
+
+  Boolean payBill(String token, PayBillRequestDTO requestDTO)throws BizException;
 }

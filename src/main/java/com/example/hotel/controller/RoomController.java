@@ -41,7 +41,7 @@ public class RoomController {
    *
    * @return
    */
-  @PostMapping("/add")
+  @PostMapping("/addRoom")
   @RequestMapping(value = "addRoom", method = RequestMethod.POST)
   public ResponseResult addRoom(@RequestHeader("Authorization") String token,
       @ApiParam(value = "room details", required = true)

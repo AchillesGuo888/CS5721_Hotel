@@ -35,5 +35,4 @@ public class QueryOrderAmountRequestDTO extends Request {
   @JsonProperty(value = "roomTypePrice")
   private BigDecimal roomTypePrice;
 
-
 }

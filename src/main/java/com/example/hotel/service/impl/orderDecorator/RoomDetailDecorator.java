@@ -27,7 +27,7 @@ public class RoomDetailDecorator extends OrderServiceDecorator {
 
   @Override
   protected OrderInfoResponse enhanceOrder(OrderInfoResponse order) {
-
+    OrderInfoResponse response = super.enhanceOrder(order);
     if (CollectionUtils.isNotEmpty(order.getDetailList()) && order.getStatus()
         .equals(OrderStatusEnum.CHECK_IN.getCode())) {
       List<String> roomNumberList = order.getDetailList().stream().map(x -> x.getRoomNumber())
@@ -43,11 +43,11 @@ public class RoomDetailDecorator extends OrderServiceDecorator {
       for (RoomInfo item : roomInfos) {
         numberKeyMap.put(item.getRoomNumber(), item.getRoomKey());
       }
-      for (OrderDetailInfoResponse item : order.getDetailList()) {
+      for (OrderDetailInfoResponse item : response.getDetailList()) {
         item.setRoomKey(numberKeyMap.get(item.getRoomNumber()));
       }
     }
-    return order;
+    return response;
   }
 
 
