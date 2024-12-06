@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @ToString
@@ -43,4 +44,7 @@ public class QueryHotelRequestDTO extends Request {
   @JsonProperty(value = "quantity")
   private Integer quantity;
 
+  @ApiModelProperty(value = "Hotel ID", example = "112")
+  @JsonProperty(value = "hotelId")
+  private Long hotelId;
 }

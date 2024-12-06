@@ -12,6 +12,8 @@ import com.example.hotel.dto.response.PreBookRoomResponse;
 import com.example.hotel.exception.BizException;
 import com.github.pagehelper.PageSerializable;
 
+import java.util.List;
+
 
 public interface OrderInfoService {
 
@@ -34,4 +36,8 @@ public interface OrderInfoService {
       String token) throws BizException;
 
   void scheduleFinishOrder();
+
+  void cancelOrderById(Long orderId);
+
+  void cancelRoomsInOrder(Long orderId, List<Integer> roomNumbers);
 }

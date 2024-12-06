@@ -12,13 +12,16 @@ import com.example.hotel.dto.response.OrderInfoListResponse;
 import com.example.hotel.dto.response.OrderInfoResponse;
 import com.example.hotel.dto.response.PreBookRoomResponse;
 import com.example.hotel.exception.BizException;
+import com.example.hotel.service.order.OrderCancelService;
 import com.example.hotel.service.order.OrderInfoService;
 import com.example.hotel.service.order.OrderQueryService;
 import com.github.pagehelper.PageSerializable;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -95,18 +98,56 @@ public class OrderController {
     }
   }
 
-  /**
-   * cancel order
-   *
-   * @return
-   */
-  @DeleteMapping("/cancelOrder")
-  @RequestMapping(value = "cancelOrder", method = RequestMethod.DELETE)
-  public ResponseResult cancelOrder(@RequestHeader("Authorization") String token,
-      @ApiParam(value = "cancel order", required = true)
-      @RequestBody CancelOrderRequestDTO requestDTO) {
+  @Autowired
+  private OrderCancelService orderCancelService;
 
+  /**
+   * 取消订单
+   *
+   * @param token 管理员授权 Token
+   * @param cancelRequestDTO 包含订单 ID 和取消原因
+   * @return 返回取消订单的结果
+   */
+  @PostMapping("/cancelOrderById")
+  public ResponseResult cancelOrderById(
+          @RequestHeader("Authorization") String token,
+          @RequestBody CancelOrderRequestDTO cancelRequestDTO) {
+
+    // 调用取消订单的服务逻辑
+    orderCancelService.processOrderCancellationReason(cancelRequestDTO.getOrderId(), cancelRequestDTO.getCancelReason());
+
+    return ResponseResult.ofSuccess("Order cancellation request submitted for admin approval.");
+  }
+
+  //管理员审核
+  @PostMapping("/cancel/approve")
+  public ResponseResult approveOrderCancellation(@RequestBody CancelOrderRequestDTO cancelOrderRequestDTO) {
+    // 处理逻辑
     return ResponseResult.ofSuccess();
+  }
+
+  /**
+   * Cancel an entire order by its ID or cancel specific rooms in an order
+   *
+   * @param token Authorization token
+   * @param requestDTO Cancel order request details
+   * @return ResponseResult
+   */
+  @DeleteMapping("/cancelOrderByRoom")
+  @ApiOperation("Cancel an order or specific rooms")
+  public ResponseResult cancelOrderByRoom(
+          @RequestHeader("Authorization") String token,
+          @ApiParam(value = "Cancel order details", required = true)
+          @RequestBody CancelOrderRequestDTO requestDTO) {
+    if (requestDTO.getRoomNumber() == null || requestDTO.getRoomNumber().isEmpty()) {
+      // Cancel entire order
+      orderCancelService.cancelOrderById(requestDTO.getOrderId());
+      return ResponseResult.ofSuccess("Order cancelled successfully");
+    } else {
+      // Cancel specific rooms
+      orderCancelService.cancelRoomsInOrder(requestDTO.getOrderId(), requestDTO.getRoomNumber());
+      return ResponseResult.ofSuccess("Rooms cancelled successfully");
+    }
   }
 
   /**

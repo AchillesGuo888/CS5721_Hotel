@@ -4,6 +4,7 @@ import com.example.hotel.entity.OrderBase;
 import com.example.hotel.entity.OrderBaseExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 
 public interface OrderBaseMapper {
 
@@ -95,4 +96,13 @@ public interface OrderBaseMapper {
    * @mbg.generated Thu Nov 28 17:11:21 GMT 2024
    */
   int updateByPrimaryKey(OrderBase row);
+
+  /**
+   * Update order status to cancelled
+   *
+   * @param orderId The ID of the order to cancel
+   * @return Number of rows affected
+   */
+  @Update("UPDATE order_base SET status = 1, is_cancelled = 1, update_time = NOW() WHERE id = #{orderId} AND is_cancelled = 0")
+  int updateOrderStatusToCancelled(@Param("orderId") Long orderId);
 }

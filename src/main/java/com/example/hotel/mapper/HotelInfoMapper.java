@@ -3,8 +3,13 @@ package com.example.hotel.mapper;
 import com.example.hotel.entity.HotelInfo;
 import com.example.hotel.entity.HotelInfoExample;
 import java.util.List;
-import org.apache.ibatis.annotations.Param;
 
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
+@Mapper
 public interface HotelInfoMapper {
 
   /**
@@ -95,4 +100,21 @@ public interface HotelInfoMapper {
    * @mbg.generated Mon Nov 04 21:06:18 GMT 2024
    */
   int updateByPrimaryKey(HotelInfo row);
+
+  @Select("SELECT * FROM hotel_info WHERE hotel_name LIKE #{name} AND city LIKE #{city} AND address LIKE #{address} AND is_deleted = 0")
+  List<HotelInfo> findHotels(@Param("name") String name, @Param("city") String city, @Param("address") String address);
+
+  @Select("SELECT * FROM hotel_info WHERE id = #{id} AND is_deleted = 0")
+  HotelInfo findHotelById(Long id);
+
+  int updateHotel(HotelInfo hotelInfo);
+
+  /**
+   * Delete a hotel by its ID
+   *
+   * @param id Hotel ID
+   * @return Number of rows affected
+   */
+  @Update("UPDATE hotel_info SET is_deleted = 1 WHERE id = #{id} AND is_deleted = 0")
+  int deleteHotelById(Long id);
 }

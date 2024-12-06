@@ -24,6 +24,7 @@ import com.example.hotel.exception.BizException;
 import com.example.hotel.exception.NoRollbackException;
 import com.example.hotel.mapper.HotelInfoMapper;
 import com.example.hotel.mapper.OrderBaseMapper;
+import com.example.hotel.mapper.OrderDetailMapper;
 import com.example.hotel.service.command.ChangeRoomCountCommand;
 import com.example.hotel.service.impl.factory.PriceFactory;
 import com.example.hotel.service.order.OrderAndDetailService;
@@ -50,6 +51,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.util.MapUtils;
@@ -348,5 +350,30 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     result.setRoomTypePrice(roomTypePriceMap.get(requestDTO.getRoomTypeId()));
 
     return result;
+  }
+
+
+  @Autowired
+  private OrderDetailMapper orderDetailMapper;
+
+  @Override
+  public void cancelOrderById(Long orderId) {
+    // 更新 order_base 表中的状态
+    orderBaseMapper.updateOrderStatusToCancelled(orderId);
+
+    // 更新 order_detail 表中的状态
+    orderDetailMapper.updateRoomStatusByOrderId(orderId,3);
+  }
+
+  @Override
+  public void cancelRoomsInOrder(Long orderId, List<Integer> roomNumbers) {
+    // 更新指定房间的状态
+    orderDetailMapper.updateRoomStatusByRoomNumbers(orderId, roomNumbers,3);
+
+    // 检查订单中是否所有房间都被取消，如果是，则更新 order_base 状态
+    int remainingRooms = orderDetailMapper.countActiveRoomsByOrderId(orderId);
+    if (remainingRooms == 0) {
+      orderBaseMapper.updateOrderStatusToCancelled(orderId);
+    }
   }
 }

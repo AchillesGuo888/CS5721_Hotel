@@ -1,28 +1,34 @@
 package com.example.hotel.controller;
 
-
+import com.example.hotel.common.base.ResponseCode;
 import com.example.hotel.common.base.ResponseResult;
 import com.example.hotel.dto.request.AddHotelRequestDTO;
 import com.example.hotel.dto.request.DeleteHotelInfoRequestDTO;
 import com.example.hotel.dto.request.ModifyHotelInfoRequestDTO;
 import com.example.hotel.dto.request.QueryHotelRequestDTO;
 import com.example.hotel.dto.request.QueryRoomTypePriceRequestDTO;
+import com.example.hotel.dto.response.AddHotelResponse;
 import com.example.hotel.dto.response.AvailableHotelResponse;
 import com.example.hotel.dto.response.HotelDetailResponse;
 import com.example.hotel.dto.response.RoomAndTypeWithPriceResponse;
-import com.example.hotel.service.hotel.HotelAndTypeService;
+import com.example.hotel.entity.HotelInfo;
+import com.example.hotel.exception.BizException;
+import com.example.hotel.service.hotel.HotelInfoService;
+import com.example.hotel.service.hotel.HotelService;
+import io.micrometer.core.instrument.util.StringUtils;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import java.awt.print.Pageable;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 
 @Slf4j
 @RestController
@@ -31,34 +37,63 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class HotelController {
 
-  private final HotelAndTypeService hotelAndTypeService;
-
+  private final HotelService hotelService;
 
   /**
-   * add hotel
+   * add Hotel
    *
    * @return
    */
-  @PostMapping("/admin/add")
-  @RequestMapping(value = "addHotel", method = RequestMethod.POST)
+  @ApiOperation(value = "Add a new hotel", notes = "添加一个新的酒店")
+  @PostMapping("/addHotel")
   public ResponseResult addHotel(@RequestHeader("Authorization") String token,
-      @ApiParam(value = "Hotel details", required = true) @RequestBody AddHotelRequestDTO addHotelRequestDTO) {
-    return ResponseResult.ofSuccess();
+                                 @ApiParam(value = "Hotel details", required = true) @RequestBody AddHotelRequestDTO addHotelRequestDTO) {
+    try {
+      // 调用 Service 层的添加酒店方法
+      AddHotelResponse response = hotelService.addHotel(addHotelRequestDTO);
+
+      // 返回成功结果
+      return ResponseResult.ofSuccess(response);
+    } catch (Exception e) {
+      // 捕获异常并返回失败的响应
+      return ResponseResult.ofError(ResponseCode.server_err.getCode(), "添加酒店失败: " + e.getMessage());
+    }
   }
 
   /**
-   * query Hotel info
+   * query Hotel list by info
    *
    * @return
    */
+  @ApiOperation(value = "Query Hotel info", notes = "查询酒店信息")
   @PostMapping("/queryHotelInfo")
-  @RequestMapping(value = "queryHotelInfo", method = RequestMethod.POST)
-  public ResponseResult<HotelDetailResponse> queryHotelInfo(
-      @RequestHeader("Authorization") String token,
-      @ApiParam(value = "query hotel details ", required = true)
-      @RequestBody QueryHotelRequestDTO queryHotelRequestDTO) {
+  public ResponseEntity<Page<HotelDetailResponse>> queryHotelInfo(
+          @RequestBody QueryHotelRequestDTO queryHotelRequestDTO,
+          @RequestParam(defaultValue = "0") int page,
+          @RequestParam(defaultValue = "10") int size) {
+    try {
+      Page<HotelDetailResponse> response = HotelInfoService.queryHotelInfo(queryHotelRequestDTO, page, size);
+      return ResponseEntity.ok(response);
+    } catch (BizException e) {
+      return ResponseEntity.status(500).body(null); // 错误处理
+    }
+  }
 
-    return ResponseResult.ofSuccess();
+  /**
+   * query Hotel by id
+   *
+   * @return
+   */
+  @Autowired
+  private HotelInfoService hotelInfoService;
+
+  @GetMapping("/{id}")
+  public ResponseEntity<?> getHotelById(@PathVariable Long id) {
+    HotelInfo hotelInfo = hotelService.getHotelById(id);
+    if (hotelInfo == null) {
+      return ResponseEntity.status(404).body("Hotel not found");
+    }
+    return ResponseEntity.ok(hotelInfo);
   }
 
   /**
@@ -66,52 +101,35 @@ public class HotelController {
    *
    * @return
    */
-  @PutMapping("/admin/modifyHotelInfo")
-  @RequestMapping(value = "modifyHotelInfo", method = RequestMethod.PUT)
-  public ResponseResult modifyHotelInfo(@RequestHeader("Authorization") String token,
-      @ApiParam(value = "Hotel details", required = true) @RequestBody ModifyHotelInfoRequestDTO modifyHotelInfoRequestDTOInfo) {
+  @RestController
+  @RequestMapping("/hotel")
+  public class HotelInfoController {
+    @Autowired
+    private HotelService hotelService;
 
-    return ResponseResult.ofSuccess();
+    @PutMapping("/modifyHotelInfo")
+    public ResponseResult modifyHotelInfo(
+            @RequestHeader("Authorization") String token,
+            @ApiParam(value = "Hotel details", required = true)
+            @RequestBody ModifyHotelInfoRequestDTO modifyHotelInfoRequestDTOInfo) {
+      hotelService.modifyHotelInfo(modifyHotelInfoRequestDTOInfo);
+      return ResponseResult.ofSuccess("Hotel info updated successfully");
+    }
   }
 
   /**
-   * delete hotel info
+   * Delete hotel info
    *
-   * @return
-   */
-  @PostMapping("/admin/deleteHotel")
-  @RequestMapping(value = "deleteHotel", method = RequestMethod.DELETE)
-  public ResponseResult deleteHotel(@RequestHeader("Authorization") String token,
-      @ApiParam(value = "delete hotel", required = true) @RequestBody DeleteHotelInfoRequestDTO deleteHotelInfoRequestDTO) {
-
-    return ResponseResult.ofSuccess();
-  }
-
-  /**
-   * query hotel list(with price)
    *
-   * @return
+   * @param deleteHotelInfoRequestDTO DTO containing the ID of the hotel to be deleted
+   * @return ResponseResult indicating success or failure
    */
-  @PostMapping("/queryHotelPriceList")
-  @RequestMapping(value = "queryHotelPriceList", method = RequestMethod.POST)
-  public ResponseResult<List<AvailableHotelResponse>> queryHotelPriceList(
-      @ApiParam(value = "query hotel details ", required = true) @RequestBody QueryHotelRequestDTO requestDTO) {
-    return ResponseResult.ofSuccess(hotelAndTypeService.queryHotelListWithPrice(requestDTO));
+  @DeleteMapping("/deleteHotel")
+  public ResponseResult deleteHotel(
+          @RequestHeader("Authorization") String token,
+          @ApiParam(value = "Delete hotel", required = true) @RequestBody DeleteHotelInfoRequestDTO deleteHotelInfoRequestDTO) {
+    hotelService.deleteHotel(deleteHotelInfoRequestDTO.getId());
+    return ResponseResult.ofSuccess("Hotel deleted successfully");
   }
-
-  /**
-   * query room types(with price) and available room count of a concrete hotel
-   *
-   * @return
-   */
-  @PostMapping("/queryRoomAndTypeWithPrice")
-  @RequestMapping(value = "queryRoomAndTypeWithPrice", method = RequestMethod.POST)
-  public ResponseResult<List<RoomAndTypeWithPriceResponse>> queryRoomAndTypeWithPrice(
-      @ApiParam(value = "query price and available room count of each room type", required = true)
-      @RequestBody QueryRoomTypePriceRequestDTO requestDTO) {
-
-    return ResponseResult.ofSuccess(hotelAndTypeService.getHotelAvailableRoomWithPrice(requestDTO));
-  }
-
 
 }

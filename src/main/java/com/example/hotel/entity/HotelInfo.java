@@ -1,7 +1,10 @@
 package com.example.hotel.entity;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.Date;
 
+@Entity
 public class HotelInfo {
 
   /**
@@ -10,6 +13,7 @@ public class HotelInfo {
    *
    * @mbg.generated Mon Nov 04 21:06:18 GMT 2024
    */
+  @Id
   private Long id;
 
   /**

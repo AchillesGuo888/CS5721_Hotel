@@ -2,6 +2,7 @@ package com.example.hotel.dto.request;
 
 import com.example.hotel.dto.request.Base.Request;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -11,5 +12,6 @@ import lombok.ToString;
 @ToString
 @ApiModel(value = "delete hotel info parameter")
 public class DeleteHotelInfoRequestDTO extends Request {
-
+    @ApiModelProperty(value = "Hotel ID", required = true)
+    private Long id;
 }
