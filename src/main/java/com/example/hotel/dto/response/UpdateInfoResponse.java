@@ -16,6 +16,7 @@ import lombok.EqualsAndHashCode;
 @Builder
 @ApiModel("update info result")
 public class UpdateInfoResponse extends ResponseResult {
+
   private static final long serialVersionUID = -6808963525093889898L;
 
   @ApiModelProperty("change result")

@@ -12,4 +12,5 @@ import lombok.ToString;
 @ApiModel(value = "add hotel info parameter")
 public class AddHotelRequestDTO extends Request {
 
+  String test;
 }

@@ -17,7 +17,6 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -40,10 +39,12 @@ public class HotelController {
    *
    * @return
    */
-  @PostMapping("/add")
+  @PostMapping("/addHotel")
   @RequestMapping(value = "addHotel", method = RequestMethod.POST)
-  public ResponseResult addHotel(@RequestHeader("Authorization") String token, @ApiParam(value = "Hotel details", required = true) @RequestBody AddHotelRequestDTO addHotelRequestDTO) {
-      return ResponseResult.ofSuccess();
+  public ResponseResult addHotel(@RequestHeader("Authorization") String token,
+      @ApiParam(value = "Hotel details", required = true) @RequestBody AddHotelRequestDTO addHotelRequestDTO) {
+    System.out.println("1111");
+    return ResponseResult.ofSuccess();
   }
 
   /**
@@ -68,7 +69,8 @@ public class HotelController {
    */
   @PutMapping("/modifyHotelInfo")
   @RequestMapping(value = "modifyHotelInfo", method = RequestMethod.PUT)
-  public ResponseResult modifyHotelInfo(@RequestHeader("Authorization") String token,@ApiParam(value = "Hotel details", required = true) @RequestBody ModifyHotelInfoRequestDTO modifyHotelInfoRequestDTOInfo) {
+  public ResponseResult modifyHotelInfo(@RequestHeader("Authorization") String token,
+      @ApiParam(value = "Hotel details", required = true) @RequestBody ModifyHotelInfoRequestDTO modifyHotelInfoRequestDTOInfo) {
 
     return ResponseResult.ofSuccess();
   }
@@ -78,9 +80,10 @@ public class HotelController {
    *
    * @return
    */
-  @DeleteMapping("/deleteHotel")
+  @PostMapping("/deleteHotel")
   @RequestMapping(value = "deleteHotel", method = RequestMethod.DELETE)
-  public ResponseResult deleteHotel(@RequestHeader("Authorization") String token,@ApiParam(value = "delete hotel", required = true) @RequestBody DeleteHotelInfoRequestDTO deleteHotelInfoRequestDTO) {
+  public ResponseResult deleteHotel(@RequestHeader("Authorization") String token,
+      @ApiParam(value = "delete hotel", required = true) @RequestBody DeleteHotelInfoRequestDTO deleteHotelInfoRequestDTO) {
 
     return ResponseResult.ofSuccess();
   }
@@ -92,7 +95,8 @@ public class HotelController {
    */
   @PostMapping("/queryHotelPriceList")
   @RequestMapping(value = "queryHotelPriceList", method = RequestMethod.POST)
-  public ResponseResult<List<AvailableHotelResponse>> queryHotelPriceList(@ApiParam(value = "query hotel details ", required = true) @RequestBody QueryHotelRequestDTO requestDTO) {
+  public ResponseResult<List<AvailableHotelResponse>> queryHotelPriceList(
+      @ApiParam(value = "query hotel details ", required = true) @RequestBody QueryHotelRequestDTO requestDTO) {
     return ResponseResult.ofSuccess(hotelAndTypeService.queryHotelListWithPrice(requestDTO));
   }
 

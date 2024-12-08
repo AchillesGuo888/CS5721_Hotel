@@ -11,6 +11,7 @@ import lombok.Data;
  */
 
 public class Verification {
+
   public String code;
   private LocalDateTime createTime;
 

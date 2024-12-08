@@ -40,7 +40,7 @@ public class MailUtils {
      */
     public void send(List<String> to, String subject, String content, boolean isHtml, File... files){
         MailAccount account = getMailAccount(mailPropertiesConfig);
-        log.info(mailPropertiesConfig.toString());
+//        log.info(mailPropertiesConfig.toString());
 
         MailUtil.send(account, to, subject, content, isHtml,files);
     }

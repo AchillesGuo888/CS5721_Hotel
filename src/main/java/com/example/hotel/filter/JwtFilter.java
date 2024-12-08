@@ -1,23 +1,22 @@
 package com.example.hotel.filter;
 
+import com.example.hotel.service.user.UserService;
 import com.example.hotel.util.JwtUtil;
-import java.util.Arrays;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-
+import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 public class JwtFilter extends OncePerRequestFilter {
+
   @Autowired
   private JwtUtil jwtUtil;
+  @Autowired
+  private UserService userService;
+
   private static final String SECRET_KEY = "2024_CS5721";
 
   // without Token url
@@ -31,11 +30,13 @@ public class JwtFilter extends OncePerRequestFilter {
 
 
   @Override
-  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+      FilterChain filterChain)
       throws ServletException, IOException {
 
     String requestURI = request.getRequestURI();
-    if (requestURI.startsWith(IGNORE_URL)||requestURI.contains(SWAGGER_URL)||requestURI.contains(API_DOCS_URL)||requestURI.contains(WEBJARS_URL)){
+    if (requestURI.startsWith(IGNORE_URL) || requestURI.contains(SWAGGER_URL) || requestURI
+        .contains(API_DOCS_URL) || requestURI.contains(WEBJARS_URL)) {
       filterChain.doFilter(request, response);
       return;
     }
@@ -50,7 +51,13 @@ public class JwtFilter extends OncePerRequestFilter {
       return;
     }
     String token = authorizationHeader.substring(7);
-    if (token != null && jwtUtil.validateToken(token)!=null) {
+    if (token != null && jwtUtil.validateToken(token) != null) {
+      if (!userService.validateToken(token)) {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter().write(
+            "Login invalid, please login again");//new client login,the old one need is logout
+        return;
+      }
       if (jwtUtil.isTokenBlacklisted(token)) {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().write("Token is in blacklist"); //

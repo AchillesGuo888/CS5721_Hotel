@@ -11,22 +11,23 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 @Component
 public class FreeMarkerTemplateUtil {
-    @Autowired
-    private FreeMarkerConfigurer freeMarkerConfigurer;
 
-    public String getEmailHtml(Map map, String templateName) {
+  @Autowired
+  private FreeMarkerConfigurer freeMarkerConfigurer;
 
-        String htmlText = "";
-        Configuration configuration = new Configuration(Configuration.getVersion());
-        try {
-            configuration.setDefaultEncoding("utf-8");
-            Template template = freeMarkerConfigurer.getConfiguration().getTemplate(templateName);
-            //render template as html
-            htmlText = FreeMarkerTemplateUtils.processTemplateIntoString(template, map);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+  public String getEmailHtml(Map map, String templateName) {
 
-        return htmlText;
+    String htmlText = "";
+    Configuration configuration = new Configuration(Configuration.getVersion());
+    try {
+      configuration.setDefaultEncoding("utf-8");
+      Template template = freeMarkerConfigurer.getConfiguration().getTemplate(templateName);
+      //render template as html
+      htmlText = FreeMarkerTemplateUtils.processTemplateIntoString(template, map);
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+
+    return htmlText;
+  }
 }

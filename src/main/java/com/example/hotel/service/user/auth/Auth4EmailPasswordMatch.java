@@ -8,41 +8,40 @@ import com.example.hotel.util.Md5Util;
 import lombok.Getter;
 
 /**
- * @author Achilles
- * email match
+ * @author Achilles email match
  */
 @Getter
 public class Auth4EmailPasswordMatch extends AbstractAuth {
 
-    /**
-     * 密码信息
-     */
-    private String passwordMD5;
+  /**
+   *
+   */
+  private String passwordMD5;
 
 
-    public Auth4EmailPasswordMatch(User user,
-                                   String requestPassword) {
-        super(user);
-        this.passwordMD5 = Md5Util.MD5(requestPassword);
+  public Auth4EmailPasswordMatch(User user,
+      String requestPassword) {
+    super(user);
+    this.passwordMD5 = Md5Util.MD5(requestPassword);
+  }
+
+  /**
+   * salt and md5
+   *
+   * @param user
+   * @param requestPassword
+   * @param salt
+   */
+  public Auth4EmailPasswordMatch(User user,
+      String requestPassword, String salt) {
+    super(user);
+    this.passwordMD5 = Md5Util.getSaltMd5AndSha(requestPassword, salt);
+  }
+
+  @Override
+  public void auth() throws BizException {
+    if (!getCurrentUser().getPassword().equals(passwordMD5)) {
+      throw new BizException(ResponseCode.email_password_not_match);
     }
-
-    /**
-     * salt and md5
-     *
-     * @param user
-     * @param requestPassword
-     * @param salt
-     */
-    public Auth4EmailPasswordMatch(User user,
-                                   String requestPassword, String salt) {
-        super(user);
-        this.passwordMD5 = Md5Util.getSaltMd5AndSha(requestPassword, salt);
-    }
-
-    @Override
-    public void auth() throws BizException {
-        if (!getCurrentUser().getPassword().equals(passwordMD5)) {
-            throw new BizException(ResponseCode.email_password_not_match);
-        }
-    }
+  }
 }

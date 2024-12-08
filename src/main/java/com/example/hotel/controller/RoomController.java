@@ -2,18 +2,14 @@ package com.example.hotel.controller;
 
 
 import com.example.hotel.common.base.ResponseResult;
-import com.example.hotel.dto.request.AddHotelRequestDTO;
 import com.example.hotel.dto.request.AddRoomRequestDTO;
 import com.example.hotel.dto.request.ChangeRoomRequestDTO;
 import com.example.hotel.dto.request.CheckInRequestDTO;
 import com.example.hotel.dto.request.DeleteHotelInfoRequestDTO;
 import com.example.hotel.dto.request.ModifyHotelInfoRequestDTO;
-import com.example.hotel.dto.request.QueryHotelRequestDTO;
 import com.example.hotel.dto.request.QueryRoomListRequestDTO;
 import com.example.hotel.dto.request.QueryRoomRequestDTO;
-import com.example.hotel.dto.response.AvailableHotelResponse;
 import com.example.hotel.dto.response.CheckInResponse;
-import com.example.hotel.dto.response.HotelDetailResponse;
 import com.example.hotel.dto.response.RoomDetailResponse;
 import com.example.hotel.util.JwtUtil;
 import io.swagger.annotations.Api;
@@ -23,7 +19,6 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -46,12 +41,12 @@ public class RoomController {
    *
    * @return
    */
-  @PostMapping("/add")
+  @PostMapping("/addRoom")
   @RequestMapping(value = "addRoom", method = RequestMethod.POST)
   public ResponseResult addRoom(@RequestHeader("Authorization") String token,
       @ApiParam(value = "room details", required = true)
       @RequestBody AddRoomRequestDTO requestDTO) {
-      return ResponseResult.ofSuccess();
+    return ResponseResult.ofSuccess();
   }
 
   /**
@@ -92,7 +87,7 @@ public class RoomController {
   @DeleteMapping("/deleteRoom")
   @RequestMapping(value = "deleteRoom", method = RequestMethod.DELETE)
   public ResponseResult deleteHotel(@RequestHeader("Authorization")
-      String token,@ApiParam(value = "delete room", required = true)
+      String token, @ApiParam(value = "delete room", required = true)
   @RequestBody DeleteHotelInfoRequestDTO requestDTO) {
 
     return ResponseResult.ofSuccess();
@@ -105,7 +100,8 @@ public class RoomController {
    */
   @PostMapping("/queryRoomList")
   @RequestMapping(value = "queryRoomList", method = RequestMethod.POST)
-  public ResponseResult<List<RoomDetailResponse>> queryUserInfo(@RequestHeader("Authorization") String token,
+  public ResponseResult<List<RoomDetailResponse>> queryUserInfo(
+      @RequestHeader("Authorization") String token,
       @ApiParam(value = "query room details ", required = true)
       @RequestBody QueryRoomListRequestDTO requestDTO) {
     return ResponseResult.ofSuccess();
