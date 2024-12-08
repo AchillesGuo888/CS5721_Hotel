@@ -23,7 +23,6 @@ public class OrderCancelService {
     private RefundInfoMapper refundInfoMapper;
     private PaymentInfoMapper paymentInfoMapper;
     private UserMapper userMapper;
-    private ObserverManager observerManager;
 
     private static final Logger logger = LoggerFactory.getLogger(OrderCancelService.class);
 
