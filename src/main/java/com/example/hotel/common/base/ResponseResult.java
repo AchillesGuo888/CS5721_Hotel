@@ -133,7 +133,7 @@ public class ResponseResult<T> extends BaseObject {
 
   public String toJson() {
     try {
-      return JSONUtil.OBJECT_MAPPER.writeValueAsString(this);
+            return JSONUtil.getInstance().writeValueAsString(this);
     } catch (JsonProcessingException e) {
       e.printStackTrace();
       throw new RuntimeException(e);
