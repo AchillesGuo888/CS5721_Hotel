@@ -117,6 +117,10 @@ public class RoomInfoServiceImpl implements RoomInfoService {
     @Override
     public RoomDetailResponse queryRoomInfo(QueryRoomRequestDTO requestDTO) throws BizException {
         // Retrieve the room info based on room ID
+
+        log.debug("Querying room info for Room ID: {}", requestDTO.getRoomId());
+        System.out.println("aaa");
+        
         RoomInfo roomInfo = roomInfoMapper.selectByPrimaryKey(requestDTO.getRoomId());
 
         if (roomInfo == null || roomInfo.getIsDeleted() == 1) {

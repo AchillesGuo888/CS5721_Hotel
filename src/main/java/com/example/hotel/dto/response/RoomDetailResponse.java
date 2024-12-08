@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 
 import org.apache.commons.pool2.BaseObject;
