@@ -76,8 +76,7 @@ public class RoomController {
       @ApiParam(value = "query room details ", required = true)
       @RequestBody QueryRoomRequestDTO requestDTO) {
       try {
-        roomInfoService.queryRoomInfo(requestDTO);
-        return ResponseResult.ofSuccess();
+        return ResponseResult.ofSuccess(roomInfoService.queryRoomInfo(requestDTO));
       } catch (BizException e) {
         log.error("adding room error", e);
         return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
@@ -127,14 +126,13 @@ public class RoomController {
    *
    * @return
    */
-  @PostMapping("/queryRoomList")
-  @RequestMapping(value = "queryRoomList", method = RequestMethod.POST)
+  @GetMapping("/queryRoomList")
+  @RequestMapping(value = "queryRoomList", method = RequestMethod.GET)
   public ResponseResult<List<RoomDetailResponse>> queryUserInfo(@RequestHeader("Authorization") String token,
       @ApiParam(value = "query room list details ", required = true)
       @RequestBody QueryRoomListRequestDTO requestDTO) {
       try {
-        roomInfoService.queryRoomList(requestDTO);
-        return ResponseResult.ofSuccess();
+        return ResponseResult.ofSuccess(roomInfoService.queryRoomList(requestDTO));
       } catch (BizException e) {
         log.error("query room list error", e);
         return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
