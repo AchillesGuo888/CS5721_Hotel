@@ -42,7 +42,7 @@ public class OrderDetailDecorator extends OrderServiceDecorator {
     for (OrderDetail item : orderDetailList) {
       if (!guestNames.contains(item.getGuestName())) {
         guestNames.add(item.getGuestName());
-        if (item.getChangeType().equals(ChangeRoomTypeEnum.UNCHANGED.getCode())) {
+        if (!item.getChangeType().equals(ChangeRoomTypeEnum.UNCHANGED.getCode())) {
           RoomTypeInfo roomTypeInfo = roomTypeInfoService.getRoomTypeById(item.getRoomTypeId());
           ChangeRoomInfoResponse changeRoom = ChangeRoomInfoResponse
               .builder().changeDate(item.getCreateTime().toLocalDate())

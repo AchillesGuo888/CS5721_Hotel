@@ -4,7 +4,8 @@ import com.example.hotel.mapper.HotelInfoMapper;
 import com.example.hotel.mapper.OrderBaseMapper;
 import com.example.hotel.mapper.RoomInfoMapper;
 
-import com.example.hotel.service.impl.order.OrderQueryServiceImpl;
+
+import com.example.hotel.service.impl.orderDecorator.BasicOrderService;
 import com.example.hotel.service.impl.orderDecorator.HotelDetailDecorator;
 import com.example.hotel.service.impl.orderDecorator.OrderDetailDecorator;
 import com.example.hotel.service.impl.orderDecorator.RoomDetailDecorator;
@@ -32,7 +33,7 @@ public class OrderQueryConfig {
   @Bean
   public OrderQueryService orderQueryService() {
     //get order base info
-    OrderQueryService basicService = new OrderQueryServiceImpl(orderBaseMapper);
+    OrderQueryService basicService = new BasicOrderService(orderBaseMapper);
     //get order detail info
     OrderQueryService orderDetailDecorator = new OrderDetailDecorator(basicService,
         orderAndDetailService, roomTypeInfoService);

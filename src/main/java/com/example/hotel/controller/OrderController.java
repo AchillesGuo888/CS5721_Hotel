@@ -5,21 +5,26 @@ import com.example.hotel.common.base.ResponseResult;
 import com.example.hotel.config.OrderQueryConfig;
 import com.example.hotel.dto.request.BookRoomRequestDTO;
 import com.example.hotel.dto.request.CancelOrderRequestDTO;
+import com.example.hotel.dto.request.ChangeRoomRequestDTO;
 import com.example.hotel.dto.request.ModifyOrderInfoRequestDTO;
 import com.example.hotel.dto.request.PayBillRequestDTO;
 import com.example.hotel.dto.request.PayDifferenceRequestDTO;
 import com.example.hotel.dto.request.PrebookRoomRequestDTO;
+import com.example.hotel.dto.request.QueryChangeRoomRequestDTO;
 import com.example.hotel.dto.request.QueryOrderDetailRequestDTO;
 import com.example.hotel.dto.response.ChangeOrderRoomCountResponse;
 import com.example.hotel.dto.response.OrderInfoListResponse;
 import com.example.hotel.dto.response.OrderInfoResponse;
 import com.example.hotel.dto.response.PreBookRoomResponse;
+import com.example.hotel.dto.response.QueryChangeEmptyRoomResponse;
+import com.example.hotel.dto.response.RoomAndTypeWithPriceResponse;
 import com.example.hotel.exception.BizException;
 import com.example.hotel.service.order.OrderInfoService;
 import com.example.hotel.service.order.OrderQueryService;
 import com.github.pagehelper.PageSerializable;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,7 +48,6 @@ public class OrderController {
 
   private final OrderQueryService orderQueryService;
 
-//  private final OrderQueryConfig orderQueryConfig;
 
   /**
    * book room and create order
@@ -219,6 +223,39 @@ public class OrderController {
   public ResponseResult payRoomDifference(@RequestHeader("Authorization") String token,
       @ApiParam(value = "difference bill detail", required = true) @RequestBody PayDifferenceRequestDTO requestDTO) {
     return ResponseResult.ofSuccess();
+  }
+
+  /**
+   * change room
+   *
+   * @return
+   */
+  @PostMapping("/changeRoom")
+  @RequestMapping(value = "changeRoom", method = RequestMethod.POST)
+  public ResponseResult changeRoom(@RequestHeader("Authorization") String token,
+      @ApiParam(value = "change room", required = true)
+      @RequestBody ChangeRoomRequestDTO requestDTO) {
+    try {
+      orderInfoService.changeRoom(token,requestDTO);
+      return ResponseResult.ofSuccess();
+    } catch (BizException e) {
+      log.error("user login error", e);
+      return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
+    }
+  }
+
+  @PostMapping("/queryEmptyRoom")
+  @RequestMapping(value = "queryEmptyRoom", method = RequestMethod.POST)
+  public ResponseResult<List<QueryChangeEmptyRoomResponse>> queryEmptyRoom(@RequestHeader("Authorization") String token,
+      @ApiParam(value = "change room", required = true)
+      @RequestBody QueryChangeRoomRequestDTO requestDTO) {
+    try {
+      return ResponseResult.ofSuccess(orderInfoService.queryEmptyRoom(token,requestDTO));
+    } catch (BizException e) {
+      log.error("user login error", e);
+      return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
+    }
+
   }
 
 

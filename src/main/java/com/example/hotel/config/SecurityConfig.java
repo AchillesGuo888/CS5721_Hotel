@@ -22,9 +22,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .permitAll() // allow Swagger url
         .anyRequest().permitAll()//.authenticated() // other request
         .and()
-        .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class) // 注册 JwtFilter
+        .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class) // register JwtFilter
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-    //TODO test step don't need AuthenticationFilter
+
   }
 
   @Bean

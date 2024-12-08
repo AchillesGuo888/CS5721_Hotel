@@ -144,12 +144,20 @@ public class Md5Util {
       IOUtils.closeQuietly(is);
     }
   }
-
   /**
-   * md5和sha-1混合加密
+   * |create a password with salt|
    *
-   * @param pwd 要加密的内容
-   * @return String md5和sha-1混合加密之后的密码
+   * @param password user password
+   * @return String password with salt
+   */
+  public static String getSaltMd5AndSha(String password, String salt) {
+    return md5AndSha(password + salt);
+  }
+  /**
+   * md5 and sha-1 hybrid encryption
+   *
+   * @param pwd the content need to be encrypted
+   * @return String the password encrypted by md5 and sha-1
    */
   public static String md5AndSha(String pwd) {
     return sha(md5(pwd));
@@ -157,10 +165,10 @@ public class Md5Util {
 
 
   /**
-   * md5加密
+   * md5 encrypt
    *
-   * @param pwd 需要加密的密码
-   * @return String  md5加密之后的密码
+   * @param pwd the content need to be encrypted
+   * @return String  the password encrypted by md5
    */
   public static String md5(String pwd) {
     return encrypt(pwd, "md5");
@@ -168,10 +176,10 @@ public class Md5Util {
 
 
   /**
-   * sha-1加密
+   * sha-1 encrypt
    *
-   * @param pwd 需要加密的密码
-   * @return sha-1加密之后的密码
+   * @param pwd the content need to be encrypted
+   * @return the password encrypted by sha-1
    */
   public static String sha(String pwd) {
     return encrypt(pwd, "sha-1");
@@ -179,15 +187,15 @@ public class Md5Util {
 
 
   /**
-   * md5或者sha-1加密
+   * md5 or sha-1 encrypt
    *
-   * @param pwd       要加密的内容
-   * @param algorithm 加密算法名称：md5/sha-1，
-   * @return String  md5/sha-1加密后的结果
+   * @param pwd       the content need to be encrypted
+   * @param algorithm algorithm：md5/sha-1，
+   * @return String  md5/sha-1 encrypt result
    */
   private static String encrypt(String pwd, String algorithm) {
     if (pwd == null || "".equals(pwd.trim())) {
-      throw new IllegalArgumentException("请输入要加密的内容");
+      throw new IllegalArgumentException("Please enter the encrypted content");
     }
     if (algorithm == null || "".equals(algorithm.trim())) {
       algorithm = "md5";
@@ -199,7 +207,7 @@ public class Md5Util {
       byte s[] = m.digest();
       return hex(s);
     } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-      log.error("加密异常", e);
+      log.error("Encryption Exception", e);
     }
     return encryptText;
   }
@@ -218,13 +226,20 @@ public class Md5Util {
     }
     return sb.toString();
   }
-
+  /**
+   * |generate salt|
+   *
+   * @return
+   */
+  public static String createSalt() {
+    return createSecureCode(16);
+  }
 
   /**
-   * 生成随机Code
+   * random Code
    *
-   * @param size 随机code长度
-   * @return 随机code
+   * @param size random size of code
+   * @return random code
    */
   public static String createSecureCode(int size) {
     StringBuilder builder = new StringBuilder();
@@ -232,15 +247,6 @@ public class Md5Util {
       builder.append(randomChar());
     }
     return builder.toString();
-  }
-
-  /**
-   * |生成盐|
-   *
-   * @return
-   */
-  public static String createSalt() {
-    return createSecureCode(16);
   }
 
   /**
@@ -256,21 +262,8 @@ public class Md5Util {
     return string.charAt(random.nextInt(string.length()));
   }
 
-
   /**
-   * |生成含有随机盐的密码|
-   *
-   * @param password 要加密的密码
-   * @return String 含有随机盐的密码
-   */
-  public static String getSaltMd5AndSha(String password, String salt) {
-    return md5AndSha(password + salt);
-  }
-
-
-
-  /**
-   * 生成用户ID
+   * create user ID
    *
    * @return
    */

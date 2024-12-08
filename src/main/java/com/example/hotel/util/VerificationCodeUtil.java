@@ -68,7 +68,7 @@ public class VerificationCodeUtil {
       mailUtils.send(requestDTO.getEmail(), "Verification Code"
           , getValidateCodeHtml(requestDTO.getCode()), true);
       log.info("send email to {}", requestDTO.getEmail());
-      log.info("redis setting end");
+
     });
     //store verification code in session
     if (session != null) {

@@ -12,4 +12,6 @@ public interface PriceCalculationService {
   PriceResponse calculateOrderPrice(QueryOrderAmountRequestDTO requestDTO) throws BizException;
 
   Integer getEarnPoints(BigDecimal orderPrice);
+
+  BigDecimal calculateMemberShipRoomTypePrice(BigDecimal roomTypePrice, BigDecimal dates);
 }

@@ -6,16 +6,21 @@ import com.example.hotel.common.base.ResponseCode;
 import com.example.hotel.common.base.ResponseResult;
 import com.example.hotel.dto.AvailableRoomCountDTO;
 import com.example.hotel.dto.request.BookRoomRequestDTO;
+import com.example.hotel.dto.request.ChangeRoomRequestDTO;
 import com.example.hotel.dto.request.ModifyOrderInfoRequestDTO;
 import com.example.hotel.dto.request.PayBillRequestDTO;
 import com.example.hotel.dto.request.PrebookRoomRequestDTO;
+import com.example.hotel.dto.request.QueryChangeRoomRequestDTO;
 import com.example.hotel.dto.request.QueryOrderAmountRequestDTO;
 import com.example.hotel.dto.request.QueryOrderDetailRequestDTO;
+import com.example.hotel.dto.request.QueryRoomTypePriceRequestDTO;
 import com.example.hotel.dto.response.ChangeOrderRoomCountResponse;
 import com.example.hotel.dto.response.OrderInfoListResponse;
 import com.example.hotel.dto.response.OrderInfoResponse;
 import com.example.hotel.dto.response.PreBookRoomResponse;
 import com.example.hotel.dto.response.PriceResponse;
+import com.example.hotel.dto.response.QueryChangeEmptyRoomResponse;
+import com.example.hotel.dto.response.RoomAndTypeWithPriceResponse;
 import com.example.hotel.entity.HotelInfo;
 import com.example.hotel.entity.OrderBase;
 import com.example.hotel.entity.OrderBaseExample;
@@ -27,7 +32,9 @@ import com.example.hotel.exception.NoRollbackException;
 import com.example.hotel.feign.BillFeignClient;
 import com.example.hotel.mapper.HotelInfoMapper;
 import com.example.hotel.mapper.OrderBaseMapper;
+import com.example.hotel.mapper.OrderDetailMapper;
 import com.example.hotel.service.command.ChangeRoomCountCommand;
+import com.example.hotel.service.hotel.HotelAndTypeService;
 import com.example.hotel.service.impl.factory.PriceFactory;
 import com.example.hotel.service.order.OrderAndDetailService;
 import com.example.hotel.service.order.OrderInfoService;
@@ -70,6 +77,8 @@ public class OrderInfoServiceImpl implements OrderInfoService {
   private final UserService userService;
   private final OrderBaseMapper orderBaseMapper;
   private final UserPointService userPointService;
+  private final OrderDetailMapper orderDetailMapper;
+  private final HotelAndTypeService hotelAndTypeService;
 
   private BillFeignClient billFeignClient;
 
@@ -146,6 +155,16 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     ChangeOrderRoomCountResponse result = getOrderPrice(requestDTO, token);
     return result;
   }
+  @Override
+  public ChangeOrderRoomCountResponse addOrderRoom(PrebookRoomRequestDTO requestDTO, String token)
+      throws BizException {
+    ChangeRoomReceiver receiver = new ChangeRoomReceiver();
+    ChangeRoomCountCommand command = new AddRoomCommand(receiver, requestDTO.getRoomCount());
+    Integer roomCount = command.execute();
+    requestDTO.setRoomCount(roomCount);
+    ChangeOrderRoomCountResponse result = getOrderPrice(requestDTO, token);
+    return result;
+  }
 
   private ChangeOrderRoomCountResponse getOrderPrice(PrebookRoomRequestDTO requestDTO, String token)
       throws BizException {
@@ -163,16 +182,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     return result;
   }
 
-  @Override
-  public ChangeOrderRoomCountResponse addOrderRoom(PrebookRoomRequestDTO requestDTO, String token)
-      throws BizException {
-    ChangeRoomReceiver receiver = new ChangeRoomReceiver();
-    ChangeRoomCountCommand command = new AddRoomCommand(receiver, requestDTO.getRoomCount());
-    Integer roomCount = command.execute();
-    requestDTO.setRoomCount(roomCount);
-    ChangeOrderRoomCountResponse result = getOrderPrice(requestDTO, token);
-    return result;
-  }
+
 
   @Override
   public OrderInfoResponse queryOrderDetail(Long id) throws BizException {
@@ -269,6 +279,8 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     }
     return true;
   }
+
+
 
   private void updateFinishOrder(List<OrderBase> orderBaseList) {
     List<Long> ids = orderBaseList.stream().map(x -> x.getId()).collect(Collectors.toList());
@@ -370,5 +382,80 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     result.setRoomTypePrice(roomTypePriceMap.get(requestDTO.getRoomTypeId()));
 
     return result;
+  }
+
+  @Override
+  public List<QueryChangeEmptyRoomResponse> queryEmptyRoom(String token,
+      QueryChangeRoomRequestDTO requestDTO) throws BizException {
+    if (requestDTO==null){
+      throw new BizException(ResponseCode.param_error);
+    }
+    //query order info and order detail info
+    OrderBase order = orderBaseMapper.selectByPrimaryKey(requestDTO.getOrderId());
+    OrderDetail detail = orderDetailMapper.selectByPrimaryKey(requestDTO.getOrderDetailId());
+    //query empty room list
+    QueryRoomTypePriceRequestDTO emptyRequest = new QueryRoomTypePriceRequestDTO();
+    emptyRequest.setHotelId(requestDTO.getHotelId());
+    emptyRequest.setEndDate(order.getEndDate());
+    emptyRequest.setStartDate(LocalDate.now());
+    List<RoomAndTypeWithPriceResponse> emptyRoomTypeList= hotelAndTypeService.getHotelAvailableRoomWithPrice(emptyRequest);
+    List<QueryChangeEmptyRoomResponse> resultList = new ArrayList<>();
+    if (CollectionUtils.isNotEmpty(emptyRoomTypeList)){
+      String userId = jwtUtil.getUserIdFromToken(token);
+      User userInfo = userService.findUserByUserId(userId);
+      PriceCalculationService priceCalculationService = PriceFactory
+          .getService(userInfo.getMemberShip());
+      for (RoomAndTypeWithPriceResponse item: emptyRoomTypeList){
+        if (item.getAvailableCount()<1){
+          continue;
+        }
+        BigDecimal dates = new BigDecimal(
+            DateUtil.getBetweenDays(order.getStartDate(), order.getEndDate()));
+        BigDecimal price = priceCalculationService.calculateMemberShipRoomTypePrice(item.getPrice(),dates);
+        //only equal price or higher price room can be changed
+        BigDecimal diffPrice = price.subtract(detail.getPrice().divide(dates).setScale(2, RoundingMode.HALF_UP));
+        BigDecimal diffDates = new BigDecimal(
+            DateUtil.getBetweenDays(LocalDate.now(), order.getEndDate()));
+
+        if (diffPrice.doubleValue()>=0){
+          QueryChangeEmptyRoomResponse result = QueryChangeEmptyRoomResponse.builder().build();
+          BeanUtils.copyProperties(item, result);
+          result.setRealDiffPrice(diffPrice.multiply(diffDates));
+          result.setTotalDiffPrice(item.getPrice().multiply(diffDates));
+          resultList.add(result);
+        }
+      }
+    }
+    return resultList;
+  }
+
+  @Override
+  @Transactional(rollbackFor = Exception.class, noRollbackFor = NoRollbackException.class)
+  public void changeRoom(String token, ChangeRoomRequestDTO requestDTO) throws BizException {
+    if (requestDTO==null){
+      throw new BizException(ResponseCode.param_error);
+    }
+    String userId = jwtUtil.getUserIdFromToken(token);
+    //cal bill service to pay difference price
+    PayBillRequestDTO billRequestDTO = new PayBillRequestDTO();
+    BeanUtils.copyProperties(requestDTO, billRequestDTO);
+    billRequestDTO.setUserId(userId);
+    billRequestDTO.setPayType((byte)1);
+    ResponseResult<Boolean> billResult = billFeignClient.payRoomBill(requestDTO);
+    if (null==billResult.getData()){
+      throw new BizException(ResponseCode.pay_error);
+    }
+    //update order price
+
+    //query order info
+    OrderBase order = orderBaseMapper.selectByPrimaryKey(requestDTO.getOrderId());
+    BigDecimal realPrice = order.getRealPrice().add(requestDTO.getRealDiffPrice());
+    BigDecimal totalPrice = order.getTotalPrice().add(requestDTO.getTotalDiffPrice());
+    order.setRealPrice(realPrice);
+    order.setTotalPrice(totalPrice);
+    orderBaseMapper.updateByPrimaryKeySelective(order);
+    //update and insert new order detail info
+    orderAndDetailService.dealChangeRoom(requestDTO,userId,order.getEndDate());
+
   }
 }

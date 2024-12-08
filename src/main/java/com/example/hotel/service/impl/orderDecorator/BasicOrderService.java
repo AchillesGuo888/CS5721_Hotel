@@ -1,4 +1,4 @@
-package com.example.hotel.service.impl.order;
+package com.example.hotel.service.impl.orderDecorator;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.example.hotel.common.base.ResponseCode;
@@ -15,12 +15,12 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @AllArgsConstructor
-public class OrderQueryServiceImpl implements OrderQueryService {
+public class BasicOrderService implements OrderQueryService {
 
   private final OrderBaseMapper orderBaseMapper;
 
   @Override
-  public OrderInfoResponse queryOrderDetail(Long id) throws BizException {
+  public OrderInfoResponse getBaseOrder(Long id) throws BizException {
     //get order base info
     OrderBase orderBase = orderBaseMapper.selectByPrimaryKey(id);
     if (ObjectUtil.isNull(orderBase)) {
@@ -33,5 +33,10 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     result.setOrderId(orderBase.getId());
     result.setMembershipDiscount(orderBase.getTotalPrice().subtract(orderBase.getRealPrice()));
     return result;
+  }
+
+  @Override
+  public OrderInfoResponse queryOrderDetail(Long id) throws BizException {
+    return getBaseOrder(id);
   }
 }

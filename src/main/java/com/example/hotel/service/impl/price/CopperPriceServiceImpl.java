@@ -72,4 +72,12 @@ public class CopperPriceServiceImpl implements PriceCalculationService {
         .setScale(0, RoundingMode.HALF_UP).intValue();
     return earnPointCount;
   }
+
+  @Override
+  public BigDecimal calculateMemberShipRoomTypePrice(BigDecimal roomTypePrice,
+      BigDecimal dates) {
+    BigDecimal realRoomPrice = roomTypePrice
+        .multiply(CommonConstant.COPPER_DISCOUNT).setScale(2, RoundingMode.HALF_UP);
+    return realRoomPrice;
+  }
 }
