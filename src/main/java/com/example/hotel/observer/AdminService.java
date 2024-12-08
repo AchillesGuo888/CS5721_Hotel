@@ -1,7 +1,7 @@
 package com.example.hotel.observer;
 
 import com.example.hotel.entity.OrderDetail;
-import com.example.hotel.service.order.OrderCancelService;
+import com.example.hotel.service.order.cancelorder.OrderCancelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

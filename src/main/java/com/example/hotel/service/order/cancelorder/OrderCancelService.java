@@ -1,17 +1,14 @@
-package com.example.hotel.service.order;
+package com.example.hotel.service.order.cancelorder;
 
-import com.example.hotel.observer.Observer;
 import com.example.hotel.entity.*;
 import com.example.hotel.mapper.*;
 import com.example.hotel.observer.ObserverManager;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -89,12 +86,6 @@ public class OrderCancelService {
                 refundInfo.setRefundStatus(Byte.valueOf("1")); // 假设 1 表示成功
                 refundInfoMapper.insertRefundInfo(refundInfo);
 
-
-
-                // 通知观察者
-                OrderDetail orderDetail = orderDetailMapper.findOrderById(orderId);
-                observerManager.notifyObservers(orderDetail); // 发布通知
-
                 return "订单取消成功，积分已回滚，退款已处理";
             }
         } catch (Exception e) {
@@ -127,7 +118,7 @@ public class OrderCancelService {
     }
 
     @Transactional
-    public void cancelRoomsInOrder(Long orderId, List<Integer> roomNumbers, String cancelReason, int isApproved) {
+    public String cancelRoomsInOrder(Long orderId, List<Integer> roomNumbers, String cancelReason, int isApproved) {
         // 查询订单信息
         OrderDetail order = orderDetailMapper.findOrderById(orderId);
         if (order == null) {
@@ -192,9 +183,11 @@ public class OrderCancelService {
         refundInfo.setRefundStatus(Byte.valueOf("1")); // 假设 1 表示成功
         refundInfoMapper.insertRefundInfo(refundInfo);
 
-        // 通知观察者
-        OrderDetail orderDetail = orderDetailMapper.findOrderById(orderId);
-        observerManager.notifyObservers(orderDetail); // 发布通知
+        return "订单取消成功，积分已回滚，退款已处理";
+    }
+
+    public OrderDetail getOrderDetailById(Long orderId) {
+        return orderDetailMapper.findOrderById(orderId);
     }
 
 }
