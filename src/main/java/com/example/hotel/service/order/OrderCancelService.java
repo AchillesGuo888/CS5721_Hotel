@@ -1,8 +1,10 @@
 package com.example.hotel.service.order;
 
-import com.example.hotel.controller.refund.Observer;
+import com.example.hotel.observer.Observer;
 import com.example.hotel.entity.*;
 import com.example.hotel.mapper.*;
+import com.example.hotel.observer.ObserverManager;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,43 +17,18 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@AllArgsConstructor
 @Service
 public class OrderCancelService {
-    @Autowired
+
     private OrderDetailMapper orderDetailMapper;
-
-    @Autowired
     private PointInfoMapper pointInfoMapper;
-
-    @Autowired
     private RefundInfoMapper refundInfoMapper;
-
-    @Autowired
     private PaymentInfoMapper paymentInfoMapper;
-
-    @Autowired
     private UserMapper userMapper;
+    private ObserverManager observerManager;
 
     private static final Logger logger = LoggerFactory.getLogger(OrderCancelService.class);
-
-    private List<Observer> observers = new ArrayList<>();  // 观察者列表
-
-    // 添加观察者
-    public void addObserver(Observer observer) {
-        observers.add(observer);
-    }
-
-    // 移除观察者
-    public void removeObserver(Observer observer) {
-        observers.remove(observer);
-    }
-
-    // 通知所有观察者
-    public void notifyObservers(OrderDetail orderDetail) {
-        for (Observer observer : observers) {
-            observer.update("订单ID: " + orderDetail.getId() + " 已取消");  // 假设订单有 getOrderId 方法
-        }
-    }
 
     /**
      * 取消订单
@@ -115,7 +92,7 @@ public class OrderCancelService {
 
 
                 // 通知观察者
-                notifyObservers(order);
+                observerManager.notifyObservers(order);
 
                 return "订单取消成功，积分已回滚，退款已处理";
             }
@@ -215,7 +192,7 @@ public class OrderCancelService {
         refundInfoMapper.insertRefundInfo(refundInfo);
 
         // 通知观察者
-        notifyObservers(order);
+        observerManager.notifyObservers(order);
     }
 
 }

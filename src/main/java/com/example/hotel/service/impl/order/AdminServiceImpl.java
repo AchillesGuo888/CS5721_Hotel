@@ -1,6 +1,6 @@
 package com.example.hotel.service.impl.order;
 
-import com.example.hotel.controller.refund.AdminService;
+import com.example.hotel.observer.AdminService;
 import com.example.hotel.entity.OrderDetail;
 import org.springframework.stereotype.Service;
 
