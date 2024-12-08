@@ -1,10 +1,8 @@
 package com.example.hotel.service.roomType;
 
 
-import com.example.hotel.dto.AvailableRoomCountDTO;
-import com.example.hotel.dto.request.QueryRoomTypePriceRequestDTO;
-import com.example.hotel.dto.response.RoomAndTypeWithPriceResponse;
-import com.example.hotel.entity.RoomTypePrice;
+import com.example.hotel.dto.common.RoomTypePriceDTO;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -23,4 +21,12 @@ public interface RoomTypePriceService {
    */
   Map<Long, BigDecimal> getHotelsRoomTypeAndPrice(List<Long> roomTypeIds, LocalDate startDate, LocalDate endDate);
 
+
+  String addRoomTypePrice(RoomTypePriceDTO roomTypePriceDTO);
+
+  RoomTypePriceDTO getRoomTypePrice(Long roomTypeId);
+
+  RoomTypePriceDTO modifyRoomTypePrice(RoomTypePriceDTO requestDTO);
+
+  void deleteRoomTypePrice(Long roomTypeId);
 }

@@ -1,5 +1,6 @@
 package com.example.hotel.dto.request;
 
+import com.example.hotel.dto.common.AmenetiesDTO;
 import com.example.hotel.dto.request.Base.Request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
@@ -30,4 +31,6 @@ public class ModifyRoomTypeInfoRequestDTO extends Request {
     private Integer roomCount;   // Corresponds to 'room_count' column
     @JsonProperty(value="maxQuantity")
     private Integer maxQuantity;
+    @JsonProperty(value = "ameneties")
+    private AmenetiesDTO ameneties;
 }

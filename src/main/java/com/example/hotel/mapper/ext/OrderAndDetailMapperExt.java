@@ -4,6 +4,8 @@ import com.example.hotel.dto.AvailableRoomCountDTO;
 import com.example.hotel.dto.DistributableRoomDTO;
 import java.time.LocalDate;
 import java.util.List;
+
+import com.example.hotel.dto.response.RoomAndTypeWithPriceResponse;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.ResultType;
@@ -88,5 +90,32 @@ public interface OrderAndDetailMapperExt {
     )
     @ResultType(DistributableRoomDTO.class)
     List<DistributableRoomDTO> getDistributableRoomList(@Param("roomTypeId") Long roomTypeId,@Param("hotelId") Long hotelId,@Param("startDate") LocalDate startDate,@Param("endDate") LocalDate endDate);
+
+
+    @Select({
+            "SELECT\n" +
+                    "    rti.id AS roomTypeId,\n" +
+                    "    rti.type_name AS roomTypeName,\n" +
+                    "    rti.room_count - IFNULL(COUNT(DISTINCT od.room_number), 0) AS availableCount\n" +
+                    "FROM\n" +
+                    "    room_type_info rti\n" +
+                    "LEFT JOIN order_detail od ON\n" +
+                    "    od.room_type_id = rti.id\n" +
+                    "LEFT JOIN order_base ob ON\n" +
+                    "    od.order_id = ob.id\n" +
+                    "    AND ob.is_cancelled = 0\n" +
+                    "    AND (\n" +
+                    "        (od.status = 0 AND ob.start_date <= #{endDate} AND ob.end_date >= #{startDate})\n" +
+                    "        OR (od.status = 2 AND ob.start_date <= #{endDate} AND od.update_time >= #{startDate})\n" +
+                    "    )\n" +
+                    "WHERE\n" +
+                    "    rti.is_deleted = 0\n" +
+                    "    AND rti.hotel_id = #{hotelId}\n" +
+                    "GROUP BY\n" +
+                    "    rti.id, rti.type_name, rti.room_count;\n"
+    }
+    )
+    @ResultType(RoomAndTypeWithPriceResponse.class)
+    List<RoomAndTypeWithPriceResponse> getAvailableRoomTypesWithPrice(@Param("hotelId") Long hotelId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
 }

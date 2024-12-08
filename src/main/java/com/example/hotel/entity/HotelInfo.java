@@ -1,7 +1,7 @@
 package com.example.hotel.entity;
 
 import java.util.Date;
-
+//dao,entity,model
 public class HotelInfo {
     /**
      *

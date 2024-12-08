@@ -1,5 +1,6 @@
 package com.example.hotel.service.impl.roomType;
 
+import com.example.hotel.dto.common.AmenetiesDTO;
 import com.example.hotel.dto.request.AddRoomTypeRequestDTO;
 import com.example.hotel.dto.request.ModifyRoomTypeInfoRequestDTO;
 import com.example.hotel.dto.request.QueryRoomTypePriceRequestDTO;
@@ -18,7 +19,10 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.example.hotel.util.JSONUtil;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -58,9 +62,13 @@ public class RoomTypeInfoServiceImpl implements RoomTypeInfoService {
   }
 
   @Override
+  @SneakyThrows
   public String addRoomType(AddRoomTypeRequestDTO addRoomTypeRequestDTO){
     RoomTypeInfo info = new RoomTypeInfo();
     BeanUtils.copyProperties(addRoomTypeRequestDTO,info);
+    if(addRoomTypeRequestDTO.getAmeneties() != null) {
+      info.setAmeneties(JSONUtil.getInstance().writeValueAsString(addRoomTypeRequestDTO.getAmeneties()));
+    }
     log.info("Room type info is: {}", info.toString());
     try {
       // Code to insert in to database. Map user input to database object
@@ -74,6 +82,7 @@ public class RoomTypeInfoServiceImpl implements RoomTypeInfoService {
   }
 
   @Override
+  @SneakyThrows
   public HotelDetailResponse getRoomOnId(Long id){
     RoomTypeInfo roomType = roomTypeInfoMapper.selectByPrimaryKey(id);
     HotelDetailResponse detailResp = new HotelDetailResponse();
@@ -85,6 +94,9 @@ public class RoomTypeInfoServiceImpl implements RoomTypeInfoService {
       detailResp.setWeekendPrice(roomType.getWeekendPrice());
       detailResp.setMaxQuantity(roomType.getMaxQuantity());
       detailResp.setTypeName(roomType.getTypeName());
+      if(roomType.getAmeneties() != null) {
+        detailResp.setAmeneties(JSONUtil.getInstance().readValue(roomType.getAmeneties(), AmenetiesDTO.class));
+      }
       return detailResp;
     }
     else{
@@ -95,10 +107,12 @@ public class RoomTypeInfoServiceImpl implements RoomTypeInfoService {
   @Override
   public String updateRoomType(ModifyRoomTypeInfoRequestDTO requestDto){
     try {
-      log.info("Payload is: "+ requestDto.toString());
       RoomTypeInfo info = new RoomTypeInfo();
       BeanUtils.copyProperties(requestDto, info);
-      roomTypeInfoMapper.updateByPrimaryKey(info);
+      if(requestDto.getAmeneties() != null) {
+        info.setAmeneties(JSONUtil.getInstance().writeValueAsString(requestDto.getAmeneties()));
+      }
+      roomTypeInfoMapper.updateByPrimaryKeySelective(info);
       return "Updated roomtype info successfully";
     }
     catch (Exception ex){

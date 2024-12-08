@@ -1,12 +1,13 @@
 package com.example.hotel.dto.response;
 
+import com.example.hotel.dto.common.AmenetiesDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import lombok.*;
 import org.apache.commons.pool2.BaseObject;
 
 import java.math.BigDecimal;
-
+//dto -> data transfer object
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
@@ -28,4 +29,6 @@ public class HotelDetailResponse extends BaseObject {
     private Integer roomCount;   // Corresponds to 'room_count' column
     @JsonProperty(value="maxQuantity")
     private Integer maxQuantity;
+    @JsonProperty(value = "ameneties")
+    private AmenetiesDTO ameneties;
 }

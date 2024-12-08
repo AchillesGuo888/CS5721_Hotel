@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class RoomTypeController {
 
-
   private final RoomTypeInfoService roomTypeInfoService;
 
   /**
@@ -40,10 +39,9 @@ public class RoomTypeController {
    *
    * @return
    */
-  @PostMapping("/addRoomType")
-  public ResponseResult addRoomType(@RequestHeader("Authorization") String token,
+  @PostMapping("/add")
+  public ResponseResult addRoomType(
       @RequestBody AddRoomTypeRequestDTO requestDTO) {
-       log.info("Token is:" + token);
       String msg = roomTypeInfoService.addRoomType(requestDTO);
       return ResponseResult.ofSuccess(msg);
   }
@@ -53,13 +51,10 @@ public class RoomTypeController {
    *
    * @return
    */
-  @GetMapping("/queryRoomTypeInfo")
-  @RequestMapping(value = "queryRoomTypeInfo", method = RequestMethod.GET)
+  @GetMapping("/query")
   public ResponseResult<HotelDetailResponse> queryHotelInfo(
-      @RequestHeader("Authorization") String token,
       @ApiParam(value = "query room type details ", required = true)
       @RequestBody QueryRoomTypeRequestDTO requestDTO) {
-     log.info("I am in query room type info");
     return ResponseResult.ofSuccess(roomTypeInfoService.getRoomOnId(requestDTO.getId()));
   }
 
@@ -68,27 +63,13 @@ public class RoomTypeController {
    *
    * @return
    */
-  @PutMapping("/modifyRoomTypeInfo")
-  @RequestMapping(value = "modifyRoomTypeInfo", method = RequestMethod.PUT)
-  public ResponseResult modifyHotelInfo(@RequestHeader("Authorization")
-      String token,@ApiParam(value = "room type details", required = true)
+  @PutMapping("/modify")
+  public ResponseResult modifyHotelInfo(
+      @ApiParam(value = "room type details", required = true)
       @RequestBody ModifyRoomTypeInfoRequestDTO requestDTO) {
-      log.info("I am in update room type info");
       String msg = roomTypeInfoService.updateRoomType(requestDTO);
       return ResponseResult.ofSuccess(msg);
   }
 
-  /**
-   * query room types(with price) and available room count of a concrete hotel
-   *
-   * @return
-   */
-  @PostMapping("/queryRoomAndTypeWithPrice")
-  @RequestMapping(value = "queryRoomAndTypeWithPrice", method = RequestMethod.POST)
-  public ResponseResult<List<RoomAndTypeWithPriceResponse>> queryRoomAndTypeWithPrice(
-      @ApiParam(value = "query price and available room count of each room type", required = true)
-      @RequestBody QueryRoomTypePriceRequestDTO requestDTO) {
 
-    return ResponseResult.ofSuccess(roomTypeInfoService.getHotelAvailableRoomWithPrice(requestDTO));
-  }
 }

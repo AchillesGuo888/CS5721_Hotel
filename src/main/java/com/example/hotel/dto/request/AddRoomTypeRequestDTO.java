@@ -1,5 +1,6 @@
 package com.example.hotel.dto.request;
 
+import com.example.hotel.dto.common.AmenetiesDTO;
 import com.example.hotel.dto.request.Base.Request;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -9,6 +10,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Setter
@@ -32,4 +34,6 @@ public class AddRoomTypeRequestDTO extends Request {
     private Integer roomCount;   // Corresponds to 'room_count' column
     @JsonProperty(value="maxQuantity")
     private Integer maxQuantity;
+    @JsonProperty(value = "ameneties")
+    private AmenetiesDTO ameneties;
 }
