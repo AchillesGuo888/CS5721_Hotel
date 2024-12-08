@@ -92,7 +92,8 @@ public class OrderCancelService {
 
 
                 // 通知观察者
-                observerManager.notifyObservers(order);
+                OrderDetail orderDetail = orderDetailMapper.findOrderById(orderId);
+                observerManager.notifyObservers(orderDetail); // 发布通知
 
                 return "订单取消成功，积分已回滚，退款已处理";
             }
@@ -192,7 +193,8 @@ public class OrderCancelService {
         refundInfoMapper.insertRefundInfo(refundInfo);
 
         // 通知观察者
-        observerManager.notifyObservers(order);
+        OrderDetail orderDetail = orderDetailMapper.findOrderById(orderId);
+        observerManager.notifyObservers(orderDetail); // 发布通知
     }
 
 }

@@ -8,17 +8,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class AdminService implements Observer {
 
+    private final OrderCancelService orderCancelService;
+
     @Autowired
-    private OrderCancelService orderCancelService;
+    public AdminService(OrderCancelService orderCancelService) {
+        this.orderCancelService = orderCancelService;
+    }
 
     @Override
     public void update(OrderDetail orderDetail) {
-        // 接收到订单通知
+        // 处理订单取消通知
         System.out.println("收到订单取消通知，订单ID：" + orderDetail.getId());
         System.out.println("订单状态：" + orderDetail.getStatus());
 
-        // 模拟管理员审核逻辑
-        boolean approved = performAdminAudit(orderDetail); // 审核结果
+        // 模拟审核逻辑
+        boolean approved = performAdminAudit(orderDetail);
         if (approved) {
             orderCancelService.processOrderCancellation(orderDetail.getId(), 1, "审核通过");
         } else {
@@ -31,5 +35,5 @@ public class AdminService implements Observer {
         System.out.println("正在审核订单，订单ID：" + orderDetail.getId());
         return true; // 默认审核通过
     }
-
 }
+
