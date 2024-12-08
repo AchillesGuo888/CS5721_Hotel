@@ -6,29 +6,21 @@ import com.example.hotel.dto.request.AddHotelRequestDTO;
 import com.example.hotel.dto.request.DeleteHotelInfoRequestDTO;
 import com.example.hotel.dto.request.ModifyHotelInfoRequestDTO;
 import com.example.hotel.dto.request.QueryHotelRequestDTO;
-import com.example.hotel.dto.request.QueryRoomTypePriceRequestDTO;
 import com.example.hotel.dto.response.AddHotelResponse;
-import com.example.hotel.dto.response.AvailableHotelResponse;
 import com.example.hotel.dto.response.HotelDetailResponse;
-import com.example.hotel.dto.response.RoomAndTypeWithPriceResponse;
 import com.example.hotel.entity.HotelInfo;
 import com.example.hotel.exception.BizException;
 import com.example.hotel.service.hotel.HotelInfoService;
 import com.example.hotel.service.hotel.HotelService;
-import io.micrometer.core.instrument.util.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import java.awt.print.Pageable;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -128,8 +120,13 @@ public class HotelController {
   public ResponseResult deleteHotel(
           @RequestHeader("Authorization") String token,
           @ApiParam(value = "Delete hotel", required = true) @RequestBody DeleteHotelInfoRequestDTO deleteHotelInfoRequestDTO) {
-    hotelService.deleteHotel(deleteHotelInfoRequestDTO.getId());
-    return ResponseResult.ofSuccess("Hotel deleted successfully");
+    Integer i = hotelService.deleteHotel(deleteHotelInfoRequestDTO.getId());
+    if (i ==1){
+      return ResponseResult.ofSuccess("Hotel deleted successfully");
+    }else {
+      return ResponseResult.ofError(ResponseCode.server_err.getCode(), "Hotel delete failed");
+    }
+
   }
 
 }

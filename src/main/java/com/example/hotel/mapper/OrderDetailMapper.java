@@ -140,4 +140,6 @@ public interface OrderDetailMapper {
   int updateRoomStatusByRoomNumbers(@Param("orderId") Long orderId,
                                     @Param("roomNumbers") List<Integer> roomNumbers,
                                     @Param("newStatus") int newStatus);
+
+  void deleteById(Long orderId);
 }

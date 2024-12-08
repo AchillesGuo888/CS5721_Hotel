@@ -24,4 +24,7 @@ public class CancelOrderRequestDTO extends Request {
     @ApiModelProperty(value = "Room Numbers to cancel (if null, cancel entire order)")
     private List<Integer> roomNumber;
 
+
+    private int isApproved;  // 是否审核通过 0表示不通过，1表示通过
+
 }

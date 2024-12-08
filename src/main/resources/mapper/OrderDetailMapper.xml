@@ -464,4 +464,9 @@
     guest_name = #{guestName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <delete id="deleteById" parameterType="long">
+    DELETE FROM order_detail WHERE id = #{id}
+  </delete>
+
 </mapper>

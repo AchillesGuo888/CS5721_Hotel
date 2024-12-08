@@ -11,16 +11,14 @@ import com.example.hotel.mapper.HotelInfoMapper;
 import com.example.hotel.repository.HotelInfoRepository;
 import com.example.hotel.service.hotel.HotelService;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.PageRequest;
 
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
@@ -133,7 +131,7 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public void deleteHotel(Long hotelId) {
+    public Integer deleteHotel(Long hotelId) {
         if (hotelId == null || hotelId <= 0) {
             throw new IllegalArgumentException("Invalid hotel ID");
         }
@@ -141,5 +139,6 @@ public class HotelServiceImpl implements HotelService {
         if (rowsAffected == 0) {
             throw new IllegalArgumentException("Hotel with ID " + hotelId + " does not exist or is already deleted");
         }
+        return rowsAffected;
     }
 }

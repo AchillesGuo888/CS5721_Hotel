@@ -45,8 +45,7 @@ public interface HotelService {
     /**
      * 删除酒店
      *
-     *
      * @return 结果
      */
-    void deleteHotel(Long hotelId);
+    Integer deleteHotel(Long hotelId);
 }

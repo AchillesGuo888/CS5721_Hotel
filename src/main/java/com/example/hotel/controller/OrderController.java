@@ -102,21 +102,27 @@ public class OrderController {
   private OrderCancelService orderCancelService;
 
   /**
-   * 取消订单
+   * Cancellation of order
    *
-   * @param token 管理员授权 Token
-   * @param cancelRequestDTO 包含订单 ID 和取消原因
-   * @return 返回取消订单的结果
+   * @param cancelRequestDTO Contains order ID, review result and cancellation reason
+   * @return Returns the result of canceling the order
    */
+  // Cancel order interface, the administrator will review and process it
   @PostMapping("/cancelOrderById")
   public ResponseResult cancelOrderById(
           @RequestHeader("Authorization") String token,
           @RequestBody CancelOrderRequestDTO cancelRequestDTO) {
 
-    // 调用取消订单的服务逻辑
-    orderCancelService.processOrderCancellationReason(cancelRequestDTO.getOrderId(), cancelRequestDTO.getCancelReason());
+    // Call the service logic to cancel the order
+    String result = orderCancelService.processOrderCancellation(
+            cancelRequestDTO.getOrderId(), cancelRequestDTO.getIsApproved(), cancelRequestDTO.getCancelReason());
 
-    return ResponseResult.ofSuccess("Order cancellation request submitted for admin approval.");
+    // 返回响应
+    if ("订单取消成功，积分已回滚，退款已处理".equals(result)) {
+      return ResponseResult.ofSuccess("Order cancellation request submitted for admin approval.");
+    } else {
+      return ResponseResult.ofFailure(result);
+    }
   }
 
   //管理员审核
@@ -127,27 +133,29 @@ public class OrderController {
   }
 
   /**
-   * Cancel an entire order by its ID or cancel specific rooms in an order
+   * cancel specific rooms in an order
    *
    * @param token Authorization token
-   * @param requestDTO Cancel order request details
+   * @param cancelRequestDTO Cancel order request details
    * @return ResponseResult
    */
   @DeleteMapping("/cancelOrderByRoom")
-  @ApiOperation("Cancel an order or specific rooms")
+  @ApiOperation("Cancel specific rooms in an order")
   public ResponseResult cancelOrderByRoom(
           @RequestHeader("Authorization") String token,
           @ApiParam(value = "Cancel order details", required = true)
-          @RequestBody CancelOrderRequestDTO requestDTO) {
-    if (requestDTO.getRoomNumber() == null || requestDTO.getRoomNumber().isEmpty()) {
-      // Cancel entire order
-      orderCancelService.cancelOrderById(requestDTO.getOrderId());
-      return ResponseResult.ofSuccess("Order cancelled successfully");
-    } else {
-      // Cancel specific rooms
-      orderCancelService.cancelRoomsInOrder(requestDTO.getOrderId(), requestDTO.getRoomNumber());
-      return ResponseResult.ofSuccess("Rooms cancelled successfully");
+          @RequestBody CancelOrderRequestDTO cancelRequestDTO) {
+
+    // 检查请求中的房间号是否有效
+    if (cancelRequestDTO.getRoomNumber() == null || cancelRequestDTO.getRoomNumber().isEmpty()) {
+      return ResponseResult.ofFailure("房间号不能为空，取消房间失败");
     }
+
+    // 调用取消特定房间的服务逻辑
+    orderCancelService.cancelRoomsInOrder(cancelRequestDTO.getOrderId(), cancelRequestDTO.getRoomNumber(),
+            cancelRequestDTO.getCancelReason(), cancelRequestDTO.getIsApproved());
+
+    return ResponseResult.ofSuccess("指定房间取消成功");
   }
 
   /**

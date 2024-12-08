@@ -310,4 +310,15 @@
       <include refid="Update_By_Example_Where_Clause"/>
     </if>
   </update>
+
+  <select id="findUsersByType" parameterType="int" resultMap="BaseResultMap">
+    SELECT * FROM user WHERE usertype = #{usertype}
+  </select>
+
+  <update id="updateUserStatus" parameterType="com.example.hotel.entity.User">
+    UPDATE user
+    SET status = #{status}
+    WHERE id = #{id}
+  </update>
+
 </mapper>
