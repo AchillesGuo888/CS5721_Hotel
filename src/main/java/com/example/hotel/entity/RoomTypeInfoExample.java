@@ -36,6 +36,26 @@ public class RoomTypeInfoExample {
      *
    * @mbg.generated Thu Nov 28 17:12:09 GMT 2024
      */
+
+     private Integer limit;
+    private Integer offset;
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
+    }
+
+    public Integer getOffset() {
+        return offset;
+    }
+
+    public void setOffset(Integer offset) {
+        this.offset = offset;
+    }
+    
     public RoomTypeInfoExample() {
         oredCriteria = new ArrayList<>();
     }

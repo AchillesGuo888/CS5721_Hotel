@@ -20,7 +20,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers("/swagger-ui.html", "/v2/api-docs", "/swagger-resources/**", "/webjars/**",
             "/user/withoutToken/**")
         .permitAll() // allow Swagger url
-        .anyRequest().permitAll()//.authenticated() // other request
+        .anyRequest().permitAll() // other request
         .and()
         .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class) // register JwtFilter
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
