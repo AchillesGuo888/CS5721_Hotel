@@ -3,7 +3,11 @@ package com.example.hotel.mapper;
 import com.example.hotel.entity.PointInfo;
 import com.example.hotel.entity.PointInfoExample;
 import java.util.List;
+
+import com.example.hotel.entity.UserPoints;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 public interface PointInfoMapper {
 
@@ -95,4 +99,10 @@ public interface PointInfoMapper {
    * @mbg.generated Sun Nov 10 00:55:30 GMT 2024
    */
   int updateByPrimaryKey(PointInfo row);
+
+  @Select("SELECT * FROM user_points WHERE order_id = #{orderId} AND is_deleted = 0")
+  UserPoints findByOrderId(@Param("orderId") String orderId);
+
+  @Update("UPDATE user_points SET is_deleted = 1, points = 0 WHERE id = #{id}")
+  int updateUserPoints(UserPoints userPoints);
 }

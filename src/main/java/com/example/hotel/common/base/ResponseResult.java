@@ -93,6 +93,11 @@ public class ResponseResult<T> extends BaseObject {
         ResponseCode.server_err.getDesc());
   }
 
+  public static <T> ResponseResult<T> ofFailure(String msg) {
+    return new ResponseResult<>(ResponseCode.failure.getCode(), msg);
+  }
+
+
   /**
    * add extend param
    *

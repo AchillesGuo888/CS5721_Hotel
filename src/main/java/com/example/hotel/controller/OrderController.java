@@ -19,14 +19,18 @@ import com.example.hotel.dto.response.PreBookRoomResponse;
 import com.example.hotel.dto.response.QueryChangeEmptyRoomResponse;
 import com.example.hotel.dto.response.RoomAndTypeWithPriceResponse;
 import com.example.hotel.exception.BizException;
+
 import com.example.hotel.service.order.OrderInfoService;
 import com.example.hotel.service.order.OrderQueryService;
+import com.example.hotel.service.order.cancelorder.OrderCancelService;
 import com.github.pagehelper.PageSerializable;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,6 +52,7 @@ public class OrderController {
 
   private final OrderQueryService orderQueryService;
 
+  private final OrderCancelService orderCancelService;
 
   /**
    * book room and create order
@@ -106,17 +111,59 @@ public class OrderController {
   }
 
   /**
-   * cancel order
+   * Cancellation of order
    *
-   * @return
+   * @param cancelRequestDTO Contains order ID, review result and cancellation reason
+   * @return Returns the result of canceling the order
    */
-  @DeleteMapping("/cancelOrder")
-  @RequestMapping(value = "cancelOrder", method = RequestMethod.DELETE)
-  public ResponseResult cancelOrder(@RequestHeader("Authorization") String token,
-      @ApiParam(value = "cancel order", required = true)
-      @RequestBody CancelOrderRequestDTO requestDTO) {
+  // Cancel order interface, the administrator will review and process it
+  @PostMapping("/cancelOrderById")
+  public ResponseResult cancelOrderById(
+          @RequestHeader("Authorization") String token,
+          @RequestBody CancelOrderRequestDTO cancelRequestDTO) {
 
+    // Call the service logic to cancel the order
+    String result = orderCancelService.processOrderCancellation(
+            cancelRequestDTO.getOrderId(), cancelRequestDTO.getIsApproved(), cancelRequestDTO.getCancelReason());
+
+    // Return Response
+    if ("The order was successfully cancelled, the points were rolled back, and the refund was processed".equals(result)) {
+      return ResponseResult.ofSuccess("Order cancellation request submitted for admin approval.");
+    } else {
+      return ResponseResult.ofFailure(result);
+    }
+  }
+
+  //Administrator review
+  @PostMapping("/cancel/approve")
+  public ResponseResult approveOrderCancellation(@RequestBody CancelOrderRequestDTO cancelOrderRequestDTO) {
+    // Processing Logic
     return ResponseResult.ofSuccess();
+  }
+
+  /**
+   * cancel specific room in an order
+   *
+   * @param token Authorization token
+   * @param cancelRequestDTO Cancel order request details
+   * @return ResponseResult
+   */
+  @DeleteMapping("/cancelOrderByRoom")
+  @ApiOperation("Cancel specific room in an order")
+  public ResponseResult cancelOrderByRoom(
+          @RequestHeader("Authorization") String token,
+          @ApiParam(value = "Cancel order details", required = true)
+          @RequestBody CancelOrderRequestDTO cancelRequestDTO) {
+
+    if (cancelRequestDTO.getOrderId() == null || cancelRequestDTO.getRoomNumber() == null) {
+      throw new IllegalArgumentException("Order ID or Room Number cannot be null");
+    }
+
+    // Call the service logic to cancel a specific room
+    orderCancelService.cancelRoomInOrder(cancelRequestDTO.getOrderId(), cancelRequestDTO.getRoomNumber(),
+            cancelRequestDTO.getCancelReason(), cancelRequestDTO.getIsApproved());
+
+    return ResponseResult.ofSuccess("The designated room was cancelled successfully");
   }
 
   /**

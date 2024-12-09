@@ -2,30 +2,19 @@ package com.example.hotel.service.impl.order;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.druid.util.StringUtils;
 import com.example.hotel.common.base.ResponseCode;
 import com.example.hotel.common.base.ResponseResult;
 import com.example.hotel.dto.AvailableRoomCountDTO;
-import com.example.hotel.dto.request.BookRoomRequestDTO;
+import com.example.hotel.dto.request.*;
 import com.example.hotel.dto.request.ChangeRoomRequestDTO;
-import com.example.hotel.dto.request.ModifyOrderInfoRequestDTO;
 import com.example.hotel.dto.request.PayBillRequestDTO;
-import com.example.hotel.dto.request.PrebookRoomRequestDTO;
 import com.example.hotel.dto.request.QueryChangeRoomRequestDTO;
-import com.example.hotel.dto.request.QueryOrderAmountRequestDTO;
-import com.example.hotel.dto.request.QueryOrderDetailRequestDTO;
 import com.example.hotel.dto.request.QueryRoomTypePriceRequestDTO;
-import com.example.hotel.dto.response.ChangeOrderRoomCountResponse;
-import com.example.hotel.dto.response.OrderInfoListResponse;
-import com.example.hotel.dto.response.OrderInfoResponse;
-import com.example.hotel.dto.response.PreBookRoomResponse;
-import com.example.hotel.dto.response.PriceResponse;
+import com.example.hotel.dto.response.*;
 import com.example.hotel.dto.response.QueryChangeEmptyRoomResponse;
 import com.example.hotel.dto.response.RoomAndTypeWithPriceResponse;
-import com.example.hotel.entity.HotelInfo;
-import com.example.hotel.entity.OrderBase;
-import com.example.hotel.entity.OrderBaseExample;
-import com.example.hotel.entity.OrderDetail;
-import com.example.hotel.entity.User;
+import com.example.hotel.entity.*;
 import com.example.hotel.enums.OrderStatusEnum;
 import com.example.hotel.exception.BizException;
 import com.example.hotel.exception.NoRollbackException;
@@ -47,23 +36,21 @@ import com.example.hotel.util.JwtUtil;
 import com.example.hotel.util.Md5Util;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageSerializable;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.thymeleaf.util.MapUtils;
-import org.thymeleaf.util.StringUtils;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
+
 
 @Service
 @AllArgsConstructor
@@ -464,5 +451,25 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     //update and insert new order detail info
     orderAndDetailService.dealChangeRoom(requestDTO,userId,order.getEndDate());
 
+  }
+  @Override
+  public void cancelOrderById(Long orderId) {
+    // 更新 order_base 表中的状态
+    orderBaseMapper.updateOrderStatusToCancelled(orderId);
+
+    // 更新 order_detail 表中的状态
+    orderDetailMapper.updateRoomStatusByOrderId(orderId,3);
+  }
+
+  @Override
+  public void cancelRoomInOrder(Long orderId, Long roomNumber) {
+    // 更新指定房间的状态
+    orderDetailMapper.updateRoomStatusByRoomNumber(orderId, roomNumber,3);
+
+    // 检查订单中是否所有房间都被取消，如果是，则更新 order_base 状态
+    int remainingRooms = orderDetailMapper.countActiveRoomsByOrderId(orderId);
+    if (remainingRooms == 0) {
+      orderBaseMapper.updateOrderStatusToCancelled(orderId);
+    }
   }
 }

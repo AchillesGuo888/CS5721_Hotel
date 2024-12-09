@@ -384,4 +384,11 @@
     operator = #{operator,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <!-- Insert refund information -->
+  <insert id="insertPaymentInfo" parameterType="com.example.hotel.entity.PaymentInfo">
+    INSERT INTO payment_info (order_id, payment_amount, payment_status, refund_reason)
+    VALUES (#{orderId}, #{paymentAmount}, #{paymentStatus}, #{refundReason});
+  </insert>
 </mapper>
+

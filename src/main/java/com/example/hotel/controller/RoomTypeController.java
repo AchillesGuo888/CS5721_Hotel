@@ -12,6 +12,7 @@ import com.example.hotel.dto.request.QueryHotelRequestDTO;
 import com.example.hotel.dto.request.QueryRoomTypePriceRequestDTO;
 import com.example.hotel.dto.request.QueryRoomTypeRequestDTO;
 import com.example.hotel.dto.response.AvailableHotelResponse;
+import com.example.hotel.dto.response.HotelDetailInfoResponse;
 import com.example.hotel.dto.response.HotelDetailResponse;
 import com.example.hotel.dto.response.RoomAndTypeWithPriceResponse;
 import com.example.hotel.service.roomType.RoomTypeInfoService;
@@ -52,7 +53,7 @@ public class RoomTypeController {
    * @return
    */
   @GetMapping("/query")
-  public ResponseResult<HotelDetailResponse> queryHotelInfo(
+  public ResponseResult<HotelDetailInfoResponse> queryHotelInfo(
       @ApiParam(value = "query room type details ", required = true)
       @RequestBody QueryRoomTypeRequestDTO requestDTO) {
     return ResponseResult.ofSuccess(roomTypeInfoService.getRoomOnId(requestDTO.getId()));

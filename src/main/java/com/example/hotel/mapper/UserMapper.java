@@ -62,4 +62,8 @@ public interface UserMapper {
    * @mbg.generated Sat Nov 09 02:40:34 GMT 2024
    */
   int updateByExample(@Param("row") User row, @Param("example") UserExample example);
+
+  List<User> findUsersByType(int i);
+
+  void updateUserStatus(User user);
 }

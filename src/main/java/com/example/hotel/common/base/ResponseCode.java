@@ -37,7 +37,7 @@ public enum ResponseCode implements BaseEnum<Long> {
 
   order_error("Can't find this order information", "", 5001L),
 
-  ;
+  data_not_found("Data not found","",404L), failure("Failure","", 500L);
 
   private String desc;
   private Long code;

@@ -473,4 +473,9 @@
       pending_cancel_rooms = #{pendingCancelRooms,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <delete id="deleteById" parameterType="long">
+    DELETE FROM order_detail WHERE id = #{id}
+  </delete>
+
 </mapper>

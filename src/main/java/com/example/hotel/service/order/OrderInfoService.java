@@ -46,4 +46,7 @@ public interface OrderInfoService {
       throws BizException;
 
   void changeRoom(String token, ChangeRoomRequestDTO requestDTO) throws BizException;
+  void cancelOrderById(Long orderId);
+
+  void cancelRoomInOrder(Long orderId, Long roomNumber);
 }

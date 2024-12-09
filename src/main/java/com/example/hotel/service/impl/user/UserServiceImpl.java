@@ -408,5 +408,4 @@ public class UserServiceImpl implements UserService {
     return jti.equals(loginStatusMap.get(userId));
   }
 
-
 }

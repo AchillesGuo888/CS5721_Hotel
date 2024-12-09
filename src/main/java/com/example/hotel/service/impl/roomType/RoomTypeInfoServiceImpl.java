@@ -4,6 +4,7 @@ import com.example.hotel.dto.common.AmenetiesDTO;
 import com.example.hotel.dto.request.AddRoomTypeRequestDTO;
 import com.example.hotel.dto.request.ModifyRoomTypeInfoRequestDTO;
 import com.example.hotel.dto.request.QueryRoomTypePriceRequestDTO;
+import com.example.hotel.dto.response.HotelDetailInfoResponse;
 import com.example.hotel.dto.response.HotelDetailResponse;
 import com.example.hotel.dto.response.RoomAndTypeWithPriceResponse;
 import com.example.hotel.entity.RoomTypeInfo;
@@ -76,9 +77,9 @@ public class RoomTypeInfoServiceImpl implements RoomTypeInfoService {
 
   @Override
   @SneakyThrows
-  public HotelDetailResponse getRoomOnId(Long id){
+  public HotelDetailInfoResponse getRoomOnId(Long id){
     RoomTypeInfo roomType = roomTypeInfoMapper.selectByPrimaryKey(id);
-    HotelDetailResponse detailResp = new HotelDetailResponse();
+    HotelDetailInfoResponse detailResp = new HotelDetailInfoResponse();
     if(null != roomType){
       detailResp.setRoomCount(roomType.getRoomCount());
       detailResp.setType(roomType.getType());
@@ -93,7 +94,7 @@ public class RoomTypeInfoServiceImpl implements RoomTypeInfoService {
       return detailResp;
     }
     else{
-      return new HotelDetailResponse();
+      return new HotelDetailInfoResponse();
     }
   }
 

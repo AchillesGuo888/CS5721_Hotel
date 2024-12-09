@@ -1,5 +1,6 @@
 package com.example.hotel.entity;
 
+import javax.persistence.Column;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -148,6 +149,7 @@ public class OrderDetail {
      * @mbg.generated Sun Dec 08 20:31:33 GMT 2024
      */
     private String guestName;
+
 
     /**
      *

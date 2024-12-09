@@ -1,34 +1,44 @@
 package com.example.hotel.dto.response;
 
-import com.example.hotel.dto.common.AmenetiesDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
-import lombok.*;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.apache.commons.pool2.BaseObject;
 
 import java.math.BigDecimal;
-//dto -> data transfer object
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @ApiModel("query hotel info result")
 public class HotelDetailResponse extends BaseObject {
-    @JsonProperty(value="hotelId")
-    private Long hotelId;        // Corresponds to 'hotel_id' column
-    @JsonProperty(value="typeName")
-    private String typeName;     // Corresponds to 'type_name' column
-    @JsonProperty(value="type")
-    private Byte type;        // Corresponds to 'type' column
-    @JsonProperty(value="weekdayPrice")
-    private BigDecimal weekdayPrice; // Corresponds to 'weekday_price' column
-    @JsonProperty(value="weekendPrice")
-    private BigDecimal weekendPrice; // Corresponds to 'weekend_price' column
-    @JsonProperty(value="roomCount")
-    private Integer roomCount;   // Corresponds to 'room_count' column
-    @JsonProperty(value="maxQuantity")
-    private Integer maxQuantity;
-    @JsonProperty(value = "ameneties")
-    private AmenetiesDTO ameneties;
+    @ApiModelProperty(value = "Hotel ID", example = "112", notes = "Unique identifier for the hotel")
+    @JsonProperty("hotelId")
+    private Long hotelId;
+
+    @ApiModelProperty(value = "Hotel Name", example = "Grand Plaza", notes = "Name of the hotel")
+    @JsonProperty("name")
+    private String name;
+
+    @ApiModelProperty(value = "City", example = "Limerick", notes = "City where the hotel is located")
+    @JsonProperty("city")
+    private String city;
+
+    @ApiModelProperty(value = "Address", example = "123 Main Street", notes = "Complete address of the hotel")
+    @JsonProperty("address")
+    private String address;
+
+    public HotelDetailResponse(Long hotelId, String name, String address, String city) {
+        this.hotelId = hotelId;
+        this.name = name;
+        this.address = address;
+        this.city = city;
+    }
+
+    public HotelDetailResponse() {
+
+    }
 }
