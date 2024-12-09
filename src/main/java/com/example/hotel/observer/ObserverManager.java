@@ -31,7 +31,6 @@ public class ObserverManager implements Observable {
         observers.remove(observer);
     }
 
-    @Override
     public void notifyObservers(OrderDetail orderDetail) {
         for (Observer observer : observers) {
             observer.update(orderDetail);

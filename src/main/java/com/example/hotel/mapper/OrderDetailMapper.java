@@ -99,11 +99,14 @@ public interface OrderDetailMapper {
    */
   int updateByPrimaryKey(OrderDetail row);
 
-  // 根据订单ID查找订单详情
+  // Find order details by order ID
   @Select("SELECT * FROM order_detail WHERE order_id = #{orderId} AND is_deleted = 0")
   OrderDetail findOrderById(Long orderId);
 
-  // 更新订单状态为已取消
+  @Select("SELECT * FROM order_detail WHERE order_id = #{orderId} AND room_number = #{roomNumber} AND is_deleted = 0")
+  OrderDetail findOrderByOrderIdAndRoom(@Param("orderId") Long orderId, @Param("roomNumber") Long roomNumber);
+
+  // Update order status to Cancelled
   @Update("UPDATE order_detail SET status = 1, update_time = NOW() WHERE order_id = #{orderId}")
   int updateOrderStatusToCancelled(Long orderId);
 
@@ -123,23 +126,19 @@ public interface OrderDetailMapper {
    * @param orderId The ID of the order.
    * @return The number of active rooms.
    */
-  @Select("SELECT COUNT(*) FROM order_detail WHERE order_id = #{orderId} AND status = 0 AND is_deleted = 0")
+  @Select("SELECT COUNT(*) num FROM order_detail WHERE order_id = #{orderId} AND status = 0 AND is_deleted = 0")
   int countActiveRoomsByOrderId(@Param("orderId") Long orderId);
 
   @Update({
-          "<script>",
           "UPDATE order_detail",
           "SET status = #{newStatus}, update_time = NOW()",
-          "WHERE room_number IN",
-          "<foreach collection='roomNumbers' item='roomNumber' open='(' separator=',' close=')'>",
-          "#{roomNumber}",
-          "</foreach>",
-          "AND order_id = #{orderId} AND is_deleted = 0",
-          "</script>"
+          "WHERE room_number = #{roomNumber}",
+          "AND order_id = #{orderId} AND is_deleted = 0"
   })
-  int updateRoomStatusByRoomNumbers(@Param("orderId") Long orderId,
-                                    @Param("roomNumbers") List<Integer> roomNumbers,
-                                    @Param("newStatus") int newStatus);
+  int updateRoomStatusByRoomNumber(@Param("orderId") Long orderId,
+                                   @Param("roomNumber") Long roomNumber,
+                                   @Param("newStatus") int newStatus);
+
 
   void deleteById(Long orderId);
 }

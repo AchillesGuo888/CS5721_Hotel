@@ -55,6 +55,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
   private final UserService userService;
   private final OrderBaseMapper orderBaseMapper;
   private final UserPointService userPointService;
+  private OrderDetailMapper orderDetailMapper;
 
   @Override
   @Transactional(rollbackFor = Exception.class, noRollbackFor = NoRollbackException.class)
@@ -338,10 +339,6 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     return result;
   }
 
-
-  @Autowired
-  private OrderDetailMapper orderDetailMapper;
-
   @Override
   public void cancelOrderById(Long orderId) {
     // 更新 order_base 表中的状态
@@ -352,9 +349,9 @@ public class OrderInfoServiceImpl implements OrderInfoService {
   }
 
   @Override
-  public void cancelRoomsInOrder(Long orderId, List<Integer> roomNumbers) {
+  public void cancelRoomInOrder(Long orderId, Long roomNumber) {
     // 更新指定房间的状态
-    orderDetailMapper.updateRoomStatusByRoomNumbers(orderId, roomNumbers,3);
+    orderDetailMapper.updateRoomStatusByRoomNumber(orderId, roomNumber,3);
 
     // 检查订单中是否所有房间都被取消，如果是，则更新 order_base 状态
     int remainingRooms = orderDetailMapper.countActiveRoomsByOrderId(orderId);

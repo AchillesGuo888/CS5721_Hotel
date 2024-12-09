@@ -39,5 +39,5 @@ public interface OrderInfoService {
 
   void cancelOrderById(Long orderId);
 
-  void cancelRoomsInOrder(Long orderId, List<Integer> roomNumbers);
+  void cancelRoomInOrder(Long orderId, Long roomNumber);
 }

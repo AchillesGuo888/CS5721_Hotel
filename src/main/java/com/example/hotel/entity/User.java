@@ -2,9 +2,11 @@ package com.example.hotel.entity;
 
 import lombok.Data;
 
+import javax.persistence.*;
 import java.util.Date;
 
-@Data
+@Entity // Annotated as a JPA entity
+@Table(name = "user") // Mapped to the table name in the database
 public class User {
 
   /**
@@ -13,6 +15,8 @@ public class User {
    *
    * @mbg.generated Sat Nov 09 02:40:34 GMT 2024
    */
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   /**

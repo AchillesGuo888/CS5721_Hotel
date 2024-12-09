@@ -46,15 +46,15 @@ public class CancelNotifyService {
     /**
      * 取消订单并通知观察者
      * @param orderId 订单ID
-     * @param roomNumbers 要取消的房间号列表
+     * @param roomNumber 要取消的房间号列表
      * @param cancelReason 取消原因
      * @param isApproved 审核是否通过
      * @return 取消结果
      */
     @Transactional
-    public String cancelOrderAndNotify(Long orderId, List<Integer> roomNumbers, String cancelReason, int isApproved) {
+    public String cancelOrderAndNotify(Long orderId, Long roomNumber, String cancelReason, int isApproved) {
         // 1. 调用 OrderCancelService 取消房间
-        String cancelResult = orderCancelService.cancelRoomsInOrder(orderId, roomNumbers, cancelReason, isApproved);
+        String cancelResult = orderCancelService.cancelRoomInOrder(orderId, roomNumber, cancelReason, isApproved);
 
         if ("订单取消成功，积分已回滚，退款已处理".equals(cancelResult)) {
             // 2. 通知观察者

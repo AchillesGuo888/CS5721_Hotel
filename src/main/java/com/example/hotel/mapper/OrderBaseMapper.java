@@ -5,7 +5,10 @@ import com.example.hotel.entity.OrderBaseExample;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import com.example.hotel.entity.OrderDetail;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 public interface OrderBaseMapper {
@@ -109,5 +112,9 @@ public interface OrderBaseMapper {
   int updateOrderStatusToCancelled(@Param("orderId") Long orderId);
 
   LocalDateTime selectCheckInTimeById(Long id);
+
+  // Find order details by order ID
+  @Select("SELECT * FROM order_detail WHERE id = #{id} AND is_deleted = 0")
+  OrderDetail findOrderById(Long orderId);
 
 }

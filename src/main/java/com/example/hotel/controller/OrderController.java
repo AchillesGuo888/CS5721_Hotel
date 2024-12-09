@@ -133,26 +133,25 @@ public class OrderController {
   }
 
   /**
-   * cancel specific rooms in an order
+   * cancel specific room in an order
    *
    * @param token Authorization token
    * @param cancelRequestDTO Cancel order request details
    * @return ResponseResult
    */
   @DeleteMapping("/cancelOrderByRoom")
-  @ApiOperation("Cancel specific rooms in an order")
+  @ApiOperation("Cancel specific room in an order")
   public ResponseResult cancelOrderByRoom(
           @RequestHeader("Authorization") String token,
           @ApiParam(value = "Cancel order details", required = true)
           @RequestBody CancelOrderRequestDTO cancelRequestDTO) {
 
-    // 检查请求中的房间号是否有效
-    if (cancelRequestDTO.getRoomNumber() == null || cancelRequestDTO.getRoomNumber().isEmpty()) {
-      return ResponseResult.ofFailure("房间号不能为空，取消房间失败");
+    if (cancelRequestDTO.getOrderId() == null || cancelRequestDTO.getRoomNumber() == null) {
+      throw new IllegalArgumentException("Order ID or Room Number cannot be null");
     }
 
     // 调用取消特定房间的服务逻辑
-    orderCancelService.cancelRoomsInOrder(cancelRequestDTO.getOrderId(), cancelRequestDTO.getRoomNumber(),
+    orderCancelService.cancelRoomInOrder(cancelRequestDTO.getOrderId(), cancelRequestDTO.getRoomNumber(),
             cancelRequestDTO.getCancelReason(), cancelRequestDTO.getIsApproved());
 
     return ResponseResult.ofSuccess("指定房间取消成功");

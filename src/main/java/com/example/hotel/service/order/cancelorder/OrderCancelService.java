@@ -2,11 +2,14 @@ package com.example.hotel.service.order.cancelorder;
 
 import com.example.hotel.entity.*;
 import com.example.hotel.mapper.*;
+import com.example.hotel.observer.Observable;
 import com.example.hotel.observer.ObserverManager;
+import com.example.hotel.observer.ObserverManagerService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -22,8 +25,9 @@ public class OrderCancelService {
     private OrderBaseMapper orderBaseMapper;
     private PointInfoMapper pointInfoMapper;
     private RefundInfoMapper refundInfoMapper;
-    //private PaymentInfoMapper paymentInfoMapper;
+    private PaymentInfoMapper paymentInfoMapper;
     private UserMapper userMapper;
+    private ObserverManagerService observerManagerService;
 
     private static final Logger logger = LoggerFactory.getLogger(OrderCancelService.class);
 
@@ -34,19 +38,26 @@ public class OrderCancelService {
      */
     @Transactional
     public String processOrderCancellation(Long orderId, Integer isApproved, String cancelReason) {
-        isApproved = 1;//这边手动审核了 订单取消
-        // 1. 查询订单信息
-        OrderDetail order = orderDetailMapper.findOrderById(orderId);
+
+        isApproved = 1;//Default approval
+        // 查询订单信息
+        //OrderDetail order = orderDetailMapper.findOrderById(orderId);
         OrderBase orderBase = orderBaseMapper.selectByPrimaryKey(orderId);
-        if (order == null) {
+        if (orderBase == null) {
             return "订单不存在";
         }
 
-        // 2. 获取当前时间和入住时间
+        // 判断取消状态
+        if (orderBase.getIsCancelled() == 1)
+        {
+            return "订单已被取消，不可重复操作";
+        }
+
+        // 获取当前时间和入住时间
         LocalDateTime currentTime = LocalDateTime.now();
         LocalDateTime checkInTime = orderBase.getCheckInTime();
 
-        // 3. 判断是否可以取消
+        // 判断是否可以取消
         if (checkInTime == null) {
             checkInTime = LocalDateTime.now().plusDays(2);
         }
@@ -55,17 +66,19 @@ public class OrderCancelService {
             return "无法取消，距离入住时间不到24小时";
         }
 
-        // 4. 判断管理员是否审核通过
+        // 判断管理员是否审核通过
         if (isApproved == 0) {
             return "管理员审核未通过，取消失败";
         }
 
-        // 5. 执行取消操作，包括更新订单状态和积分回滚等
+        // 执行取消操作，包括更新订单状态和积分回滚等
         try {
             int rowsAffected = orderDetailMapper.updateOrderStatusToCancelled(orderId);
             if (rowsAffected > 0) {
                 // 记录取消原因
                 processOrderCancellationReason(orderId, cancelReason);
+                //标记取消
+                orderBaseMapper.updateOrderStatusToCancelled(orderId);
 
                 // 退还积分
                 UserPoints userPoints = pointInfoMapper.findByOrderId(String.valueOf(orderId));
@@ -78,15 +91,18 @@ public class OrderCancelService {
                 // 记录退款信息到 payment_info 表
                 PaymentInfo paymentInfo = new PaymentInfo();
                 paymentInfo.setOrderId(orderId);
-                paymentInfo.setAmount(order.getPrice().negate()); // 退款金额为负数
+                BigDecimal zero = new BigDecimal(0);
+                BigDecimal price = orderBase.getRealPrice();
+                BigDecimal refund = zero.subtract(price);
+                paymentInfo.setAmount(refund); // 退款金额为负数
 
                 // 插入退款信息
-                //paymentInfoMapper.insertPaymentInfo(paymentInfo);
+                paymentInfoMapper.insertSelective(paymentInfo);
 
                 // 记录退款信息
                 RefundInfo refundInfo = new RefundInfo();
                 refundInfo.setOrderId(orderId);
-                refundInfo.setRefundAmount(order.getPrice()); // 假设价格字段是 `price`
+                refundInfo.setRefundAmount(orderBase.getRealPrice()); // 假设价格字段是 `price`
                 refundInfo.setRefundStatus(Byte.valueOf("1")); // 假设 1 表示成功
                 refundInfoMapper.insertRefundInfo(refundInfo);
 
@@ -122,21 +138,17 @@ public class OrderCancelService {
     }
 
     @Transactional
-    public String cancelRoomsInOrder(Long orderId, List<Integer> roomNumbers, String cancelReason, int isApproved) {
-        // 查询订单信息
-        OrderDetail order = orderDetailMapper.findOrderById(orderId);
-        if (order == null) {
+    public String cancelRoomInOrder(Long orderId, Long roomNumber, String cancelReason, int isApproved) {
+        isApproved = 1;
+
+        // 查找符合条件的订单
+        OrderDetail orderDetail = orderDetailMapper.findOrderByOrderIdAndRoom(orderId, roomNumber);
+        if (orderDetail == null) {
             throw new RuntimeException("订单不存在");
         }
 
-        // 获取当前时间和入住时间
-        LocalDateTime currentTime = LocalDateTime.now();
-        LocalDateTime checkInTime = LocalDateTime.now();
-
-        // 判断是否可以取消
-        long hoursBetween = ChronoUnit.HOURS.between(currentTime, checkInTime);
-        if (hoursBetween > 24) {
-            throw new RuntimeException("无法取消，距离入住时间不到24小时");
+        if(orderDetail.getStatus() == 1){
+            throw new RuntimeException("订单已被取消");
         }
 
         // 判断管理员是否审核通过
@@ -144,46 +156,46 @@ public class OrderCancelService {
             throw new RuntimeException("管理员审核未通过，取消失败");
         }
 
-        // 更新 usertype 为 1 的用户的 status
-        List<User> users = userMapper.findUsersByType(1);
-        orderDetailMapper.deleteById(orderId);
-        for (User user : users) {
-            user.setApproveStatus("订单ID: " + order.getId() + " 已取消");
-            userMapper.updateUserStatus(user);
-        }
+        // 注册所有 user_type=1 的用户为观察者
+        observerManagerService.addAllType1UsersAsObservers();
+
+        // 通知所有观察者
+        observerManagerService.notifyAllObservers(orderDetail);
+
+        System.out.println("订单取消操作完成，并通知了所有相关管理员。");
+
+        ObserverManager observerManager = new ObserverManager();
+        // 通知所有管理员
+        String message = "订单ID " + orderId + "中:房间" + roomNumber + " 已取消";
+        observerManager.notifyObservers(orderDetail);
 
         // 取消指定房间
-        orderDetailMapper.updateRoomStatusByRoomNumbers(orderId, roomNumbers, 1); // 更新指定房间状态为已取消
+        orderDetailMapper.updateRoomStatusByRoomNumber(orderId, roomNumber, 1); // 更新指定房间状态为已取消
 
         // 检查订单是否还有活跃房间
-        int activeRooms = orderDetailMapper.countActiveRoomsByOrderId(orderId);
-        if (activeRooms == 0) {
-            orderDetailMapper.updateOrderStatusToCancelled(orderId); // 如果没有活跃房间，则取消整个订单
+        OrderDetailExample detailExample = new OrderDetailExample();
+        OrderDetailExample.Criteria detailCr = detailExample.createCriteria();
+        detailCr.andOrderIdEqualTo(orderId).andStatusEqualTo((byte)0);
+        long count = orderDetailMapper.countByExample(detailExample);
+        if (count == 0) {
+            orderBaseMapper.updateOrderStatusToCancelled(orderId); // 如果没有活跃房间，则取消整个订单
         }
 
         // 记录取消原因
         processOrderCancellationReason(orderId, cancelReason);
 
-        // 退还积分
-        UserPoints userPoints = pointInfoMapper.findByOrderId(String.valueOf(orderId));
-        if (userPoints != null) {
-            userPoints.setIsDeleted((byte) 1);
-            userPoints.setPoints(0);
-            pointInfoMapper.updateUserPoints(userPoints);
-        }
-
         // 记录退款信息到 payment_info 表
         PaymentInfo paymentInfo = new PaymentInfo();
         paymentInfo.setOrderId(orderId);
-        paymentInfo.setAmount(order.getPrice().negate()); // 退款金额为负数
+        paymentInfo.setAmount(orderDetail.getPrice().negate()); // 退款金额为负数
 
         // 插入退款信息
-        //paymentInfoMapper.insertPaymentInfo(paymentInfo);
+        paymentInfoMapper.insertSelective(paymentInfo);
 
         // 记录退款信息
         RefundInfo refundInfo = new RefundInfo();
         refundInfo.setOrderId(orderId);
-        refundInfo.setRefundAmount(order.getPrice()); // 假设价格字段是 `price`
+        refundInfo.setRefundAmount(orderDetail.getPrice()); // 假设价格字段是 `price`
         refundInfo.setRefundStatus(Byte.valueOf("1")); // 假设 1 表示成功
         refundInfoMapper.insertRefundInfo(refundInfo);
 

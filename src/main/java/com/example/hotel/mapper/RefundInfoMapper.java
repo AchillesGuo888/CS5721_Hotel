@@ -99,7 +99,7 @@ public interface RefundInfoMapper {
      */
     int updateByPrimaryKey(RefundInfo row);
 
-    @Insert("INSERT INTO refund_info (order_id, refund_status, created_at, updated_at) VALUES (#{orderId}, #{refundStatus}, #{createdAt}, #{updatedAt})")
+    @Insert("INSERT INTO refund_info (order_id, refund_status, refund_amount, updated_at) VALUES (#{orderId}, #{refundStatus}, #{refundAmount}, #{updatedAt})")
     int insertRefundInfo(RefundInfo refundInfo);
 
     @Update("UPDATE refund_info SET refund_status = #{refundStatus}, updated_at = #{updatedAt} WHERE order_id = #{orderId}")
