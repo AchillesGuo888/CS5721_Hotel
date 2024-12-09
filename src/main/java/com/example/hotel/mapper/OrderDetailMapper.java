@@ -104,7 +104,7 @@ public interface OrderDetailMapper {
   OrderDetail findOrderById(Long orderId);
 
   // 更新订单状态为已取消
-  @Update("UPDATE order_detail SET status = '已取消', update_time = NOW() WHERE order_id = #{orderId}")
+  @Update("UPDATE order_detail SET status = 1, update_time = NOW() WHERE order_id = #{orderId}")
   int updateOrderStatusToCancelled(Long orderId);
 
   /**

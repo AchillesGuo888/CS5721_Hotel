@@ -23,7 +23,7 @@
       targetProject="src/main/java"/>
 
     <!-- Specify the tables to be generated -->
-    <table tableName="refund_info">
+    <table tableName="order_base">
       <generatedKey column="id" sqlStatement="MYSQL" identity="true"/>
     </table>
   </context>

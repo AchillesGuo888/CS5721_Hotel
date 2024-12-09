@@ -17,7 +17,7 @@ public class ObserverManager implements Observable {
 
     @PostConstruct
     public void init() {
-        // 在初始化时添加观察者
+        // Add observers at initialization time
         observers.add(adminService);
     }
 
@@ -36,5 +36,9 @@ public class ObserverManager implements Observable {
         for (Observer observer : observers) {
             observer.update(orderDetail);
         }
+    }
+
+    public int getObserverCount() {
+        return observers.size();
     }
 }

@@ -2,6 +2,8 @@ package com.example.hotel.mapper;
 
 import com.example.hotel.entity.OrderBase;
 import com.example.hotel.entity.OrderBaseExample;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
@@ -105,4 +107,7 @@ public interface OrderBaseMapper {
    */
   @Update("UPDATE order_base SET status = 1, is_cancelled = 1, update_time = NOW() WHERE id = #{orderId} AND is_cancelled = 0")
   int updateOrderStatusToCancelled(@Param("orderId") Long orderId);
+
+  LocalDateTime selectCheckInTimeById(Long id);
+
 }

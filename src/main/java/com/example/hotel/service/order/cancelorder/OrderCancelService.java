@@ -19,9 +19,10 @@ import org.slf4j.LoggerFactory;
 public class OrderCancelService {
 
     private OrderDetailMapper orderDetailMapper;
+    private OrderBaseMapper orderBaseMapper;
     private PointInfoMapper pointInfoMapper;
     private RefundInfoMapper refundInfoMapper;
-    private PaymentInfoMapper paymentInfoMapper;
+    //private PaymentInfoMapper paymentInfoMapper;
     private UserMapper userMapper;
 
     private static final Logger logger = LoggerFactory.getLogger(OrderCancelService.class);
@@ -36,15 +37,19 @@ public class OrderCancelService {
         isApproved = 1;//这边手动审核了 订单取消
         // 1. 查询订单信息
         OrderDetail order = orderDetailMapper.findOrderById(orderId);
+        OrderBase orderBase = orderBaseMapper.selectByPrimaryKey(orderId);
         if (order == null) {
             return "订单不存在";
         }
 
         // 2. 获取当前时间和入住时间
         LocalDateTime currentTime = LocalDateTime.now();
-        LocalDateTime checkInTime = order.getCheckInTime();
+        LocalDateTime checkInTime = orderBase.getCheckInTime();
 
         // 3. 判断是否可以取消
+        if (checkInTime == null) {
+            checkInTime = LocalDateTime.now().plusDays(2);
+        }
         long hoursBetween = ChronoUnit.HOURS.between(currentTime, checkInTime);
         if (hoursBetween < 24) {
             return "无法取消，距离入住时间不到24小时";
@@ -76,7 +81,7 @@ public class OrderCancelService {
                 paymentInfo.setAmount(order.getPrice().negate()); // 退款金额为负数
 
                 // 插入退款信息
-                paymentInfoMapper.insertPaymentInfo(paymentInfo);
+                //paymentInfoMapper.insertPaymentInfo(paymentInfo);
 
                 // 记录退款信息
                 RefundInfo refundInfo = new RefundInfo();
@@ -173,7 +178,7 @@ public class OrderCancelService {
         paymentInfo.setAmount(order.getPrice().negate()); // 退款金额为负数
 
         // 插入退款信息
-        paymentInfoMapper.insertPaymentInfo(paymentInfo);
+        //paymentInfoMapper.insertPaymentInfo(paymentInfo);
 
         // 记录退款信息
         RefundInfo refundInfo = new RefundInfo();

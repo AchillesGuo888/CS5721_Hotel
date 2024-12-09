@@ -12,9 +12,10 @@ import com.example.hotel.dto.response.OrderInfoListResponse;
 import com.example.hotel.dto.response.OrderInfoResponse;
 import com.example.hotel.dto.response.PreBookRoomResponse;
 import com.example.hotel.exception.BizException;
-import com.example.hotel.service.order.OrderCancelService;
+
 import com.example.hotel.service.order.OrderInfoService;
 import com.example.hotel.service.order.OrderQueryService;
+import com.example.hotel.service.order.cancelorder.OrderCancelService;
 import com.github.pagehelper.PageSerializable;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -42,6 +43,8 @@ public class OrderController {
   private final OrderInfoService orderInfoService;
 
   private final OrderQueryService orderQueryService;
+
+  private final OrderCancelService orderCancelService;
 
   /**
    * book room and create order
@@ -97,9 +100,6 @@ public class OrderController {
       return ResponseResult.ofError(e.getCode().getCode(), e.getMessage());
     }
   }
-
-  @Autowired
-  private OrderCancelService orderCancelService;
 
   /**
    * Cancellation of order
