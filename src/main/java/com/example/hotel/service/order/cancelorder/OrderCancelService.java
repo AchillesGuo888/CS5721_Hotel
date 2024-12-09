@@ -164,7 +164,7 @@ public class OrderCancelService {
 
         ObserverManager observerManager = new ObserverManager();
         // Notify all administrators
-        String message = "Order ID " + orderId + "中:Room" + roomNumber + "Cancelled";
+        String message = "Order ID " + orderId + " :Room" + roomNumber + "be cancelled";
         observerManager.notifyObservers(orderDetail);
 
         // Cancel the specified room
