@@ -12,12 +12,9 @@ public class InterceptorContext {
   private Exception exception;
 
 
-  public InterceptorContext(HttpServletRequest request, Object handler,
-      HttpServletResponse response, Exception exception) {
+  public InterceptorContext(HttpServletRequest request, Object handler) {
     this.request = request;
     this.handler = handler;
-    this.response = response;
-    this.exception = exception;
   }
 
 

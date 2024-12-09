@@ -5,6 +5,7 @@ import com.example.hotel.dto.request.AddRoomTypeRequestDTO;
 import com.example.hotel.dto.request.ModifyRoomTypeInfoRequestDTO;
 import com.example.hotel.dto.request.QueryRoomTypePriceRequestDTO;
 import com.example.hotel.dto.response.AvailableHotelResponse;
+import com.example.hotel.dto.response.HotelDetailResponse;
 import com.example.hotel.dto.response.RoomAndTypeWithPriceResponse;
 import com.example.hotel.entity.RoomTypeInfo;
 

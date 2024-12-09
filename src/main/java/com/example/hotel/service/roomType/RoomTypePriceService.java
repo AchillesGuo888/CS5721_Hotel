@@ -1,6 +1,7 @@
 package com.example.hotel.service.roomType;
 
 
+import com.example.hotel.dto.common.RoomTypePriceDTO;
 import com.example.hotel.entity.RoomTypePrice;
 
 import java.math.BigDecimal;

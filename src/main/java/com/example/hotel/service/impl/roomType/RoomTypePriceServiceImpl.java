@@ -117,8 +117,8 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
       LocalDate endDate) {
     RoomTypePriceExample example = new RoomTypePriceExample();
     RoomTypePriceExample.Criteria criteria = example.createCriteria();
-    criteria.andRoomTypeIdIn(roomTypeIds).andStartDateLessThanOrEqualTo(Date.valueOf(endDate))
-        .andEndDateGreaterThanOrEqualTo(Date.valueOf(startDate));
+    criteria.andRoomTypeIdIn(roomTypeIds).andStartDateLessThanOrEqualTo(endDate)
+        .andEndDateGreaterThanOrEqualTo(startDate);
 
     return roomTypePriceMapper.selectByExample(example);
   }
