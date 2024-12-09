@@ -68,7 +68,7 @@ public class HotelController {
       Page<HotelDetailResponse> response = hotelInfoService.queryHotelInfo(queryHotelRequestDTO, page, size);
       return ResponseEntity.ok(response);
     } catch (BizException e) {
-      return ResponseEntity.status(500).body(null);
+      return ResponseEntity.status(404).body(null);
     }
   }
 
@@ -103,6 +103,10 @@ public class HotelController {
             @RequestHeader("Authorization") String token,
             @ApiParam(value = "Hotel details", required = true)
             @RequestBody ModifyHotelInfoRequestDTO modifyHotelInfoRequestDTOInfo) {
+      HotelInfo hotelInfo = hotelService.getHotelById(modifyHotelInfoRequestDTOInfo.getHotelId());
+      if (hotelInfo == null) {
+        return ResponseResult.ofError(404L,"Hotel does not exist");
+      }
       hotelService.modifyHotelInfo(modifyHotelInfoRequestDTOInfo);
       return ResponseResult.ofSuccess("Hotel info updated successfully");
     }
