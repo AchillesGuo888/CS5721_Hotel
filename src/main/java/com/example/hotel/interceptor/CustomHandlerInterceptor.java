@@ -13,21 +13,21 @@ public class CustomHandlerInterceptor implements HandlerInterceptor {
       LoggingInterceptor loggingInterceptor) {
     this.dispatcher = dispatcher;
     this.loggingInterceptor = loggingInterceptor;
+    dispatcher.addInterceptor(loggingInterceptor);
   }
 
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-    dispatcher.addInterceptor(loggingInterceptor);
     return dispatcher.dispatch(request, handler);
   }
 
   @Override
   public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-    // 可选：处理 postHandle
+
   }
 
   @Override
   public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-    // 可选：处理 afterCompletion
+
   }
 }

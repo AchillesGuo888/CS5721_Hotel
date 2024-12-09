@@ -12,6 +12,7 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpSession;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -19,6 +20,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Slf4j
 @Component
+@AllArgsConstructor
 public class VerificationCodeUtil {
 
   private MailUtils mailUtils;
@@ -80,7 +82,9 @@ public class VerificationCodeUtil {
 
   public Boolean verifyCode(String code, String email) {
     HttpSession session = getCurrentSession();
-    LocalDateTime generatedTime = (LocalDateTime) session.getAttribute("cs5721_" + email);
+    Verification verification = (Verification) session.getAttribute("cs5721_" + email);
+    LocalDateTime generatedTime =verification.getCreateTime();
+
     // check verification exists
     if (generatedTime == null) {
       return false;

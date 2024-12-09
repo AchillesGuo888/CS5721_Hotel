@@ -41,7 +41,7 @@ mybatis:
   type-aliases-package: com.example.hotel.entity
   configLocation: classpath:mybatis-config.xml
   configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 输出 SQL 到控制台
     map-underscore-to-camel-case: true
 #  #实体扫描，多个package用逗号或者分号分隔
 #  typeAliasesPackage: com.example.sens.entity
@@ -91,10 +91,10 @@ shiro:
 #    name: Hotux
 
 mail:
-  host: smtp.exmail.qq.com
+  host: smtp.qq.com
   from: 1483503963@qq.com
   user: 1483503963@qq.com
-  pass: 89gr@@39
+  pass: zwhwugceuaydhhdh
   port: 465
   sslEnable: true
   socketFactoryClass: javax.net.ssl.SSLSocketFactory

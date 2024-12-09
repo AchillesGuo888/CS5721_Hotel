@@ -7,7 +7,6 @@ import org.apache.commons.pool2.BaseObject;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
 
 public class AvailableRoomCountDTO extends BaseObject {
 

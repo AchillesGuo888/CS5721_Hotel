@@ -20,19 +20,20 @@ public class LoggingInterceptor implements Interceptor {
 
   @Override
   public boolean preHandle(InterceptorContext context) throws IOException {
-    // get request info
-    LogInfo log = new LogInfo();
-    log.setUrl(context.getRequest().getRequestURL().toString());
-    log.setHeader(JSON.toJSONString(context.getRequest().getHeader("Authorization")));
-    StringBuilder json = new StringBuilder();
-    BufferedReader reader = context.getRequest().getReader();
-    String line;
-    while ((line = reader.readLine()) != null) {
-      json.append(line);
-    }
-    log.setBody(json.toString());
-    // save log info
-    logInfoService.save(log);
+//    // get request info
+//    LogInfo log = new LogInfo();
+//    log.setUrl(context.getRequest().getRequestURL().toString());
+//    log.setHeader(JSON.toJSONString(context.getRequest().getHeader("Authorization")));
+//    StringBuilder json = new StringBuilder();
+//    BufferedReader reader = context.getRequest().getReader();
+//    String line;
+//    while ((line = reader.readLine()) != null) {
+//      json.append(line);
+//    }
+//    log.setBody(json.toString());
+//    // save log info
+//    logInfoService.save(log);
+    getLogInfo(context);
     return true;
   }
 
@@ -43,7 +44,29 @@ public class LoggingInterceptor implements Interceptor {
 
   @Override
   public void afterCompletion(InterceptorContext context) {
+    try {
+      getLogInfo(context);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 
+  void getLogInfo(InterceptorContext context) throws IOException {
+    LogInfo log = new LogInfo();
+    log.setUrl(context.getRequest().getRequestURL().toString());
+    log.setHeader(JSON.toJSONString(context.getRequest().getHeader("Authorization")));
+    StringBuilder json = new StringBuilder();
+    BufferedReader reader = context.getRequest().getReader();
+    String line;
+    while ((line = reader.readLine()) != null) {
+      json.append(line);
+    }
+    log.setBody(json.toString());
+    if (context.getException()!=null){
+      log.setMessage(context.getException().getMessage());
+    }
+    // save log info
+    logInfoService.save(log);
   }
 }
 

@@ -63,35 +63,35 @@ public class BookRoomRequestDTO extends Request {
   @JsonProperty(value = "roomCount")
   private Integer roomCount;
 
-  @NotEmpty(message = "room price cannot be empty")
-  @ApiModelProperty(value = "roomPrice", required = true, example = "200.00")
-  @JsonProperty(value = "roomPrice")
-  private BigDecimal roomPrice;
+  @NotEmpty(message = "roomDayRealPrice cannot be empty")
+  @ApiModelProperty(value = "roomDayRealPrice", required = true, example = "200.00")
+  @JsonProperty(value = "roomDayRealPrice")
+  private BigDecimal roomDayRealPrice;
 
-  @NotEmpty(message = "room real price cannot be empty")
-  @ApiModelProperty(value = "roomRealPrice", required = true, example = "180.00")
-  @JsonProperty(value = "roomRealPrice")
-  private BigDecimal roomRealPrice;
+  @NotEmpty(message = "roomTotalPrice cannot be empty")
+  @ApiModelProperty(value = "roomTotalPrice", required = true, example = "180.00")
+  @JsonProperty(value = "roomTotalPrice")
+  private BigDecimal roomTotalPrice;
 
-  @NotEmpty(message = "Total price cannot be empty")
-  @ApiModelProperty(value = "totalPrice", required = true, example = "2000.00")
-  @JsonProperty(value = "totalPrice")
-  private BigDecimal totalPrice;
+  @NotEmpty(message = "orderTotalPrice cannot be empty")
+  @ApiModelProperty(value = "orderTotalPrice", required = true, example = "2000.00")
+  @JsonProperty(value = "orderTotalPrice")
+  private BigDecimal orderTotalPrice;
 
-  @NotEmpty(message = "Real price cannot be empty")
-  @ApiModelProperty(value = "realPrice", required = true, example = "1800.00")
-  @JsonProperty(value = "realPrice")
-  private BigDecimal realPrice;
+  @NotEmpty(message = "orderRealPrice cannot be empty")
+  @ApiModelProperty(value = "orderRealPrice", required = true, example = "1800.00")
+  @JsonProperty(value = "orderRealPrice")
+  private BigDecimal orderRealPrice;
 
   @NotEmpty(message = "earn points cannot be empty")
   @ApiModelProperty(value = "earnPointsCount", required = true, example = "666")
   @JsonProperty(value = "earnPointsCount")
   private Integer earnPointsCount;
 
-  @NotEmpty(message = "Membership discount cannot be empty")
-  @ApiModelProperty(value = "membershipDiscount", required = true, example = "200.00")
-  @JsonProperty(value = "membershipDiscount")
-  private BigDecimal membershipDiscount;
+  @NotEmpty(message = "orderDiscount  cannot be empty")
+  @ApiModelProperty(value = "orderDiscount", required = true, example = "200.00")
+  @JsonProperty(value = "orderDiscount")
+  private BigDecimal orderDiscount;
 
   @ApiModelProperty(value = "userId", hidden = true, example = "878787")
   @JsonProperty(value = "userId")

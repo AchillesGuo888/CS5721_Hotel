@@ -22,16 +22,10 @@ public class Dispatcher {
           return false;
         }
       }
-
-      // 继续执行控制器方法
-
-      for (Interceptor interceptor : interceptors) {
-        interceptor.postHandle(context);
-      }
-
       return true;
     } catch (Exception e) {
       for (Interceptor interceptor : interceptors) {
+        context.setException(e);
         interceptor.afterCompletion(context);
       }
       throw e;

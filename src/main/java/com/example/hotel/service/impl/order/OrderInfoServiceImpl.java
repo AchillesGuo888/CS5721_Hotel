@@ -99,8 +99,8 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     BigDecimal currentRoomPrice = roomTypePriceMap.get(requestDTO.getRoomTypeId());
     BigDecimal dates = new BigDecimal(
         DateUtil.getBetweenDays(requestDTO.getStartDate(), requestDTO.getEndDate()));
-    BigDecimal orderRoomPrice = currentRoomPrice.multiply(dates).setScale(2, RoundingMode.HALF_UP);
-    if (orderRoomPrice.compareTo(requestDTO.getRoomPrice()) != 0) {
+    BigDecimal totalPrice = currentRoomPrice.multiply(dates).multiply(new BigDecimal(requestDTO.getRoomCount())).setScale(2, RoundingMode.HALF_UP);
+    if (totalPrice.compareTo(requestDTO.getOrderTotalPrice()) != 0) {
       throw new BizException(ResponseCode.room_price_change);
     }
     // create order info
@@ -119,6 +119,8 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     orderBase.setUserId(userInfo.getUserId());
     orderBase.setOperator(userInfo.getUserId());
     orderBase.setOrderNumber(Md5Util.getRandom(10));
+    orderBase.setRealPrice(requestDTO.getOrderRealPrice());
+    orderBase.setTotalPrice(requestDTO.getOrderTotalPrice());
     orderBaseMapper.insertSelective(orderBase);
     return orderBase.getId();
   }
@@ -379,7 +381,8 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     BeanUtils.copyProperties(userInfo, result);
     BeanUtils.copyProperties(preBookPrice, result);
     result.setRoomTypeName(roomTypeInfo.getRoomTypeName());
-    result.setRoomTypePrice(roomTypePriceMap.get(requestDTO.getRoomTypeId()));
+
+//    result.setRoomTypePrice(roomTypePriceMap.get(requestDTO.getRoomTypeId()));
 
     return result;
   }

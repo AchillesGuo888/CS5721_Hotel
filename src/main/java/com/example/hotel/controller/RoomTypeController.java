@@ -90,17 +90,4 @@ public class RoomTypeController {
     return ResponseResult.ofSuccess();
   }
 
-  /**
-   * query room types(with price) and available room count of a concrete hotel
-   *
-   * @return
-   */
-  @PostMapping("/queryRoomAndTypeWithPrice")
-  @RequestMapping(value = "queryRoomAndTypeWithPrice", method = RequestMethod.POST)
-  public ResponseResult<List<RoomAndTypeWithPriceResponse>> queryRoomAndTypeWithPrice(
-      @ApiParam(value = "query price and available room count of each room type", required = true)
-      @RequestBody QueryRoomTypePriceRequestDTO requestDTO) {
-
-    return ResponseResult.ofSuccess(roomTypeInfoService.getHotelAvailableRoomWithPrice(requestDTO));
-  }
 }

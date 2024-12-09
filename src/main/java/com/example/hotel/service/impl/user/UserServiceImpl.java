@@ -201,7 +201,7 @@ public class UserServiceImpl implements UserService {
     if (user == null) {
       throw new BizException(ResponseCode.email_not_exist);
     }
-    if (verificationCodeUtil.verifyCode(requestDTO.getCode(), requestDTO.getEmail())) {
+    if (!verificationCodeUtil.verifyCode(requestDTO.getCode(), requestDTO.getEmail())) {
       throw new BizException(ResponseCode.code_false);
     }
 
@@ -264,6 +264,7 @@ public class UserServiceImpl implements UserService {
       }
     }
     BeanUtils.copyProperties(requestDTO, user);
+    user.setUserId(userId);
     UserExample example = new UserExample();
     UserExample.Criteria criteria = example.createCriteria();
     criteria.andIdEqualTo(user.getId());

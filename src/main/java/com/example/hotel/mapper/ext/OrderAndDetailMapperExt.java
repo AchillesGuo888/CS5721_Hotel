@@ -2,22 +2,24 @@ package com.example.hotel.mapper.ext;
 
 import com.example.hotel.dto.AvailableRoomCountDTO;
 import com.example.hotel.dto.DistributableRoomDTO;
+import com.example.hotel.dto.request.QueryAvailableParam;
 import com.example.hotel.dto.response.OrderInfoListResponse;
 import java.time.LocalDate;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.ResultType;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 public interface OrderAndDetailMapperExt {
 
-  @Select({
-      "select  "
+  @Select({"<script>"
+          + " select  "
           + "  rti.id roomTypeId,  "
           + "  rti.hotel_id hotelId,   "
           + "  rti.type_name roomTypeName,   "
           + "  COUNT(distinct (od.room_number)) as bookedRoomsCount,  "
-          + "  rti.room_count - COUNT(distinct (od.room_number)) available  "
+          + "  rti.room_count - COUNT(distinct (od.room_number)) availableCount  "
           + "from  "
           + "  room_type_info rti  "
           + "left join order_detail od on  "
@@ -29,38 +31,36 @@ public interface OrderAndDetailMapperExt {
           + "  and   "
           + "   ((od.status = 0  "
           + "    and   "
-          + "    ob.start_date <= #{endDate}  "
-          + "    and ob.end_date >= #{startDate})  "
+          + "    ob.start_date &lt;= #{params.endDate}  "
+          + "    and ob.end_date >= #{params.startDate})  "
           + "  or (od.status = 2  "
           + "    and   "
-          + "    ob.start_date <= #{endDate}  "
-          + "    and od.update_time >= #{startDate})  "
+          + "    ob.start_date &lt;= #{params.endDate}  "
+          + "    and od.update_time >= #{params.startDate}))  "
           + "where   "
           + " rti.is_deleted=0 "
-          + "  <if test='hotelIds != null and hotelIds.size()>0'>"
-          + "     <foreach collection='hotelIds' item='hotelId' open=' and rti.hotel_id in(' "
+          + "  <if test='params.hotelIds != null and params.hotelIds.size()>0'>"
+          + "     <foreach collection='params.hotelIds' item='hotelId' open=' and rti.hotel_id in(' "
           + "close=') ' separator=','>"
           + "         #{hotelId}"
           + "     </foreach>"
           + "  </if>                                                      "
-          + "  <if test='quantity != null and quantity>0'>"
-          + "     and rti.max_quantity >= #{quantity} "
+          + "  <if test='params.quantity != null and params.quantity>0'>"
+          + "     and rti.max_quantity >= #{params.quantity} "
           + "  </if>                                                      "
-          + "  <if test='roomTypeIds != null and roomTypeIds.size()>0'>"
-          + "     <foreach collection='roomTypeIds' item='roomTypeId' open=' and rti.room_type_id"
+          + "  <if test='params.roomTypeIds != null and params.roomTypeIds.size()>0'>"
+          + "     <foreach collection='params.roomTypeIds' item='roomTypeId' open=' and rti.id"
           + " in(' close=') ' separator=','>"
           + "         #{roomTypeId}"
           + "     </foreach>"
           + "  </if>                                                      "
           + "group by  "
           + "  rti.id ,  "
-          + "  rti.hotel_id ;"
-  }
-  )
+          + "  rti.hotel_id "
+      +"</script>"
+  })
   @ResultType(AvailableRoomCountDTO.class)
-  List<AvailableRoomCountDTO> getAvailableRoomType(@Param("hotelIds") List<Long> hotelIds,
-      @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate,
-      @Param("quantity") Integer quantity, @Param("roomTypeIds") List<Long> roomTypeIds);
+  List<AvailableRoomCountDTO> getAvailableRoomType(@Param("params") QueryAvailableParam params);
 
   @Select({
       "select "
@@ -96,8 +96,8 @@ public interface OrderAndDetailMapperExt {
       @Param("hotelId") Long hotelId, @Param("startDate") LocalDate startDate,
       @Param("endDate") LocalDate endDate);
 
-  @Select({
-      "select "
+  @Select({"<script>"
+      +"select "
           + " ob.id orderId, "
           + " ob.hotel_id hotelId, "
           + " hi.hotel_name hotelName, "
@@ -111,7 +111,7 @@ public interface OrderAndDetailMapperExt {
           + " ob.hotel_id = hi.id "
           + "left join order_detail od on "
           + " ob.id = od.order_id "
-          + " and od.status <> 1 "
+          + " and od.status &lt;> 1 "
           + "left join room_type_info rti on "
           + " od.room_type_id = rti.id "
           + " and ob.hotel_id = rti.hotel_id "
@@ -124,11 +124,14 @@ public interface OrderAndDetailMapperExt {
           + "     </foreach>"
           + "  </if>                                                      "
           + " and ob.user_id = #{userId}"
+      +"</script>"
   }
   )
   @ResultType(OrderInfoListResponse.class)
   List<OrderInfoListResponse> getOrderListInfo(@Param("userId") String userId,
       @Param("orderIds") List<Long> orderIds);
+
+
 
 
 }
