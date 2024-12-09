@@ -23,8 +23,6 @@ public class Dispatcher {
         }
       }
 
-      // 继续执行控制器方法
-
       for (Interceptor interceptor : interceptors) {
         interceptor.postHandle(context);
       }

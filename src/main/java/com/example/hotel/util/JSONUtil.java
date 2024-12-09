@@ -23,7 +23,7 @@ import org.apache.commons.lang3.StringUtils;
  * Json tool util
  */
 public class JSONUtil {
-   * global Object mapper
+   // global Object mapper
     private static volatile ObjectMapper OBJECT_MAPPER;
 
     private JSONUtil() {
