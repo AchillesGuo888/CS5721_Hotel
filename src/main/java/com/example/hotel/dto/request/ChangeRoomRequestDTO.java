@@ -37,9 +37,9 @@ public class ChangeRoomRequestDTO extends PayBillRequestDTO {
   @JsonProperty(value = "roomTypeId")
   private Long roomTypeId;
 
-  @NotEmpty(message = "difference price cannot be empty")
-  @ApiModelProperty(value = "diffPrice", required = true, example = "123.12")
-  @JsonProperty(value = "diffPrice")
+  @NotEmpty(message = "realDiff price cannot be empty")
+  @ApiModelProperty(value = "realDiffPrice", required = true, example = "123.12")
+  @JsonProperty(value = "realDiffPrice")
   private BigDecimal realDiffPrice;
 
   @NotEmpty(message = "total difference price cannot be empty")

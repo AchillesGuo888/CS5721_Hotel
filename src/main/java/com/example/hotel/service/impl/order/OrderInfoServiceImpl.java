@@ -435,8 +435,10 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     BeanUtils.copyProperties(requestDTO, billRequestDTO);
     billRequestDTO.setUserId(userId);
     billRequestDTO.setPayType((byte)1);
+    billRequestDTO.setAmount(requestDTO.getRealDiffPrice());
+    //call bill service to deal with payment
     ResponseResult<Boolean> billResult = billFeignClient.payRoomBill(requestDTO);
-    if (null==billResult.getData()){
+    if (billResult.getCode()!=200){
       throw new BizException(ResponseCode.pay_error);
     }
     //update order price
