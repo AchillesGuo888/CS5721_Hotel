@@ -44,7 +44,7 @@ public class OrderInfoResponse extends BaseObject {
   private LocalDateTime createTime;
 
   @ApiModelProperty("guestNames")
-  private List<String> guestNames;
+  private List<String> guestNames =new ArrayList<>();
 
   @ApiModelProperty("earnPointsCount")
   private Integer earnPointsCount;

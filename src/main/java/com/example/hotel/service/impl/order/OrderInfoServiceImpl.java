@@ -209,7 +209,11 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         || StringUtils.isEmpty(requestDTO.getContactPhone())) {
       throw new BizException(ResponseCode.param_error);
     }
-    return null;
+    OrderBase param = new OrderBase();
+    BeanUtils.copyProperties(requestDTO,param);
+    param.setId(requestDTO.getOrderId());
+    orderBaseMapper.updateByPrimaryKeySelective(param);
+    return true;
   }
 
   @Override
@@ -271,7 +275,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     String userId = jwtUtil.getUserIdFromToken(token);
     requestDTO.setUserId(userId);
     ResponseResult<Boolean> billResult = billFeignClient.payRoomBill(requestDTO);
-    if (billResult.getData()){
+    if (billResult.getCode()==200){
       OrderBase param = new OrderBase();
       param.setId(requestDTO.getOrderId());
       param.setStatus(OrderStatusEnum.HAS_PAY.getCode());

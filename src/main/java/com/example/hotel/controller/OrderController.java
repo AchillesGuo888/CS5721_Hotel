@@ -73,7 +73,7 @@ public class OrderController {
    * @return
    */
   @GetMapping("/queryOrderDetailInfo/{id}")
-  @RequestMapping(value = "queryOrderDetailInfo", method = RequestMethod.GET)
+//  @RequestMapping(value = "queryOrderDetailInfo", method = RequestMethod.GET)
   public ResponseResult<OrderInfoResponse> queryOrderDetailInfo(
       @ApiParam(value = "order id ", required = true)
       @PathVariable Long id) {

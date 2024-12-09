@@ -104,7 +104,7 @@ public interface OrderAndDetailMapperExt {
           + " ob.start_date startDate, "
           + " ob.end_date endDate, "
           + " ob.real_price realPrice, "
-          + " rti.type_name typeName "
+          + " rti.type_name roomTypeName "
           + "from "
           + " order_base ob "
           + "left join hotel_info hi on "

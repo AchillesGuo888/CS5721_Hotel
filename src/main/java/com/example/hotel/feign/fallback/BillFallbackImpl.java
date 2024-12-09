@@ -20,7 +20,7 @@ public class BillFallbackImpl implements BillFeignClient {
 
     @Override
     public ResponseResult<Boolean> payRoomBill(@RequestBody PayBillRequestDTO requestDTO) {
-        log.error("payRoomBill error:{}",cause.getMessage());
+//        log.error("payRoomBill error:{}",cause.getMessage());
         return null;
     }
 }

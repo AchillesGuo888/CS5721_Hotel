@@ -13,6 +13,7 @@ import com.example.hotel.service.roomType.RoomTypeInfoService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -61,7 +62,13 @@ public class OrderDetailDecorator extends OrderServiceDecorator {
         }
       }
     }
+    if (CollectionUtils.isEmpty(response.getDetailList())){
+      response.setDetailList(new ArrayList<>());
+    }
     response.getDetailList().addAll(orderDetails);
+    if (CollectionUtils.isEmpty(response.getChangeRoomList())){
+      response.setChangeRoomList(new ArrayList<>());
+    }
     response.getChangeRoomList().addAll(changeList);
     return response;
   }

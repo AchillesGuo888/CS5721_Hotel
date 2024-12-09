@@ -18,6 +18,9 @@ public class OrderInfoListResponse extends BaseObject {
   @ApiModelProperty("orderId")
   private Long orderId;
 
+  @ApiModelProperty("hotel id")
+  private Long hotelId;
+
   @ApiModelProperty("hotel name")
   private String hotelName;
 
@@ -29,11 +32,11 @@ public class OrderInfoListResponse extends BaseObject {
 //
 //  @ApiModelProperty("room count")
 //  private Integer roomCount;
-
+@ApiModelProperty("real price of rooms")
+private BigDecimal realPrice;
   @ApiModelProperty("room type name")
   private String roomTypeName;
 
-  @ApiModelProperty("real price of rooms")
-  private BigDecimal realPrice;
+
 
 }

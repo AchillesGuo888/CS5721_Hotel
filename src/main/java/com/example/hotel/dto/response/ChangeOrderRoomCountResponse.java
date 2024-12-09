@@ -23,13 +23,16 @@ public class ChangeOrderRoomCountResponse extends BaseObject {
   @ApiModelProperty("membershipDiscount")
   private BigDecimal membershipDiscount;
 
-  @ApiModelProperty("realPrice")
-  private BigDecimal realPrice;
+  @ApiModelProperty("roomDayRealPrice")
+  private BigDecimal roomDayRealPrice;
 
   @ApiModelProperty("roomTypePrice")
-  private BigDecimal roomTypePrice;
+  private BigDecimal roomTotalPrice;
 
-  @ApiModelProperty("totalPrice")
-  private BigDecimal totalPrice;
+  @ApiModelProperty("orderTotalPrice")
+  private BigDecimal orderTotalPrice;
+
+  @ApiModelProperty("orderRealPrice")
+  private BigDecimal orderRealPrice;
 
 }

@@ -15,6 +15,11 @@ import lombok.ToString;
 @ApiModel(value = "modify order info parameter")
 public class ModifyOrderInfoRequestDTO extends Request {
 
+  @NotEmpty(message = "orderId cannot be empty")
+  @ApiModelProperty(value = "orderId", required = true, example = "1")
+  @JsonProperty(value = "orderId")
+  private Long orderId;
+
   @NotEmpty(message = "contact name cannot be empty")
   @ApiModelProperty(value = "contactName", required = true, example = "Shane")
   @JsonProperty(value = "contactName")
