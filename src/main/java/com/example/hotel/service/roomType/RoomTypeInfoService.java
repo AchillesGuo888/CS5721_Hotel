@@ -16,15 +16,6 @@ import java.util.Map;
 public interface RoomTypeInfoService {
 
   /**
-   * get the room type price list of the hotel for booking
-   *
-   * @param requestDTO
-   * @return
-   */
-  List<RoomAndTypeWithPriceResponse> getHotelAvailableRoomWithPrice(
-      QueryRoomTypePriceRequestDTO requestDTO);
-
-  /**
    * get room type default price by room type ids
    *
    * @param roomTypeIds

@@ -22,14 +22,10 @@ public class Dispatcher {
           return false;
         }
       }
-
-      for (Interceptor interceptor : interceptors) {
-        interceptor.postHandle(context);
-      }
-
       return true;
     } catch (Exception e) {
       for (Interceptor interceptor : interceptors) {
+        context.setException(e);
         interceptor.afterCompletion(context);
       }
       throw e;

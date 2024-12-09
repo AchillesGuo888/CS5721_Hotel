@@ -22,19 +22,17 @@ public class PriceResponse extends BaseObject {
   @ApiModelProperty("membershipDiscount")
   private BigDecimal membershipDiscount;
 
-//  @ApiModelProperty("pointsDiscount")
-//  private BigDecimal pointsDiscount;
-//
-//  @ApiModelProperty("pointsExpenseCount")
-//  private Integer pointsExpenseCount;
 
-  @ApiModelProperty("realPrice")
-  private BigDecimal realPrice;
+  @ApiModelProperty("roomDayRealPrice")
+  private BigDecimal roomDayRealPrice;
 
-  @ApiModelProperty("totalPrice")
-  private BigDecimal totalPrice;
+  @ApiModelProperty("roomTypePrice")
+  private BigDecimal roomTotalPrice;
 
-  @ApiModelProperty("realRoomPrice")
-  private BigDecimal realRoomPrice;
+  @ApiModelProperty("orderTotalPrice")
+  private BigDecimal orderTotalPrice;
+
+  @ApiModelProperty("orderRealPrice")
+  private BigDecimal orderRealPrice;
 
 }

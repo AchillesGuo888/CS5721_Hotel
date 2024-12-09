@@ -29,12 +29,6 @@ public class RoomTypeInfoServiceImpl implements RoomTypeInfoService {
 
   private final RoomTypeInfoMapper roomTypeInfoMapper;
 
-  @Override
-  public List<RoomAndTypeWithPriceResponse> getHotelAvailableRoomWithPrice(
-      QueryRoomTypePriceRequestDTO requestDTO) {
-//    roomTypeInfoMapper
-    return null;
-  }
 
 
   @Override

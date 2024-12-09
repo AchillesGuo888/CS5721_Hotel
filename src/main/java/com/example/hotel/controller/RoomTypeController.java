@@ -71,5 +71,4 @@ public class RoomTypeController {
       return ResponseResult.ofSuccess(msg);
   }
 
-
 }

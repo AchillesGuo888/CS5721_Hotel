@@ -5,6 +5,7 @@ import com.example.hotel.dto.AvailableRoomCountDTO;
 import com.example.hotel.dto.DistributableRoomDTO;
 import com.example.hotel.dto.request.BookRoomRequestDTO;
 import com.example.hotel.dto.request.ChangeRoomRequestDTO;
+import com.example.hotel.dto.request.QueryAvailableParam;
 import com.example.hotel.dto.response.OrderInfoListResponse;
 import com.example.hotel.entity.OrderDetail;
 import com.example.hotel.entity.OrderDetailExample;
@@ -31,8 +32,13 @@ public class OrderAndDetailServiceImpl implements OrderAndDetailService {
   @Override
   public List<AvailableRoomCountDTO> queryAvailableRoomType(List<Long> hotelIds,
       LocalDate startDate, LocalDate endDate, Integer quantity, List<Long> roomTypeIds) {
-    return orderAndDetailMapperExt.getAvailableRoomType(hotelIds,
-        startDate, endDate, quantity, roomTypeIds);
+    QueryAvailableParam param = new QueryAvailableParam();
+    param.setEndDate(endDate);
+    param.setHotelIds(hotelIds);
+    param.setQuantity(quantity);
+    param.setRoomTypeIds(roomTypeIds);
+    param.setStartDate(startDate);
+    return orderAndDetailMapperExt.getAvailableRoomType(param);
   }
 
   @Override
@@ -47,7 +53,7 @@ public class OrderAndDetailServiceImpl implements OrderAndDetailService {
       detail.setUserId(requestDTO.getUserId());
       detail.setGuestName(requestDTO.getGuestNames().get(i));
       detail.setRoomNumber(roomList.get(i).getRoomNumber());
-      detail.setPrice(requestDTO.getRoomRealPrice());
+      detail.setPrice(requestDTO.getRoomTotalPrice());
       orderDetailMapper.insertSelective(detail);
     }
   }

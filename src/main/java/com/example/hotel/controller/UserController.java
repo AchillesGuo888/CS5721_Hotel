@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/user/withToken")
+@RequestMapping("/user")
 @Api(tags = "User API")
 public class UserController {
 
@@ -76,10 +76,6 @@ public class UserController {
   @RequestMapping(value = "modifyUserInfo", method = RequestMethod.POST)
   public ResponseResult modifyUserInfo(@RequestHeader("Authorization") String token,
       @ApiParam(value = "User details", required = true) @RequestBody ModifyUserInfoRequestDTO requestDTO) {
-    if (token != null && token.startsWith("Bearer ")) {
-      token = token.substring(7);
-      String userId = jwtUtil.getUserIdFromToken(token);
-    }
     try {
       return ResponseResult.ofSuccess(userService.updateUserInfo(requestDTO, token));
     } catch (BizException e) {

@@ -13,11 +13,11 @@ public class CustomHandlerInterceptor implements HandlerInterceptor {
       LoggingInterceptor loggingInterceptor) {
     this.dispatcher = dispatcher;
     this.loggingInterceptor = loggingInterceptor;
+    dispatcher.addInterceptor(loggingInterceptor);
   }
 
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-    dispatcher.addInterceptor(loggingInterceptor);
     return dispatcher.dispatch(request, handler);
   }
 
