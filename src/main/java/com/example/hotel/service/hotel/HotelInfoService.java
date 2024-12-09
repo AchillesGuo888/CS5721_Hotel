@@ -21,32 +21,32 @@ public class HotelInfoService {
     private HotelInfoRepository hotelInfoRepository;
 
     /**
-     * 根据查询条件进行模糊查询
+     * Perform fuzzy query based on query conditions
      */
     public static Page<HotelDetailResponse> queryHotelInfo(QueryHotelRequestDTO queryHotelRequestDTO, int page, int size) throws BizException {
         Pageable pageable = PageRequest.of(page, size);
 
-        // 模糊查询条件
+        // Fuzzy query is guaranteed not to be null
         String name = queryHotelRequestDTO.getName() != null ? queryHotelRequestDTO.getName() : "";
         String city = queryHotelRequestDTO.getCity() != null ? queryHotelRequestDTO.getCity() : "";
         String address = queryHotelRequestDTO.getAddress() != null ? queryHotelRequestDTO.getAddress() : "";
 
-        // 通过HotelInfoRepository进行模糊查询
+        // Fuzzy query through HotelInfoRepository
         Page<HotelInfo> hotels = HotelInfoRepository.findByNameContainingAndCityContainingAndAddressContaining(
                 name, city, address, pageable);
 
         if (hotels.isEmpty()) {
-            throw new BizException("未找到符合条件的酒店信息");
+            throw new BizException("No matching hotel information found");
         }
 
-        // 将查询结果转换为HotelDetailResponse
+        // Convert the query result to HotelDetailResponse
         return hotels.map(hotel -> new HotelDetailResponse(
                 hotel.getId(), hotel.getHotelName(), hotel.getAddress(), hotel.getCity()
         ));
     }
 
     /**
-     * 根据ID查询进行查询
+     * Query by ID
      */
     @Autowired
     private HotelInfoMapper hotelInfoMapper;

@@ -13,13 +13,13 @@ import lombok.ToString;
 @ApiModel(value = "add hotel info parameter")
 public class AddHotelRequestDTO extends Request {
     @JsonProperty(value = "hotelName")
-    private String hotelName;    // 酒店名称
+    private String hotelName;
     @JsonProperty(value = "city")
-    private String city;         // 城市
+    private String city;
     @JsonProperty(value = "address")
-    private String address;      // 地址
+    private String address;
     @JsonProperty(value = "phoneNumber")
-    private String phoneNumber;  // 联系电话
+    private String phoneNumber;
     @JsonProperty(value = "level")
-    private Integer level;       // 酒店星级（例如：5星）
+    private Integer level;       // Hotel star rating (e.g. 5 )
 }

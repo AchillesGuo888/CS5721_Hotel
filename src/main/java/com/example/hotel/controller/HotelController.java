@@ -36,19 +36,19 @@ public class HotelController {
    *
    * @return
    */
-  @ApiOperation(value = "Add a new hotel", notes = "添加一个新的酒店")
+  @ApiOperation(value = "Add a new hotel", notes = "Add a new hotel")
   @PostMapping("/addHotel")
   public ResponseResult addHotel(@RequestHeader("Authorization") String token,
                                  @ApiParam(value = "Hotel details", required = true) @RequestBody AddHotelRequestDTO addHotelRequestDTO) {
     try {
-      // 调用 Service 层的添加酒店方法
+      // Call the add hotel method of the Service layer
       AddHotelResponse response = hotelService.addHotel(addHotelRequestDTO);
 
-      // 返回成功结果
+      // Returns successful result
       return ResponseResult.ofSuccess(response);
     } catch (Exception e) {
-      // 捕获异常并返回失败的响应
-      return ResponseResult.ofError(ResponseCode.server_err.getCode(), "添加酒店失败: " + e.getMessage());
+      // Catch the exception and return a failed response
+      return ResponseResult.ofError(ResponseCode.server_err.getCode(), "Failed to add hotel: " + e.getMessage());
     }
   }
 
@@ -57,7 +57,7 @@ public class HotelController {
    *
    * @return
    */
-  @ApiOperation(value = "Query Hotel info", notes = "查询酒店信息")
+  @ApiOperation(value = "Query Hotel info", notes = "Query hotel information")
   @PostMapping("/queryHotelInfo")
   public ResponseEntity<Page<HotelDetailResponse>> queryHotelInfo(
           @RequestBody QueryHotelRequestDTO queryHotelRequestDTO,
@@ -67,7 +67,7 @@ public class HotelController {
       Page<HotelDetailResponse> response = HotelInfoService.queryHotelInfo(queryHotelRequestDTO, page, size);
       return ResponseEntity.ok(response);
     } catch (BizException e) {
-      return ResponseEntity.status(500).body(null); // 错误处理
+      return ResponseEntity.status(500).body(null);
     }
   }
 

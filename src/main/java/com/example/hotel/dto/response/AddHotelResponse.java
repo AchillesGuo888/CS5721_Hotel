@@ -3,7 +3,7 @@ package com.example.hotel.dto.response;
 import lombok.Data;
 
 /**
- * 添加酒店响应结果
+ * Add hotel response results
  */
 @Data
 public class AddHotelResponse {

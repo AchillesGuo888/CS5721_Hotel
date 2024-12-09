@@ -32,55 +32,54 @@ public class OrderCancelService {
     private static final Logger logger = LoggerFactory.getLogger(OrderCancelService.class);
 
     /**
-     * 取消订单
-     * @param orderId 订单ID
-     * @return 取消是否成功
+     * Cancel order
+     * @param orderId Order ID
+     * @return Whether the cancellation is successful
      */
     @Transactional
     public String processOrderCancellation(Long orderId, Integer isApproved, String cancelReason) {
 
         isApproved = 1;//Default approval
-        // 查询订单信息
+        // Query order information
         //OrderDetail order = orderDetailMapper.findOrderById(orderId);
         OrderBase orderBase = orderBaseMapper.selectByPrimaryKey(orderId);
         if (orderBase == null) {
-            return "订单不存在";
+            return "Order does not exist";
         }
 
-        // 判断取消状态
+        // Determine the cancellation status
         if (orderBase.getIsCancelled() == 1)
         {
-            return "订单已被取消，不可重复操作";
+            return "The order has been canceled and cannot be repeated";
         }
 
-        // 获取当前时间和入住时间
+        // Get the current time and check-in time
         LocalDateTime currentTime = LocalDateTime.now();
         LocalDateTime checkInTime = orderBase.getCheckInTime();
-
-        // 判断是否可以取消
+        // Determine whether it can be cancelled
         if (checkInTime == null) {
             checkInTime = LocalDateTime.now().plusDays(2);
         }
         long hoursBetween = ChronoUnit.HOURS.between(currentTime, checkInTime);
         if (hoursBetween < 24) {
-            return "无法取消，距离入住时间不到24小时";
+            return "Cannot be cancelled, less than 24 hours before check-in time";
         }
 
-        // 判断管理员是否审核通过
+        // Determine whether the administrator has passed the review
         if (isApproved == 0) {
-            return "管理员审核未通过，取消失败";
+            return "The administrator's review failed and the cancellation failed.";
         }
 
-        // 执行取消操作，包括更新订单状态和积分回滚等
+        // Execute cancellation operations, including updating order status and points rollback, etc.
         try {
             int rowsAffected = orderDetailMapper.updateOrderStatusToCancelled(orderId);
             if (rowsAffected > 0) {
-                // 记录取消原因
+                // Record cancellation reason
                 processOrderCancellationReason(orderId, cancelReason);
-                //标记取消
+                //Mark Cancel
                 orderBaseMapper.updateOrderStatusToCancelled(orderId);
 
-                // 退还积分
+                // Refund points
                 UserPoints userPoints = pointInfoMapper.findByOrderId(String.valueOf(orderId));
                 if (userPoints != null) {
                     userPoints.setIsDeleted((byte) 1);
@@ -88,118 +87,117 @@ public class OrderCancelService {
                     pointInfoMapper.updateUserPoints(userPoints);
                 }
 
-                // 记录退款信息到 payment_info 表
+                // Record refund information to the payment_info table
                 PaymentInfo paymentInfo = new PaymentInfo();
                 paymentInfo.setOrderId(orderId);
                 BigDecimal zero = new BigDecimal(0);
                 BigDecimal price = orderBase.getRealPrice();
                 BigDecimal refund = zero.subtract(price);
-                paymentInfo.setAmount(refund); // 退款金额为负数
+                paymentInfo.setAmount(refund); // The refund amount is negative
 
-                // 插入退款信息
+                // Insert refund information
                 paymentInfoMapper.insertSelective(paymentInfo);
 
-                // 记录退款信息
+                //Record refund information
                 RefundInfo refundInfo = new RefundInfo();
                 refundInfo.setOrderId(orderId);
-                refundInfo.setRefundAmount(orderBase.getRealPrice()); // 假设价格字段是 `price`
-                refundInfo.setRefundStatus(Byte.valueOf("1")); // 假设 1 表示成功
+                refundInfo.setRefundAmount(orderBase.getRealPrice()); //Assume the price field is `price`
+                refundInfo.setRefundStatus(Byte.valueOf("1")); //Assume 1 means success
                 refundInfoMapper.insertRefundInfo(refundInfo);
 
-                return "订单取消成功，积分已回滚，退款已处理";
-            }
-        } catch (Exception e) {
-            // 捕获并记录异常
-            logger.error("取消订单时出现异常，订单ID: {}, 错误: {}", orderId, e.getMessage());
-            return "订单取消失败，系统内部错误";
+                return "Order canceled successfully, points rolled back, refund processed";            }
+        }catch (Exception e) {
+            // Capture and record exceptions
+            logger.error("Exception occurred when canceling the order, order ID: {}, error: {}", orderId, e.getMessage());
+            return "Order cancellation failed, system internal error";
         }
 
-        return "订单取消失败";
+        return "Order cancellation failed";
     }
 
 
-    // 记录取消原因的方法
+    //Method for recording cancellation reasons
     public String processOrderCancellationReason(Long orderId, String cancelReason) {
-        // 查询订单是否存在
+        //Check whether the order exists
         RefundInfo refundInfo = refundInfoMapper.selectByPrimaryKey(orderId);
         if (refundInfo == null) {
-            logger.warn("订单不存在，无法记录取消原因，订单ID: {}", orderId);
-            return "订单不存在，无法记录取消原因";
+            logger.warn("Order does not exist, cannot record cancellation reason, order ID: {}", orderId);
+            return "Order does not exist, cannot record cancellation reason";
         }
 
-        // 更新取消原因
+        // Update cancellation reason
         refundInfo.setRefundReason(cancelReason);
         refundInfo.setUpdatedAt(LocalDateTime.now());
         refundInfoMapper.updateRefundInfo(orderId, refundInfo.getRefundStatus(), cancelReason, refundInfo.getUpdatedAt());
 
-        // 打印日志
-        logger.info("更新退款记录的取消原因，订单ID: {}, 原因: {}", orderId, cancelReason);
-        return "取消原因记录成功";
+        // Print log
+        logger.info("Update the cancellation reason of the refund record, order ID: {}, reason: {}", orderId, cancelReason);
+        return "Cancellation reason record successful";
     }
 
     @Transactional
     public String cancelRoomInOrder(Long orderId, Long roomNumber, String cancelReason, int isApproved) {
         isApproved = 1;
 
-        // 查找符合条件的订单
+        // Find qualified orders
         OrderDetail orderDetail = orderDetailMapper.findOrderByOrderIdAndRoom(orderId, roomNumber);
         if (orderDetail == null) {
-            throw new RuntimeException("订单不存在");
+            throw new RuntimeException("Order does not exist");
         }
 
         if(orderDetail.getStatus() == 1){
-            throw new RuntimeException("订单已被取消");
+            throw new RuntimeException("Order has been canceled");
         }
 
-        // 判断管理员是否审核通过
+        // Determine whether the administrator has passed the review
         if (isApproved == 0) {
-            throw new RuntimeException("管理员审核未通过，取消失败");
+            throw new RuntimeException("Administrator review failed, cancellation failed");
         }
 
-        // 注册所有 user_type=1 的用户为观察者
+        // Register all users with user_type=1 as observers
         observerManagerService.addAllType1UsersAsObservers();
 
-        // 通知所有观察者
+        // Notify all observers
         observerManagerService.notifyAllObservers(orderDetail);
 
-        System.out.println("订单取消操作完成，并通知了所有相关管理员。");
+        System.out.println("Order cancellation operation completed, and all relevant administrators notified.");
 
         ObserverManager observerManager = new ObserverManager();
-        // 通知所有管理员
-        String message = "订单ID " + orderId + "中:房间" + roomNumber + " 已取消";
+        // Notify all administrators
+        String message = "Order ID " + orderId + "中:Room" + roomNumber + "Cancelled";
         observerManager.notifyObservers(orderDetail);
 
-        // 取消指定房间
-        orderDetailMapper.updateRoomStatusByRoomNumber(orderId, roomNumber, 1); // 更新指定房间状态为已取消
+        // Cancel the specified room
+        orderDetailMapper.updateRoomStatusByRoomNumber(orderId, roomNumber, 1); // Update the specified room status to canceled
 
-        // 检查订单是否还有活跃房间
+        // Check if there are any active rooms for the order
         OrderDetailExample detailExample = new OrderDetailExample();
         OrderDetailExample.Criteria detailCr = detailExample.createCriteria();
         detailCr.andOrderIdEqualTo(orderId).andStatusEqualTo((byte)0);
         long count = orderDetailMapper.countByExample(detailExample);
         if (count == 0) {
-            orderBaseMapper.updateOrderStatusToCancelled(orderId); // 如果没有活跃房间，则取消整个订单
+            orderBaseMapper.updateOrderStatusToCancelled(orderId); // If there is no active room, cancel the entire order
         }
 
-        // 记录取消原因
+        //Record cancellation reason
         processOrderCancellationReason(orderId, cancelReason);
 
-        // 记录退款信息到 payment_info 表
+        //Record refund information to payment_info table
         PaymentInfo paymentInfo = new PaymentInfo();
         paymentInfo.setOrderId(orderId);
-        paymentInfo.setAmount(orderDetail.getPrice().negate()); // 退款金额为负数
+        paymentInfo.setAmount(orderDetail.getPrice().negate()); //Refund amount is negative
 
-        // 插入退款信息
+        //Insert refund information
         paymentInfoMapper.insertSelective(paymentInfo);
 
-        // 记录退款信息
+        //Record refund information
         RefundInfo refundInfo = new RefundInfo();
         refundInfo.setOrderId(orderId);
-        refundInfo.setRefundAmount(orderDetail.getPrice()); // 假设价格字段是 `price`
-        refundInfo.setRefundStatus(Byte.valueOf("1")); // 假设 1 表示成功
+        refundInfo.setRefundAmount(orderDetail.getPrice()); // Assume the price field is `price`
+        refundInfo.setRefundStatus(Byte.valueOf("1")); // Assume 1 means success
         refundInfoMapper.insertRefundInfo(refundInfo);
 
-        return "订单取消成功，积分已回滚，退款已处理";
+        return "Order canceled successfully, points rolled back, refund processed";
     }
 
     public OrderDetail getOrderDetailById(Long orderId) {

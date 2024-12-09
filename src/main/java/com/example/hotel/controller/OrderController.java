@@ -117,18 +117,18 @@ public class OrderController {
     String result = orderCancelService.processOrderCancellation(
             cancelRequestDTO.getOrderId(), cancelRequestDTO.getIsApproved(), cancelRequestDTO.getCancelReason());
 
-    // 返回响应
-    if ("订单取消成功，积分已回滚，退款已处理".equals(result)) {
+    // Return Response
+    if ("The order was successfully cancelled, the points were rolled back, and the refund was processed".equals(result)) {
       return ResponseResult.ofSuccess("Order cancellation request submitted for admin approval.");
     } else {
       return ResponseResult.ofFailure(result);
     }
   }
 
-  //管理员审核
+  //Administrator review
   @PostMapping("/cancel/approve")
   public ResponseResult approveOrderCancellation(@RequestBody CancelOrderRequestDTO cancelOrderRequestDTO) {
-    // 处理逻辑
+    // Processing Logic
     return ResponseResult.ofSuccess();
   }
 
@@ -150,11 +150,11 @@ public class OrderController {
       throw new IllegalArgumentException("Order ID or Room Number cannot be null");
     }
 
-    // 调用取消特定房间的服务逻辑
+    // Call the service logic to cancel a specific room
     orderCancelService.cancelRoomInOrder(cancelRequestDTO.getOrderId(), cancelRequestDTO.getRoomNumber(),
             cancelRequestDTO.getCancelReason(), cancelRequestDTO.getIsApproved());
 
-    return ResponseResult.ofSuccess("指定房间取消成功");
+    return ResponseResult.ofSuccess("The designated room was cancelled successfully");
   }
 
   /**

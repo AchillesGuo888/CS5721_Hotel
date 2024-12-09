@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface HotelInfoRepository extends JpaRepository<HotelInfo, Long> {
 
-    // 根据酒店名称、城市和地址进行模糊查询，并进行分页
+    // Perform fuzzy query based on hotel name, city and address, and perform paging
     static Page<HotelInfo> findByNameContainingAndCityContainingAndAddressContaining(
             String hotelName, String city, String address, Pageable pageable) {
         return null;

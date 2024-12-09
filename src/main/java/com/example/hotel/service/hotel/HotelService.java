@@ -11,41 +11,41 @@ import org.springframework.data.domain.Page;
 
 public interface HotelService {
     /**
-     * 添加酒店
+     * addHotel
      *
-     * @param requestDTO 请求参数
-     * @return 添加结果
+     * @param requestDTO Request Parameters
+     * @return Add results
      */
     AddHotelResponse addHotel(AddHotelRequestDTO requestDTO);
 
     /**
-     * 模糊查询酒店列表
+     * Fuzzy query hotel list
      *
      *
-     * @return 查询结果
+     * @return Query results
      */
     Page<HotelDetailResponse> queryHotelInfo(QueryHotelRequestDTO queryHotelRequestDTO, int page, int size) throws BizException;
 
     /**
-     * 查询酒店id
+     * Query hotel id
      *
      *
-     * @return 查询结果
+     * @return Query results
      */
     HotelInfo getHotelById(Long id);
 
     /**
-     * 修改酒店信息
+     * Modify hotel information
      *
      *
-     * @return 结果
+     * @return results
      */
     void modifyHotelInfo(ModifyHotelInfoRequestDTO requestDTO);
 
     /**
-     * 删除酒店
+     * Delete Hotel
      *
-     * @return 结果
+     * @return results
      */
     Integer deleteHotel(Long hotelId);
 }

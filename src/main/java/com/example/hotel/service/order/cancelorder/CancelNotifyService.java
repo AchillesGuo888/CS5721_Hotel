@@ -23,20 +23,20 @@ public class CancelNotifyService {
     }
 
     /**
-     * 取消订单并通知观察者
-     * @param orderId 订单ID
-     * @param isApproved 审核是否通过
-     * @param cancelReason 取消原因
-     * @return 取消结果
+     * Cancel the order and notify the observer
+     * @param orderId order ID
+     * @param isApproved whether the review is passed
+     * @param cancelReason cancellation reason
+     * @return cancellation result
      */
     public String cancelOrderAndNotify(Long orderId, Integer isApproved, String cancelReason) {
-        // 1. 调用 OrderCancelService 取消订单
+        // 1. Call OrderCancelService to cancel the order
         String cancelResult = orderCancelService.processOrderCancellation(orderId, isApproved, cancelReason);
 
-        if ("订单取消成功，积分已回滚，退款已处理".equals(cancelResult)) {
-            // 2. 通知观察者
+        if ("Order canceled successfully, points rolled back, refund processed".equals(cancelResult)) {
+            // 2. Notify observers
             OrderDetail orderDetail = orderCancelService.getOrderDetailById(orderId);
-            observerManager.notifyObservers(orderDetail); // 发布通知
+            observerManager.notifyObservers(orderDetail); // Publish notification
         }
 
         return cancelResult;
@@ -44,24 +44,24 @@ public class CancelNotifyService {
 
 
     /**
-     * 取消订单并通知观察者
-     * @param orderId 订单ID
-     * @param roomNumber 要取消的房间号列表
-     * @param cancelReason 取消原因
-     * @param isApproved 审核是否通过
-     * @return 取消结果
+     * Cancel the order and notify the observer
+     * @param orderId order ID
+     * @param roomNumber list of room numbers to be canceled
+     * @param cancelReason cancellation reason
+     * @param isApproved review passed
+     * @return cancellation result
      */
     @Transactional
     public String cancelOrderAndNotify(Long orderId, Long roomNumber, String cancelReason, int isApproved) {
-        // 1. 调用 OrderCancelService 取消房间
+        // 1. Call OrderCancelService to cancel the room
         String cancelResult = orderCancelService.cancelRoomInOrder(orderId, roomNumber, cancelReason, isApproved);
 
-        if ("订单取消成功，积分已回滚，退款已处理".equals(cancelResult)) {
-            // 2. 通知观察者
+        if ("Order canceled successfully, points rolled back, refund processed".equals(cancelResult)) {
+            // 2. Notify observers
             OrderDetail orderDetail = orderCancelService.getOrderDetailById(orderId);
-            observerManager.notifyObservers(orderDetail); // 发布通知
+            observerManager.notifyObservers(orderDetail); // Publish notification
         }
 
-        return "订单取消成功，已通知观察者";
+        return "Order canceled successfully, observers notified";
     }
 }

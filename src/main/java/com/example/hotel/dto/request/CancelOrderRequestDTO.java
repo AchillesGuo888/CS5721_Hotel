@@ -15,16 +15,16 @@ import java.util.List;
 @ApiModel("cancel order request parameter")
 public class CancelOrderRequestDTO extends Request {
 
-    @ApiModelProperty(value = "订单ID", required = true, example = "12345")
+    @ApiModelProperty(value = "Order ID", required = true, example = "12345")
     private Long orderId;
 
-    @ApiModelProperty(value = "取消原因", required = false, example = "Change of plans")
+    @ApiModelProperty(value = "Reason for cancellation", required = false, example = "Change of plans")
     private String cancelReason;
 
     @ApiModelProperty(value = "Room Numbers to cancel (if null, cancel entire order)")
     private Long roomNumber;
 
 
-    private int isApproved;  // 是否审核通过 0表示不通过，1表示通过
+    private int isApproved;  // Whether the audit is passed 0 means failed, 1 means passed
 
 }

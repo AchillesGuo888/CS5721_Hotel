@@ -38,34 +38,34 @@ public class HotelServiceImpl implements HotelService {
     @RequestMapping(value = "/hotel/addHotel", method = RequestMethod.POST)
     public AddHotelResponse addHotel(AddHotelRequestDTO requestDTO) {
 
-        // 校验请求参数
+        // Verify request parameters
         if (requestDTO == null || StringUtils.isBlank(requestDTO.getHotelName())
                 || StringUtils.isBlank(requestDTO.getCity())) {
-            throw new IllegalArgumentException("酒店名称和城市不能为空");
+            throw new IllegalArgumentException("Hotel name and city cannot be empty");
         }
 
-        // 构造酒店实体对象
+        // Constructing hotel entity object
         HotelInfo hotelInfo = new HotelInfo();
         hotelInfo.setHotelName(requestDTO.getHotelName());
         hotelInfo.setAddress(requestDTO.getAddress());
         hotelInfo.setCity(requestDTO.getCity());
         hotelInfo.setPhone(requestDTO.getPhoneNumber());
         hotelInfo.setLevel(requestDTO.getLevel().byteValue());
-        hotelInfo.setIsDeleted((byte) 0);  // 默认未删除
+        hotelInfo.setIsDeleted((byte) 0);  // Not deleted by default
         hotelInfo.setCreateTime(new Timestamp(System.currentTimeMillis()));
         hotelInfo.setUpdateTime(hotelInfo.getCreateTime());
 
-        // 插入数据库
+        // Insert into database
         int rowsInserted = hotelInfoMapper.insert(hotelInfo);
         if (rowsInserted == 0) {
-            throw new RuntimeException("添加酒店失败，影响行数为0");
+            throw new RuntimeException("Failed to add hotel, affecting 0 rows");
         }
 
-        // 构造返回结果
+        // Construct return result
         AddHotelResponse response = new AddHotelResponse();
         response.setHotelId(hotelInfo.getId());
         response.setHotelName(hotelInfo.getHotelName());
-        response.setMessage("酒店添加成功");
+        response.setMessage("Hotel added successfully");
 
         return response;
     }
@@ -83,7 +83,7 @@ public class HotelServiceImpl implements HotelService {
         Page<HotelInfo> hotelPage = HotelInfoRepository.findByNameContainingAndCityContainingAndAddressContaining(hotelName, city, address, pageable);
 
         if (hotelPage.isEmpty()) {
-            throw new BizException("未找到符合条件的酒店信息");
+            throw new BizException("No matching hotel information found");
         }
 
         return hotelPage.map(hotel -> {
@@ -98,7 +98,6 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     public HotelInfo getHotelById(Long id) {
-        // 调用 Mapper 查询数据库
         return hotelInfoMapper.findHotelById(id);
     }
 
@@ -110,7 +109,7 @@ public class HotelServiceImpl implements HotelService {
             throw new IllegalArgumentException("Hotel not found with ID: " + requestDTO.getHotelId());
         }
 
-        // 更新字段
+        // Update Fields
         if (requestDTO.getHotelName() != null) {
             hotelInfo.setHotelName(requestDTO.getHotelName());
         }
