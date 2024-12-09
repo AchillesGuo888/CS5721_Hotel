@@ -121,15 +121,17 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     //query room type info and original price
     Map<Long, BigDecimal> roomTypePriceMap = getRoomTypePrice(requestDTO);
     AvailableRoomCountDTO roomTypeInfo = CollectionUtil.getFirst(getRoomTypeList(requestDTO));
+
     //query user info
     String userId = jwtUtil.getUserIdFromToken(token);
     User userInfo = userService.findUserByUserId(userId);
+
     //calculate the discount and price
     QueryOrderAmountRequestDTO calculateRequest = new QueryOrderAmountRequestDTO();
     BeanUtils.copyProperties(requestDTO, calculateRequest);
     calculateRequest.setRoomTypePrice(roomTypePriceMap.get(requestDTO.getRoomTypeId()));
     PriceResponse preBookPrice = calculatePrice(calculateRequest, userInfo);
-
+    //assemble the return result
     return assemblePreBookInfo(hotelInfo, roomTypePriceMap, userInfo, preBookPrice, requestDTO,
         roomTypeInfo);
   }
