@@ -234,6 +234,17 @@
       <include refid="Example_Where_Clause"/>
     </if>
   </select>
+  <update id="updateHotel">
+    UPDATE hotel_info
+    SET
+      hotel_name = #{hotelName},
+      city = #{city},
+      address = #{address},
+      phone = #{phone},
+      level = #{level},
+      update_time = NOW()
+    WHERE id = #{id} AND is_deleted = 0
+  </update>
   <update id="updateByExampleSelective" parameterType="map">
     <!--
       WARNING - @mbg.generated

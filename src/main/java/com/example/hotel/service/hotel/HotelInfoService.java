@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class HotelInfoService {
@@ -23,7 +24,7 @@ public class HotelInfoService {
     /**
      * Perform fuzzy query based on query conditions
      */
-    public static Page<HotelDetailResponse> queryHotelInfo(QueryHotelRequestDTO queryHotelRequestDTO, int page, int size) throws BizException {
+    public Page<HotelDetailResponse> queryHotelInfo(QueryHotelRequestDTO queryHotelRequestDTO, int page, int size) throws BizException {
         Pageable pageable = PageRequest.of(page, size);
 
         // Fuzzy query is guaranteed not to be null
@@ -32,7 +33,7 @@ public class HotelInfoService {
         String address = queryHotelRequestDTO.getAddress() != null ? queryHotelRequestDTO.getAddress() : "";
 
         // Fuzzy query through HotelInfoRepository
-        Page<HotelInfo> hotels = HotelInfoRepository.findByNameContainingAndCityContainingAndAddressContaining(
+        Page<HotelInfo> hotels = hotelInfoRepository.findByHotelNameContainingAndCityContainingAndAddressContaining(
                 name, city, address, pageable);
 
         if (hotels.isEmpty()) {

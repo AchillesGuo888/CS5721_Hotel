@@ -33,6 +33,7 @@ import java.sql.Timestamp;
 public class HotelServiceImpl implements HotelService {
 
     private final HotelInfoMapper hotelInfoMapper;
+    private HotelInfoRepository hotelInfoRepository;
 
     @Override
     @RequestMapping(value = "/hotel/addHotel", method = RequestMethod.POST)
@@ -70,9 +71,6 @@ public class HotelServiceImpl implements HotelService {
         return response;
     }
 
-    @Autowired
-    private HotelInfoRepository hotelInfoRepository;
-
     @Override
     public Page<HotelDetailResponse> queryHotelInfo(QueryHotelRequestDTO queryHotelRequestDTO, int page, int size) throws BizException {
         String hotelName = queryHotelRequestDTO.getName();
@@ -80,7 +78,7 @@ public class HotelServiceImpl implements HotelService {
         String address = queryHotelRequestDTO.getAddress();
 
         Pageable pageable = (Pageable) PageRequest.of(page, size);
-        Page<HotelInfo> hotelPage = HotelInfoRepository.findByNameContainingAndCityContainingAndAddressContaining(hotelName, city, address, pageable);
+        Page<HotelInfo> hotelPage = hotelInfoRepository.findByHotelNameContainingAndCityContainingAndAddressContaining(hotelName, city, address, pageable);
 
         if (hotelPage.isEmpty()) {
             throw new BizException("No matching hotel information found");

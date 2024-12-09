@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 public class HotelController {
 
   private final HotelService hotelService;
+  private final HotelInfoService hotelInfoService;
 
   /**
    * add Hotel
@@ -64,7 +65,7 @@ public class HotelController {
           @RequestParam(defaultValue = "0") int page,
           @RequestParam(defaultValue = "10") int size) {
     try {
-      Page<HotelDetailResponse> response = HotelInfoService.queryHotelInfo(queryHotelRequestDTO, page, size);
+      Page<HotelDetailResponse> response = hotelInfoService.queryHotelInfo(queryHotelRequestDTO, page, size);
       return ResponseEntity.ok(response);
     } catch (BizException e) {
       return ResponseEntity.status(500).body(null);
@@ -76,8 +77,6 @@ public class HotelController {
    *
    * @return
    */
-  @Autowired
-  private HotelInfoService hotelInfoService;
 
   @GetMapping("/{id}")
   public ResponseEntity<?> getHotelById(@PathVariable Long id) {
