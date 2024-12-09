@@ -3,6 +3,7 @@ package com.example.hotel;
 
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
+import org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -16,15 +17,12 @@ import org.springframework.context.ApplicationContext;
  * <pre>
  *     SENS run!
  * </pre>
- *
- * @author : saysky
- * @date : 2017/11/14
  */
 
-@SpringBootApplication
+@SpringBootApplication(exclude = MybatisAutoConfiguration.class)
 @EnableCaching
 
-@MapperScan("com.example.hotel.mapper*")
+@MapperScan(basePackages = "com.example.hotel.mapper")
 public class Application {
     private static final Logger log = LoggerFactory.getLogger(Application.class);
     public static void main(String[] args) {

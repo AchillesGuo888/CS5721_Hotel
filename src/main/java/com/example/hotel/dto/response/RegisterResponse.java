@@ -14,6 +14,6 @@ import org.apache.commons.pool2.BaseObject;
 @ApiModel("user login result")
 public class RegisterResponse extends BaseObject {
     @ApiModelProperty("token")
-    private String accessToken;
+    public String accessToken;
 
 }
