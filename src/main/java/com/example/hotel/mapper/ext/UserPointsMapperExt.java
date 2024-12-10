@@ -8,8 +8,8 @@ import org.apache.ibatis.annotations.Select;
 
 public interface UserPointsMapperExt {
 
-  @Select({
-      "select "
+  @Select({"<script>"
+      +"select "
           + " user_id userId, "
           + " sum(points) points "
           + "from "
@@ -24,6 +24,7 @@ public interface UserPointsMapperExt {
           + "  </if>                                                      "
           + "group by "
           + " user_id;"
+          +"</script>"
   }
   )
   @ResultType(UserPoints.class)

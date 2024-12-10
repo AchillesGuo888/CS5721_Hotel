@@ -10,11 +10,12 @@ import org.apache.ibatis.annotations.Param;
 public interface BatchInsertMapperExt {
 
   @Insert({
-
-      "INSERT INTO user (user_id, points, order_id, expense) VALUES",
-      "<foreach collection='userPointsList' item='pointInfo' separator=','>",
-      "(#{pointInfo.userId}, #{pointInfo.points}, #{pointInfo.orderId}, #{pointInfo.expense})",
-      "</foreach>",
+      "<script>"
+      +"INSERT INTO user_points (user_id, points, order_id, expense) VALUES"
+      +"<foreach collection='userPointsList' item='pointInfo' separator=','>"
+      +"(#{pointInfo.userId}, #{pointInfo.points}, #{pointInfo.orderId}, #{pointInfo.expense})"
+      +"</foreach>"
+      +"</script>"
   })
   void batchInsertUserPoints(@Param("userPointsList") List<UserPoints> userPointsList);
 }
