@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+  <context id="DB2Tables" targetRuntime="MyBatis3">
+    <!-- JDBC configuration information -->
+    <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+      connectionURL="jdbc:mysql://rm-bp1k160qpstc9hojzto.mysql.rds.aliyuncs.com:3306/hotel"
+      userId="root"
+      password="Cs5721__"/>
+    <javaTypeResolver type="org.mybatis.generator.internal.types.JavaTypeResolverDefaultImpl">
+      <property name="useJSR310Types" value="true"/>
+    </javaTypeResolver>
+    <!-- arget package and output path for generating model classes -->
+    <javaModelGenerator targetPackage="com.example.hotel.entity" targetProject="src/main/java"/>
+
+    <!-- Target package and output path for generating Mapper XML files -->
+    <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources"/>
+
+    <!-- Target package and output path for generating Mapper interfaces -->
+    <javaClientGenerator type="XMLMAPPER" targetPackage="com.example.hotel.mapper"
+      targetProject="src/main/java"/>
+
+    <!-- Specify the tables to be generated -->
+    <table tableName="user_points">
+      <generatedKey column="id" sqlStatement="MYSQL" identity="true"/>
+    </table>
+  </context>
+</generatorConfiguration>

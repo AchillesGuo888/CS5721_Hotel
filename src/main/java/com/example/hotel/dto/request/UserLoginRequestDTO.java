@@ -1,6 +1,7 @@
 package com.example.hotel.dto.request;
 
 import com.example.hotel.dto.request.Base.Request;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.NotEmpty;
@@ -13,13 +14,15 @@ import lombok.ToString;
 @ToString
 @ApiModel("login request parameter")
 public class UserLoginRequestDTO extends Request {
-  @NotEmpty(message = "Username cannot be empty")
-  @ApiModelProperty(value = "username", required = true, example = "Achilles")
-  private String username;
+
+  @NotEmpty(message = "email cannot be empty")
+  @ApiModelProperty(value = "email", required = true, example = "11@qq.com")
+  @JsonProperty(value = "email")
+  private String email;
 
   @NotEmpty(message = "Password cannot be empty")
   @ApiModelProperty(value = "password", required = true, example = "123456")
+  @JsonProperty(value = "password")
   private String password;
-
 
 }

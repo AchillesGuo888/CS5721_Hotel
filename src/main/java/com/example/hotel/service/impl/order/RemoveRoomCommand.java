@@ -1,0 +1,26 @@
+package com.example.hotel.service.impl.order;
+
+import com.example.hotel.service.command.ChangeRoomCountCommand;
+import lombok.extern.slf4j.Slf4j;
+
+
+@Slf4j
+
+public class RemoveRoomCommand implements ChangeRoomCountCommand {
+
+  private ChangeRoomReceiver receiver;
+
+  private Integer roomCount;
+
+
+  public RemoveRoomCommand(ChangeRoomReceiver receiver, Integer roomCount) {
+    this.receiver = receiver;
+    this.roomCount = roomCount;
+  }
+
+  @Override
+  public Integer execute() {
+
+    return receiver.removeRoom(roomCount);
+  }
+}
