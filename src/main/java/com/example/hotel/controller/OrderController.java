@@ -127,8 +127,8 @@ public class OrderController {
             cancelRequestDTO.getOrderId(), cancelRequestDTO.getIsApproved(), cancelRequestDTO.getCancelReason());
 
     // Return Response
-    if ("The order was successfully cancelled, the points were rolled back, and the refund was processed".equals(result)) {
-      return ResponseResult.ofSuccess("Order cancellation request submitted for admin approval.");
+    if (result != null && result.contains("successfully")) {
+      return ResponseResult.ofSuccess(200L,"Order cancellation request submitted for admin approval.");
     } else {
       return ResponseResult.ofFailure(result);
     }
