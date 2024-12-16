@@ -71,6 +71,11 @@ public class ResponseResult<T> extends BaseObject {
         data);
   }
 
+  public static <T> ResponseResult<T> ofSuccess(Long code,T data) {
+    return new ResponseResult<>(code, ResponseCode.success.getDesc(),
+            data);
+  }
+
   public static <T> ResponseResult<T> ofError(Long code, String msg) {
     return new ResponseResult<>(code, msg);
   }

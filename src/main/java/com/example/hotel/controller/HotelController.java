@@ -74,6 +74,7 @@ public class HotelController {
       Page<HotelDetailResponse> response = hotelInfoService.queryHotelInfo(queryHotelRequestDTO, page, size);
       return ResponseEntity.ok(response);
     } catch (BizException e) {
+      e.printStackTrace(); // Print the exception stack to the console
       return ResponseEntity.status(404).body(null);
     }
   }
@@ -87,6 +88,7 @@ public class HotelController {
   @GetMapping("/{id}")
   public ResponseEntity<?> getHotelById(@PathVariable Long id) {
     HotelInfo hotelInfo = hotelService.getHotelById(id);
+    //HotelInfo hotelInfo = hotelInfoService.getHotelById(id);
     if (hotelInfo == null) {
       return ResponseEntity.status(404).body("Hotel not found");
     }
@@ -101,8 +103,6 @@ public class HotelController {
   @RestController
   @RequestMapping("/hotel")
   public class HotelInfoController {
-    @Autowired
-    private HotelService hotelService;
 
     @PutMapping("/modifyHotelInfo")
     public ResponseResult modifyHotelInfo(
@@ -129,13 +129,18 @@ public class HotelController {
   public ResponseResult deleteHotel(
           @RequestHeader("Authorization") String token,
           @ApiParam(value = "Delete hotel", required = true) @RequestBody DeleteHotelInfoRequestDTO deleteHotelInfoRequestDTO) {
-    Integer i = hotelService.deleteHotel(deleteHotelInfoRequestDTO.getId());
-    if (i ==1){
-      return ResponseResult.ofSuccess("Hotel deleted successfully");
-    }else {
-      return ResponseResult.ofError(ResponseCode.server_err.getCode(), "Hotel delete failed");
+    try {
+      Integer i = hotelService.deleteHotel(deleteHotelInfoRequestDTO.getId());
+      if (i ==1){
+        return ResponseResult.ofSuccess("Hotel deleted successfully");
+      }else {
+        return ResponseResult.ofError(500L, "Hotel delete failed");
+      }
     }
-
+    catch (Exception e){
+      e.printStackTrace(); // Print the exception stack to the console
+      return ResponseResult.ofError(404L, "An error occurred", e.getMessage());
+    }
   }
   
    /**
