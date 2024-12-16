@@ -69,6 +69,7 @@ public class OrderDetailDecorator extends OrderServiceDecorator {
     if (CollectionUtils.isEmpty(response.getChangeRoomList())){
       response.setChangeRoomList(new ArrayList<>());
     }
+    response.setGuestNames(guestNames);
     response.getChangeRoomList().addAll(changeList);
     return response;
   }
