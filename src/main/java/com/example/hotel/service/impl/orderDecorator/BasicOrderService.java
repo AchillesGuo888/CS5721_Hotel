@@ -7,6 +7,7 @@ import com.example.hotel.entity.OrderBase;
 import com.example.hotel.exception.BizException;
 import com.example.hotel.mapper.OrderBaseMapper;
 import com.example.hotel.service.order.OrderQueryService;
+import com.example.hotel.util.DateUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -32,6 +33,7 @@ public class BasicOrderService implements OrderQueryService {
     BeanUtils.copyProperties(orderBase, result);
     result.setOrderId(orderBase.getId());
     result.setMembershipDiscount(orderBase.getTotalPrice().subtract(orderBase.getRealPrice()));
+    result.setDates( DateUtil.getBetweenDays(orderBase.getStartDate(), orderBase.getEndDate()).intValue());
     return result;
   }
 
