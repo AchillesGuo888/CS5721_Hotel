@@ -123,6 +123,11 @@
     from hotel_info
     where id = #{id,jdbcType=BIGINT}
   </select>
+  <select id="getHotelById" parameterType="long" resultMap="BaseResultMap">
+    SELECT id, hotel_name AS hotelName, city, address, phone, level, update_time AS updateTime, create_time AS createTime, is_deleted AS isDeleted
+    FROM hotel_info
+    WHERE id = #{id};
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     <!--
       WARNING - @mbg.generated

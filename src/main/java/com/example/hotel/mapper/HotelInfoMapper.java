@@ -104,7 +104,7 @@ public interface HotelInfoMapper {
   @Select("SELECT * FROM hotel_info WHERE hotel_name LIKE #{name} AND city LIKE #{city} AND address LIKE #{address} AND is_deleted = 0")
   List<HotelInfo> findHotels(@Param("name") String name, @Param("city") String city, @Param("address") String address);
 
-  @Select("SELECT * FROM hotel_info WHERE id = #{id} AND is_deleted = 0")
+  @Select("SELECT id, hotel_name AS hotelName, city, address, phone, level, update_time AS updateTime, create_time AS createTime, is_deleted AS isDeleted FROM hotel_info WHERE id = #{id} AND is_deleted = 0")
   HotelInfo findHotelById(Long id);
 
   int updateHotel(HotelInfo hotelInfo);
